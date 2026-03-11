@@ -175,6 +175,23 @@
   .btn-yellow { background: linear-gradient(135deg, var(--yellow), #e89a23); color: #111; }
   .btn-pink   { background: linear-gradient(135deg, var(--pink),   #a83dbd); }
 
+  /* ─── Hear button ─── */
+  .hear-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    background: #fff;
+    border: 3px solid #4a90e2;
+    border-radius: 50px;
+    color: #4a90e2;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-bottom: 4px;
+  }
+  .hear-btn:hover { background: #e7f3ff; transform: scale(1.04); }
+  .hear-btn:active { transform: scale(0.97); }
+
   /* ─── Sound pill ─── */
   .sound-pill {
     display: inline-block; margin-top: 8px;
@@ -518,12 +535,26 @@ let sIdx=0, sScore=0;
 
 function initSounds(){ sIdx=0; sScore=0; renderSounds(); }
 
+function speakWord(word){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-AU';
+  u.rate = 0.85;
+  window.speechSynthesis.speak(u);
+}
+
 function renderSounds(){
   const q=SOUNDS[sIdx];
   document.getElementById('sounds-card').innerHTML=
     progressHTML(sIdx, SOUNDS.length, '#4a90e2')+
     `<div class="q-text">${q.q}</div>
-     <div class="tc mb14"><span class="sound-pill" style="color:${q.color};border-color:${q.color}">${q.sound}</span></div>
+     <div class="tc mb14">
+       <span class="sound-pill" style="color:${q.color};border-color:${q.color}">${q.sound}</span>
+     </div>
+     <div class="tc mb14">
+       <button class="hear-btn" onclick="speakWord('${q.word}')">🔊 Hear the word</button>
+     </div>
      <div class="opts-2" id="s-opts">
        <button class="opt-btn" onclick="ansSound('Yes',this)">✅ Yes</button>
        <button class="opt-btn" onclick="ansSound('No',this)">❌ No</button>
