@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Term 1 Spanish – Year 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #c60b1e;
+    --yellow: #f1bf00;
+    --cream:  #fdf6ee;
+    --dark:   #1a1a2e;
+    --card:   #ffffff;
+    --green:  #16a34a;
+    --soft-red:    #fde8ea;
+    --soft-yellow: #fef9c3;
+    --soft-green:  #dcfce7;
+    --soft-blue:   #dbeafe;
+    --soft-purple: #ede9fe;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Andika', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── Hero ─── */
+  header {
+    background: linear-gradient(135deg, var(--red) 0%, #9b0917 50%, #c8a000 100%);
+    padding: 2.5rem 1.5rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '🌮';
+    position: absolute; left: -10px; bottom: -20px;
+    font-size: 8rem; opacity: .12;
+  }
+  header::after {
+    content: '🎸';
+    position: absolute; right: 10px; top: 10px;
+    font-size: 5rem; opacity: .15; transform: rotate(15deg);
+  }
+  header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(2rem, 7vw, 3.8rem);
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 3px 3px 0 rgba(0,0,0,.2);
+    line-height: 1.1;
+  }
+  header p {
+    color: rgba(255,255,255,.88);
+    font-size: 1.05rem;
+    margin-top: .6rem;
+    font-weight: 600;
+  }
+
+  .flag-stripe { display: flex; height: 6px; }
+  .flag-stripe span { flex: 1; }
+  .flag-stripe span:nth-child(1) { background: #c60b1e; }
+  .flag-stripe span:nth-child(2) { background: #f1bf00; flex: 2; }
+  .flag-stripe span:nth-child(3) { background: #c60b1e; }
+
+  #voice-notice {
+    background: #fef9c3;
+    border-left: 4px solid var(--yellow);
+    padding: .75rem 1.2rem;
+    font-size: .9rem;
+    text-align: center;
+    color: #713f12;
+    display: none;
+  }
+
+  /* ─── Nav ─── */
+  nav {
+    display: flex;
+    gap: .4rem;
+    padding: 1.2rem 1rem .5rem;
+    overflow-x: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  nav button {
+    font-family: 'Fredoka', sans-serif;
+    font-size: .92rem;
+    font-weight: 600;
+    padding: .5rem 1rem;
+    border-radius: 50px;
+    border: 2.5px solid transparent;
+    cursor: pointer;
+    transition: all .2s;
+    background: #fff;
+    color: var(--dark);
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  }
+  nav button:hover  { background: var(--soft-yellow); border-color: var(--yellow); }
+  nav button.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+  /* ─── Sections ─── */
+  .section { display: none; padding: 1.2rem 1rem 3rem; max-width: 900px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: .3rem;
+  }
+  .section-subtitle {
+    font-size: .92rem;
+    color: #666;
+    margin-bottom: 1.2rem;
+  }
+
+  /* ─── Phrase cards ─── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .phrase-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    border: 2px solid transparent;
+    transition: border-color .2s, transform .15s;
+  }
+  .phrase-card:hover { border-color: var(--yellow); transform: translateY(-2px); }
+  .card-text { flex: 1; }
+  .spanish { font-size: 1.15rem; font-weight: 700; color: var(--dark); }
+  .phonetic { font-size: .82rem; color: #e63e2a; font-style: italic; margin: .1rem 0; }
+  .english { font-size: .88rem; color: #555; }
+  .speak-btn {
+    background: var(--soft-yellow);
+    border: none; border-radius: 12px;
+    width: 42px; height: 42px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, transform .1s;
+  }
+  .speak-btn:hover  { background: #fde68a; }
+  .speak-btn:active { transform: scale(.93); }
+  .speak-btn.speaking { background: var(--yellow); animation: pulse .6s infinite alternate; }
+  @keyframes pulse { from { opacity: .7; } to { opacity: 1; } }
+
+  /* ─── Numbers ─── */
+  .number-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1rem;
+  }
+  .number-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1.2rem .8rem;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    border: 2px solid transparent;
+    transition: all .2s;
+  }
+  .number-card:hover { border-color: var(--yellow); transform: translateY(-2px); }
+  .number-card.speaking { border-color: var(--red); background: var(--soft-red); }
+  .num-digit { font-family: 'Fredoka', sans-serif; font-size: 2.2rem; color: var(--red); }
+  .num-spanish { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin: .2rem 0; }
+  .num-phonetic { font-size: .78rem; color: #e63e2a; font-style: italic; }
+
+  /* ─── Colours ─── */
+  .colour-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  .colour-card {
+    background: var(--card);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    cursor: pointer;
+    transition: transform .15s;
+    border: 2.5px solid transparent;
+  }
+  .colour-card:hover { transform: translateY(-3px); }
+  .colour-card.speaking { border-color: var(--yellow); }
+  .colour-swatch { height: 70px; }
+  .colour-info { padding: .7rem .9rem; }
+  .colour-info .spanish { font-size: 1rem; }
+  .colour-info .phonetic { font-size: .76rem; }
+  .colour-info .english { font-size: .82rem; }
+
+  /* ─── Days ─── */
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: .9rem;
+  }
+  .day-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    border: 2px solid transparent;
+    transition: all .2s;
+  }
+  .day-card:hover { border-color: var(--yellow); transform: translateY(-2px); }
+  .day-card.speaking { background: var(--soft-yellow); border-color: var(--yellow); }
+  .day-num { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; color: var(--red); }
+  .day-name { font-size: 1.05rem; font-weight: 700; color: var(--dark); margin: .2rem 0; }
+  .day-phonetic { font-size: .78rem; color: #e63e2a; font-style: italic; }
+  .day-english { font-size: .82rem; color: #555; }
+
+  /* ─── Family ─── */
+  .family-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  .family-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    border: 2px solid transparent;
+    transition: all .2s;
+  }
+  .family-card:hover { border-color: var(--yellow); transform: translateY(-2px); }
+  .family-card.speaking { background: var(--soft-yellow); border-color: var(--yellow); }
+  .family-emoji { font-size: 2.8rem; margin-bottom: .4rem; display: block; }
+  .family-spanish { font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+  .family-phonetic { font-size: .78rem; color: #e63e2a; font-style: italic; margin: .1rem 0; }
+  .family-english { font-size: .85rem; color: #555; }
+
+  /* ─── Sounds guide ─── */
+  .sounds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .sound-card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1.2rem;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+  }
+  .sound-rule {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.3rem;
+    color: var(--red);
+    margin-bottom: .4rem;
+  }
+  .sound-desc { font-size: .9rem; color: #444; margin-bottom: .8rem; line-height: 1.5; }
+  .sound-examples { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .sound-ex {
+    background: var(--soft-yellow);
+    border: none;
+    border-radius: 10px;
+    padding: .35rem .8rem;
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--dark);
+    cursor: pointer;
+    font-family: 'Andika', sans-serif;
+    transition: background .15s;
+  }
+  .sound-ex:hover { background: #fde68a; }
+
+  /* ─── Speech builder ─── */
+  .speech-box {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  }
+  .speech-box h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    margin-bottom: 1rem;
+  }
+  .speech-line {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .speech-line:last-of-type { border-bottom: none; }
+  .speech-line input, .speech-line select {
+    flex: 1;
+    font-size: 1rem;
+    padding: .4rem .7rem;
+    border-radius: 10px;
+    border: 2px solid #fde68a;
+    font-family: 'Andika', sans-serif;
+    font-weight: 700;
+    outline: none;
+  }
+  .speech-line input:focus, .speech-line select:focus { border-color: var(--yellow); }
+  .big-btn {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: .7rem 1.6rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+  }
+  .big-btn:hover { opacity: .88; }
+  .big-btn:active { transform: scale(.97); }
+  .big-btn.red    { background: var(--red);    color: #fff; }
+  .big-btn.yellow { background: var(--yellow); color: var(--dark); }
+  .big-btn.green  { background: var(--green);  color: #fff; }
+
+  /* ─── Record yourself ─── */
+  .record-box {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  }
+  .record-box h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    margin-bottom: .6rem;
+  }
+  .record-box p { font-size: .92rem; color: #555; margin-bottom: 1rem; }
+  .record-phrase-select { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
+  .rp-btn {
+    font-family: 'Andika', sans-serif;
+    font-size: .88rem;
+    padding: .45rem 1rem;
+    border-radius: 50px;
+    border: 2px solid #e5e7eb;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: all .2s;
+    font-weight: 700;
+  }
+  .rp-btn:hover  { border-color: var(--yellow); background: var(--soft-yellow); }
+  .rp-btn.active { border-color: var(--red); background: var(--soft-red); color: var(--red); }
+  .rec-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .6rem 1.4rem;
+    border-radius: 50px; border: none;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .rec-btn:hover { opacity: .85; }
+  .rec-btn.ref    { background: #dbeafe; color: #1e40af; }
+  .rec-btn.record { background: #fee2e2; color: #b91c1c; }
+  .rec-btn.stop   { background: #f3f4f6; color: #374151; }
+  .rec-btn.play-r { background: #dcfce7; color: #166534; }
+  .rec-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .record-controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .rec-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #6b7280; margin-right: .4rem; }
+  .rec-dot.active { background: #ef4444; animation: blink .8s infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  #rec-status { font-size: .88rem; color: #555; }
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+  .compare-box { background: #f9fafb; border-radius: 14px; padding: 1rem; text-align: center; }
+  .compare-box .label { font-size: .88rem; font-weight: 700; margin-bottom: .6rem; color: #555; }
+
+  /* ─── Quiz ─── */
+  .quiz-header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--card); border-radius: 16px;
+    padding: .8rem 1.2rem; margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    flex-wrap: wrap; gap: .5rem;
+  }
+  .quiz-score { font-family: 'Fredoka', sans-serif; font-size: 1.2rem; color: var(--dark); }
+  .score-stars { color: var(--yellow); font-size: 1.1rem; }
+  .quiz-streak { font-size: .88rem; background: #fef9c3; padding: .2rem .6rem; border-radius: 20px; margin-right: .4rem; }
+  .quiz-best   { font-size: .88rem; background: #dcfce7; padding: .2rem .6rem; border-radius: 20px; }
+  .quiz-card {
+    background: var(--card); border-radius: 20px;
+    padding: 1.5rem; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    margin-bottom: 1rem;
+  }
+  .quiz-question { font-family: 'Fredoka', sans-serif; font-size: 1.4rem; color: var(--dark); margin-bottom: 1.2rem; line-height: 1.3; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .quiz-opt {
+    font-family: 'Andika', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    padding: .9rem; border-radius: 14px;
+    border: 2.5px solid #e5e7eb;
+    background: #f9fafb; cursor: pointer;
+    transition: all .2s;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--yellow); background: var(--soft-yellow); }
+  .quiz-opt.correct { background: #dcfce7; border-color: #16a34a; color: #166534; }
+  .quiz-opt.wrong   { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+  .quiz-opt:disabled { cursor: not-allowed; }
+  .quiz-feedback {
+    font-family: 'Fredoka', sans-serif; font-size: 1.1rem;
+    padding: .7rem; border-radius: 12px;
+    margin-top: .8rem; display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.good { background: var(--soft-green); color: #166534; }
+  .quiz-feedback.bad  { background: var(--soft-red);   color: #991b1b; }
+  .quiz-next {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.05rem; font-weight: 600;
+    padding: .7rem 2rem; border-radius: 50px;
+    border: none; background: var(--red); color: #fff;
+    cursor: pointer; margin-top: 1rem;
+    display: none;
+    transition: opacity .2s;
+  }
+  .quiz-next:hover { opacity: .85; }
+  .quiz-progress-text { font-size: .88rem; color: #888; margin-bottom: .5rem; }
+  .quiz-bar { height: 8px; background: #f0f0f0; border-radius: 10px; margin-bottom: 1rem; overflow: hidden; }
+  .quiz-bar-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--yellow)); border-radius: 10px; transition: width .4s; }
+  .progress-tracker {
+    background: var(--card); border-radius: 16px;
+    padding: 1rem 1.2rem; margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .progress-tracker h4 { font-family: 'Fredoka', sans-serif; font-size: 1rem; color: var(--dark); margin-bottom: .6rem; }
+  .progress-badges { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .p-badge {
+    font-size: .8rem; padding: .25rem .7rem;
+    border-radius: 20px; border: 2px solid #e5e7eb;
+    background: #f9fafb; color: #888; transition: all .3s;
+  }
+  .p-badge.earned { background: var(--soft-yellow); border-color: var(--yellow); color: #713f12; font-weight: 700; }
+
+  footer {
+    text-align: center; padding: 2rem 1rem;
+    font-size: .85rem; color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>¡Hola! 🇪🇸<br>Let's Learn Spanish</h1>
+  <p>Year 1 · Term 1 · 2026</p>
+</header>
+<div class="flag-stripe"><span></span><span></span><span></span></div>
+<div id="voice-notice">🔊 Tip: tap any 🔊 button to hear the Spanish pronunciation!</div>
+
+<nav>
+  <button onclick="showSection('greetings',this)" class="active">👋 Greetings</button>
+  <button onclick="showSection('introduce',this)">🙋 Introduce</button>
+  <button onclick="showSection('numbers',this)">🔢 Numbers</button>
+  <button onclick="showSection('colours',this)">🎨 Colours</button>
+  <button onclick="showSection('days',this)">📅 Days</button>
+  <button onclick="showSection('family',this)">👨‍👩‍👧 Family</button>
+  <button onclick="showSection('sounds',this)">👄 Sounds</button>
+  <button onclick="showSection('speech',this)">🎤 Speech</button>
+  <button onclick="showSection('record',this)">🎙️ Record Me</button>
+  <button onclick="showSection('quiz',this)">⭐ Quiz</button>
+</nav>
+
+<!-- GREETINGS -->
+<section id="greetings" class="section active">
+  <div class="section-title">👋 Saludos · Greetings</div>
+  <div class="section-subtitle">Tap 🔊 to hear each phrase in Spanish</div>
+  <div class="card-grid" id="greetings-grid"></div>
+</section>
+
+<!-- INTRODUCE -->
+<section id="introduce" class="section">
+  <div class="section-title">🙋 Me Presento · Introducing Myself</div>
+  <div class="section-subtitle">Phrases for talking about yourself</div>
+  <div class="card-grid" id="introduce-grid"></div>
+</section>
+
+<!-- NUMBERS -->
+<section id="numbers" class="section">
+  <div class="section-title">🔢 Los Números 1–10</div>
+  <div class="section-subtitle">Tap a number card to hear it spoken in Spanish</div>
+  <div class="number-grid" id="number-grid"></div>
+</section>
+
+<!-- COLOURS -->
+<section id="colours" class="section">
+  <div class="section-title">🎨 Los Colores · Colours</div>
+  <div class="section-subtitle">Tap a colour to hear its Spanish name</div>
+  <div class="colour-grid" id="colour-grid"></div>
+</section>
+
+<!-- DAYS -->
+<section id="days" class="section">
+  <div class="section-title">📅 Los Días de la Semana · Days of the Week</div>
+  <div class="section-subtitle">Tap a day to hear it in Spanish</div>
+  <div class="days-grid" id="days-grid"></div>
+</section>
+
+<!-- FAMILY -->
+<section id="family" class="section">
+  <div class="section-title">👨‍👩‍👧 La Familia · Family</div>
+  <div class="section-subtitle">Tap a card to hear the Spanish word</div>
+  <div class="family-grid" id="family-grid"></div>
+</section>
+
+<!-- SOUNDS GUIDE -->
+<section id="sounds" class="section">
+  <div class="section-title">👄 Spanish Sounds Guide</div>
+  <div class="section-subtitle">Key sounds in Spanish — tap examples to hear them</div>
+  <div class="sounds-grid" id="sounds-grid"></div>
+</section>
+
+<!-- SPEECH BUILDER -->
+<section id="speech" class="section">
+  <div class="section-title">🎤 Build My Speech</div>
+  <div class="section-subtitle">Fill in your details and press Play to hear your full Spanish introduction</div>
+  <div class="speech-box">
+    <h3>Your personalised Spanish introduction:</h3>
+
+    <div class="speech-line">
+      <div class="card-text">
+        <div class="spanish">¡Hola!</div>
+        <div class="english">Hello!</div>
+      </div>
+      <button class="speak-btn" onclick="speakOne('¡Hola!')">🔊</button>
+    </div>
+
+    <div class="speech-line">
+      <div class="card-text">
+        <div class="spanish">Me llamo <span id="preview-name" style="color:var(--red)">___</span></div>
+        <div class="english">My name is…</div>
+      </div>
+      <input type="text" id="name-input" placeholder="Your name" oninput="updatePreview()"
+        style="flex:1;font-size:1rem;padding:.4rem .7rem;border-radius:10px;border:2px solid #fde68a;font-family:Andika,sans-serif;font-weight:700;outline:none;">
+      <button class="speak-btn" onclick="speakName()">🔊</button>
+    </div>
+
+    <div class="speech-line">
+      <div class="card-text">
+        <div class="spanish">Tengo <span id="preview-age" style="color:var(--red)">___</span> años</div>
+        <div class="english">I am … years old</div>
+      </div>
+      <select id="age-select" onchange="updatePreview()">
+        <option value="">Age</option>
+        <option>cinco</option><option>seis</option><option>siete</option>
+        <option>ocho</option><option>nueve</option><option>diez</option>
+      </select>
+      <button class="speak-btn" onclick="speakAge()">🔊</button>
+    </div>
+
+    <div class="speech-line">
+      <div class="card-text">
+        <div class="spanish">Vivo en Melbourne</div>
+        <div class="english">I live in Melbourne</div>
+      </div>
+      <button class="speak-btn" onclick="speakOne('Vivo en Melbourne')">🔊</button>
+    </div>
+
+    <div class="speech-line">
+      <div class="card-text">
+        <div class="spanish">Me gusta el español</div>
+        <div class="english">I like Spanish</div>
+      </div>
+      <button class="speak-btn" onclick="speakOne('Me gusta el español')">🔊</button>
+    </div>
+
+    <div class="speech-line">
+      <div class="card-text">
+        <div class="spanish">¡Adiós!</div>
+        <div class="english">Goodbye!</div>
+      </div>
+      <button class="speak-btn" onclick="speakOne('¡Adiós!')">🔊</button>
+    </div>
+
+    <div style="margin-top:1.2rem;display:flex;gap:.8rem;flex-wrap:wrap;">
+      <button class="big-btn red"    onclick="playSpeech()">▶ Play My Whole Speech</button>
+      <button class="big-btn yellow" onclick="stopSpeech()">⏹ Stop</button>
+      <button class="big-btn green"  onclick="window.print()">🖨️ Print</button>
+    </div>
+  </div>
+</section>
+
+<!-- RECORD YOURSELF -->
+<section id="record" class="section">
+  <div class="section-title">🎙️ Record Yourself</div>
+  <div class="section-subtitle">Hear how you sound vs the correct Spanish pronunciation</div>
+  <div class="record-box">
+    <h3>1. Choose a phrase to practise</h3>
+    <p>Select a phrase, listen to the reference, then record yourself and compare!</p>
+    <div class="record-phrase-select" id="rp-btns"></div>
+
+    <h3 style="margin-top:1rem;">2. Listen to the reference</h3>
+    <div style="margin:.6rem 0 1rem;">
+      <button class="rec-btn ref" id="btn-ref" onclick="playReference()">🔊 Hear Correct Pronunciation</button>
+    </div>
+
+    <h3>3. Record your attempt</h3>
+    <div class="record-controls">
+      <button class="rec-btn record" id="btn-rec"  onclick="startRecording()">🔴 Start Recording</button>
+      <button class="rec-btn stop"   id="btn-stop" onclick="stopRecording()" disabled>⏹ Stop</button>
+      <span id="rec-status"><span class="rec-dot" id="rec-dot"></span><span id="rec-text">Ready to record</span></span>
+    </div>
+
+    <div class="compare-row" id="compare-row" style="display:none;">
+      <div class="compare-box">
+        <div class="label">🔊 Correct Spanish</div>
+        <button class="rec-btn ref" onclick="playReference()" style="width:100%;justify-content:center;">▶ Play</button>
+      </div>
+      <div class="compare-box">
+        <div class="label">🎙️ Your Recording</div>
+        <button class="rec-btn play-r" id="btn-play-rec" onclick="playRecording()" style="width:100%;justify-content:center;">▶ Play</button>
+      </div>
+    </div>
+
+    <div id="mic-error" style="display:none;margin-top:1rem;border-radius:16px;overflow:hidden;border:2px solid #fca5a5;">
+      <div style="background:#fef2f2;padding:1rem 1.2rem;border-bottom:1px solid #fca5a5;">
+        <div style="font-weight:700;color:#b91c1c;font-size:1rem;margin-bottom:.3rem;" id="mic-error-title">⚠️ Microphone not available</div>
+        <div style="font-size:.9rem;color:#7f1d1d;line-height:1.5;" id="mic-error-body"></div>
+      </div>
+      <div style="background:#fff5f5;padding:1rem 1.2rem;font-size:.88rem;color:#450a0a;line-height:1.7;" id="mic-error-steps"></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="section">
+  <div class="section-title">⭐ Pronunciation Quiz</div>
+  <div class="quiz-header">
+    <div class="quiz-score">Score: <span id="q-score">0</span> / <span id="q-total">0</span> <span class="score-stars" id="q-stars"></span></div>
+    <div>
+      <span class="quiz-streak" id="q-streak"></span>
+      <span class="quiz-best"   id="q-best"></span>
+    </div>
+  </div>
+  <div class="progress-tracker">
+    <h4>🏅 Badges earned:</h4>
+    <div class="progress-badges" id="p-badges"></div>
+  </div>
+  <div class="quiz-progress-text" id="q-progress-text"></div>
+  <div class="quiz-bar"><div class="quiz-bar-fill" id="q-bar-fill" style="width:0%"></div></div>
+  <div class="quiz-card" id="quiz-card">
+    <div class="quiz-question" id="q-question">Loading quiz…</div>
+    <div class="quiz-options" id="q-options"></div>
+    <div class="quiz-feedback" id="q-feedback"></div>
+    <button class="quiz-next" id="q-next" onclick="nextQuestion()">Next ➜</button>
+  </div>
+</section>
+
+<footer>Made with ❤️ by Suhas Atluri · Wyndham Vale · 2026</footer>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
+const GREETINGS = [
+  { es:'¡Hola!',              ph:'OH-lah',             en:'Hello!' },
+  { es:'¡Buenos días!',       ph:'BWEH-nos DEE-as',     en:'Good morning!' },
+  { es:'¡Buenas tardes!',     ph:'BWEH-nas TAR-des',    en:'Good afternoon!' },
+  { es:'¡Buenas noches!',     ph:'BWEH-nas NO-ches',    en:'Good night!' },
+  { es:'¿Cómo estás?',        ph:'KOH-mo es-TAS',       en:'How are you?' },
+  { es:'Muy bien, gracias',   ph:'mwee BYEN, GRA-syas',  en:'Very well, thank you' },
+  { es:'Por favor',           ph:'por fa-VOR',           en:'Please' },
+  { es:'Gracias',             ph:'GRA-syas',             en:'Thank you' },
+  { es:'De nada',             ph:'de NA-da',             en:'You\'re welcome' },
+  { es:'¡Adiós!',             ph:'a-DYOS',               en:'Goodbye!' },
+];
+
+const INTRODUCE = [
+  { es:'Me llamo…',           ph:'me YA-mo',             en:'My name is…' },
+  { es:'Tengo seis años',     ph:'TEN-go SEYS AN-yos',   en:'I am six years old' },
+  { es:'Soy de Australia',    ph:'soy de ow-STRA-lya',   en:'I am from Australia' },
+  { es:'Vivo en Melbourne',   ph:'BEE-bo en Melbourne',  en:'I live in Melbourne' },
+  { es:'Me gusta el fútbol',  ph:'me GUS-ta el FOOT-bol', en:'I like football' },
+  { es:'Soy estudiante',      ph:'soy es-too-DYAN-te',   en:'I am a student' },
+];
+
+const NUMBERS = [
+  { n:1,  es:'uno',   ph:'OO-no' },
+  { n:2,  es:'dos',   ph:'dos' },
+  { n:3,  es:'tres',  ph:'tres' },
+  { n:4,  es:'cuatro',ph:'KWA-tro' },
+  { n:5,  es:'cinco', ph:'SEEN-ko' },
+  { n:6,  es:'seis',  ph:'SEYS' },
+  { n:7,  es:'siete', ph:'SYET-e' },
+  { n:8,  es:'ocho',  ph:'OH-cho' },
+  { n:9,  es:'nueve', ph:'NWEH-be' },
+  { n:10, es:'diez',  ph:'DYES' },
+];
+
+const COLOURS = [
+  { es:'rojo',     ph:'RO-ho',      en:'red',    hex:'#e74c3c' },
+  { es:'azul',     ph:'a-SOOL',     en:'blue',   hex:'#3498db' },
+  { es:'amarillo', ph:'a-ma-REE-yo', en:'yellow', hex:'#f1c40f' },
+  { es:'verde',    ph:'BER-de',     en:'green',  hex:'#2ecc71' },
+  { es:'naranja',  ph:'na-RAN-ha',  en:'orange', hex:'#e67e22' },
+  { es:'rosa',     ph:'RO-sa',      en:'pink',   hex:'#ff69b4' },
+  { es:'morado',   ph:'mo-RA-do',   en:'purple', hex:'#9b59b6' },
+  { es:'blanco',   ph:'BLAN-ko',    en:'white',  hex:'#ecf0f1', border:true },
+  { es:'negro',    ph:'NE-gro',     en:'black',  hex:'#2c3e50' },
+  { es:'marrón',   ph:'ma-RRON',    en:'brown',  hex:'#795548' },
+];
+
+const DAYS = [
+  { n:'L', es:'lunes',     ph:'LOO-nes',    en:'Monday' },
+  { n:'M', es:'martes',    ph:'MAR-tes',    en:'Tuesday' },
+  { n:'X', es:'miércoles', ph:'MYER-ko-les', en:'Wednesday' },
+  { n:'J', es:'jueves',    ph:'HWEH-bes',   en:'Thursday' },
+  { n:'V', es:'viernes',   ph:'BYER-nes',   en:'Friday' },
+  { n:'S', es:'sábado',    ph:'SA-ba-do',   en:'Saturday' },
+  { n:'D', es:'domingo',   ph:'do-MEEN-go', en:'Sunday' },
+];
+
+const FAMILY = [
+  { emoji:'👨', es:'el padre',   ph:'el PA-dre',  en:'father' },
+  { emoji:'👩', es:'la madre',   ph:'la MA-dre',  en:'mother' },
+  { emoji:'👦', es:'el hijo',    ph:'el EE-ho',   en:'son' },
+  { emoji:'👧', es:'la hija',    ph:'la EE-ha',   en:'daughter' },
+  { emoji:'👴', es:'el abuelo',  ph:'el a-BWEH-lo', en:'grandfather' },
+  { emoji:'👵', es:'la abuela',  ph:'la a-BWEH-la', en:'grandmother' },
+  { emoji:'👶', es:'el bebé',    ph:'el be-BEH',  en:'baby' },
+  { emoji:'🐶', es:'el perro',   ph:'el PE-ro',   en:'dog (family pet)' },
+];
+
+const SOUNDS_GUIDE = [
+  {
+    rule: 'LL / Y → "y" sound',
+    desc: 'In Spanish, "ll" and "y" both make a "y" sound like in "yes".',
+    examples: ['llamo', 'llorar', 'yo', 'yema'],
+  },
+  {
+    rule: 'J / G → "h" sound',
+    desc: '"j" and "g" (before e/i) make a soft "h" sound like a gentle breath.',
+    examples: ['jueves', 'jardín', 'gente', 'girar'],
+  },
+  {
+    rule: 'Ñ → "ny" sound',
+    desc: 'The letter "ñ" makes a "ny" sound, like "canyon".',
+    examples: ['años', 'niño', 'mañana', 'España'],
+  },
+  {
+    rule: 'RR → rolled "r"',
+    desc: 'Double "r" is rolled — try tapping your tongue on the roof of your mouth.',
+    examples: ['perro', 'arriba', 'correr', 'tierra'],
+  },
+  {
+    rule: 'H is always silent',
+    desc: 'The letter "h" makes no sound in Spanish — it\'s completely silent!',
+    examples: ['hola', 'hora', 'hablar', 'hijo'],
+  },
+  {
+    rule: 'V sounds like B',
+    desc: 'In Spanish, "v" and "b" sound almost the same — a soft "b" sound.',
+    examples: ['vivo', 'volar', 'bueno', 'boca'],
+  },
+];
+
+const RECORD_PHRASES = [
+  '¡Hola!', '¡Buenos días!', 'Me llamo…', 'Gracias',
+  '¿Cómo estás?', 'Muy bien', '¡Adiós!', 'Por favor',
+];
+
+// ═══════════════════════════════════════
+//  QUIZ DATA (drawn from all sections)
+// ═══════════════════════════════════════
+const ALL_QUIZ = [
+  { q:'What does "¡Hola!" mean?',          a:'Hello!',         opts:['Hello!','Goodbye!','Thank you','Please'] },
+  { q:'What does "gracias" mean?',          a:'Thank you',      opts:['Please','Hello!','Thank you','Goodbye!'] },
+  { q:'How do you say "Good morning"?',     a:'¡Buenos días!',  opts:['¡Buenas noches!','¡Buenos días!','¡Buenas tardes!','¡Hola!'] },
+  { q:'What does "adiós" mean?',            a:'Goodbye!',       opts:['Hello!','Goodbye!','Good night!','Please'] },
+  { q:'How do you say 3 in Spanish?',       a:'tres',           opts:['uno','dos','tres','cuatro'] },
+  { q:'How do you say 7 in Spanish?',       a:'siete',          opts:['seis','siete','ocho','nueve'] },
+  { q:'What colour is "rojo"?',             a:'red',            opts:['blue','red','green','yellow'] },
+  { q:'What colour is "azul"?',             a:'blue',           opts:['blue','red','green','yellow'] },
+  { q:'What colour is "verde"?',            a:'green',          opts:['orange','blue','green','purple'] },
+  { q:'How do you say "Monday" in Spanish?',a:'lunes',          opts:['martes','lunes','viernes','sábado'] },
+  { q:'How do you say "Friday" in Spanish?',a:'viernes',        opts:['lunes','miércoles','jueves','viernes'] },
+  { q:'"El padre" means…',                  a:'father',         opts:['mother','father','son','grandfather'] },
+  { q:'"La madre" means…',                  a:'mother',         opts:['mother','father','daughter','grandmother'] },
+  { q:'How do you say "My name is" in Spanish?', a:'Me llamo…', opts:['Me gusta','Tengo…','Me llamo…','Soy de…'] },
+  { q:'How do you say "I live in" in Spanish?',  a:'Vivo en',   opts:['Tengo en','Me llamo en','Vivo en','Soy de'] },
+  { q:'What does "por favor" mean?',        a:'Please',         opts:['Thank you','Goodbye','Please','Hello'] },
+  { q:'How do you say 5 in Spanish?',       a:'cinco',          opts:['cuatro','cinco','seis','siete'] },
+  { q:'What colour is "amarillo"?',         a:'yellow',         opts:['orange','pink','yellow','brown'] },
+  { q:'How do you say "Sunday" in Spanish?',a:'domingo',        opts:['sábado','domingo','lunes','viernes'] },
+  { q:'"El abuelo" means…',                 a:'grandfather',    opts:['father','brother','grandfather','uncle'] },
+];
+
+// ═══════════════════════════════════════
+//  SPEECH SYNTHESIS
+// ═══════════════════════════════════════
+let currentBtn = null;
+
+function speak(text, btn) {
+  if (!window.speechSynthesis) {
+    document.getElementById('voice-notice').style.display = 'block';
+    return;
+  }
+  if (currentBtn) currentBtn.classList.remove('speaking');
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-ES';
+  u.rate = 0.82;
+  if (btn) { currentBtn = btn; btn.classList.add('speaking'); }
+  u.onend = () => { if (btn) btn.classList.remove('speaking'); currentBtn = null; };
+  window.speechSynthesis.speak(u);
+}
+
+function speakOne(text) { speak(text, event.currentTarget); }
+function speakCard(text, el) { speak(text, el); }
+
+// ═══════════════════════════════════════
+//  NAV
+// ═══════════════════════════════════════
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'quiz') initQuiz();
+}
+
+// ═══════════════════════════════════════
+//  RENDER SECTIONS
+// ═══════════════════════════════════════
+function renderGrid(id, data) {
+  document.getElementById(id).innerHTML = data.map(d => `
+    <div class="phrase-card">
+      <div class="card-text">
+        <div class="spanish">${d.es}</div>
+        <div class="phonetic">${d.ph}</div>
+        <div class="english">${d.en}</div>
+      </div>
+      <button class="speak-btn" onclick="speak('${d.es.replace(/'/g,"\\'")}', this)">🔊</button>
+    </div>`).join('');
+}
+
+function renderNumbers() {
+  document.getElementById('number-grid').innerHTML = NUMBERS.map(d => `
+    <div class="number-card" onclick="speak('${d.es}', this)">
+      <div class="num-digit">${d.n}</div>
+      <div class="num-spanish">${d.es}</div>
+      <div class="num-phonetic">${d.ph}</div>
+    </div>`).join('');
+}
+
+function renderColours() {
+  document.getElementById('colour-grid').innerHTML = COLOURS.map(d => `
+    <div class="colour-card" onclick="speak('${d.es}', this)">
+      <div class="colour-swatch" style="background:${d.hex};${d.border?'border-bottom:2px solid #ddd;':''}"></div>
+      <div class="colour-info">
+        <div class="spanish">${d.es}</div>
+        <div class="phonetic">${d.ph}</div>
+        <div class="english">${d.en}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderDays() {
+  document.getElementById('days-grid').innerHTML = DAYS.map(d => `
+    <div class="day-card" onclick="speak('${d.es}', this)">
+      <div class="day-num">${d.n}</div>
+      <div class="day-name">${d.es}</div>
+      <div class="day-phonetic">${d.ph}</div>
+      <div class="day-english">${d.en}</div>
+    </div>`).join('');
+}
+
+function renderFamily() {
+  document.getElementById('family-grid').innerHTML = FAMILY.map(d => `
+    <div class="family-card" onclick="speak('${d.es}', this)">
+      <span class="family-emoji">${d.emoji}</span>
+      <div class="family-spanish">${d.es}</div>
+      <div class="family-phonetic">${d.ph}</div>
+      <div class="family-english">${d.en}</div>
+    </div>`).join('');
+}
+
+function renderSounds() {
+  document.getElementById('sounds-grid').innerHTML = SOUNDS_GUIDE.map(s => `
+    <div class="sound-card">
+      <div class="sound-rule">${s.rule}</div>
+      <div class="sound-desc">${s.desc}</div>
+      <div class="sound-examples">
+        ${s.examples.map(e => `<button class="sound-ex" onclick="speak('${e}', this)">${e}</button>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════
+//  SPEECH BUILDER
+// ═══════════════════════════════════════
+function updatePreview() {
+  const name = document.getElementById('name-input').value || '___';
+  const age  = document.getElementById('age-select').value || '___';
+  document.getElementById('preview-name').textContent = name;
+  document.getElementById('preview-age').textContent  = age;
+}
+
+function speakName() {
+  const name = document.getElementById('name-input').value;
+  if (name) speak('Me llamo ' + name, event.currentTarget);
+  else speak('Me llamo', event.currentTarget);
+}
+
+function speakAge() {
+  const age = document.getElementById('age-select').value;
+  if (age) speak('Tengo ' + age + ' años', event.currentTarget);
+  else speak('Tengo años', event.currentTarget);
+}
+
+let speechQueue = [], speechIdx = 0;
+
+function playSpeech() {
+  const name = document.getElementById('name-input').value || 'estudiante';
+  const age  = document.getElementById('age-select').value || 'seis';
+  speechQueue = [
+    '¡Hola!',
+    'Me llamo ' + name,
+    'Tengo ' + age + ' años',
+    'Vivo en Melbourne',
+    'Me gusta el español',
+    '¡Adiós!',
+  ];
+  speechIdx = 0;
+  speakNext();
+}
+
+function speakNext() {
+  if (speechIdx >= speechQueue.length) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(speechQueue[speechIdx]);
+  u.lang = 'es-ES'; u.rate = 0.82;
+  u.onend = () => { speechIdx++; setTimeout(speakNext, 400); };
+  window.speechSynthesis.speak(u);
+}
+
+function stopSpeech() { window.speechSynthesis.cancel(); speechIdx = 999; }
+
+// ═══════════════════════════════════════
+//  RECORD YOURSELF
+// ═══════════════════════════════════════
+let selectedPhrase = RECORD_PHRASES[0];
+let mediaRecorder = null, audioChunks = [], audioBlob = null, audioURL = null;
+
+function buildRecordPhrases() {
+  document.getElementById('rp-btns').innerHTML = RECORD_PHRASES.map((p, i) => `
+    <button class="rp-btn${i===0?' active':''}" onclick="selectPhrase(this,'${p.replace(/'/g,"\\'")}')">
+      ${p}
+    </button>`).join('');
+}
+
+function selectPhrase(btn, phrase) {
+  document.querySelectorAll('.rp-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPhrase = phrase;
+  audioBlob = null; audioURL = null;
+  document.getElementById('compare-row').style.display = 'none';
+  document.getElementById('rec-text').textContent = 'Ready to record';
+  document.getElementById('rec-dot').classList.remove('active');
+}
+
+function playReference() { speak(selectedPhrase, document.getElementById('btn-ref')); }
+
+async function startRecording() {
+  document.getElementById('mic-error').style.display = 'none';
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      audioURL  = URL.createObjectURL(audioBlob);
+      document.getElementById('compare-row').style.display = 'grid';
+      document.getElementById('rec-text').textContent = 'Recording saved! Press Play to compare.';
+      document.getElementById('rec-dot').classList.remove('active');
+      stream.getTracks().forEach(t => t.stop());
+    };
+    mediaRecorder.start();
+    document.getElementById('btn-rec').disabled  = true;
+    document.getElementById('btn-stop').disabled = false;
+    document.getElementById('rec-dot').classList.add('active');
+    document.getElementById('rec-text').textContent = 'Recording…';
+  } catch (err) {
+    const isPhone = /iPhone|iPad|Android/i.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    document.getElementById('mic-error').style.display = 'block';
+    document.getElementById('mic-error-title').textContent = '⚠️ Microphone not available';
+    document.getElementById('mic-error-body').textContent  = err.message || 'Could not access microphone.';
+    document.getElementById('mic-error-steps').innerHTML   = isPhone && isSafari
+      ? '1. Tap the <strong>Aᴬ</strong> icon in Safari\'s address bar<br>2. Tap Website Settings → Microphone → Allow<br>3. Refresh the page'
+      : '1. Click the 🔒 icon in your browser address bar<br>2. Allow microphone access<br>3. Refresh the page';
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  document.getElementById('btn-rec').disabled  = false;
+  document.getElementById('btn-stop').disabled = true;
+}
+
+function playRecording() {
+  if (audioURL) new Audio(audioURL).play();
+}
+
+// ═══════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════
+let qList = [], qIdx = 0, qScore = 0, qStreak = 0, qBest = 0;
+const BADGES = [
+  { id:'first',   label:'⭐ First Answer', condition: s => s >= 1  },
+  { id:'five',    label:'🌟 5 Correct',    condition: s => s >= 5  },
+  { id:'ten',     label:'🏅 10 Correct',   condition: s => s >= 10 },
+  { id:'all',     label:'🏆 Perfect!',     condition: (s,t) => s === t && t > 0 },
+];
+let earned = new Set();
+
+function initQuiz() {
+  qList = [...ALL_QUIZ].sort(() => Math.random() - .5);
+  qIdx = 0; qScore = 0; qStreak = 0; qBest = 0; earned = new Set();
+  renderBadges();
+  renderQuestion();
+}
+
+function renderBadges() {
+  document.getElementById('p-badges').innerHTML = BADGES.map(b => `
+    <span class="p-badge${earned.has(b.id)?' earned':''}" id="badge-${b.id}">${b.label}</span>`).join('');
+}
+
+function checkBadges() {
+  BADGES.forEach(b => {
+    if (!earned.has(b.id) && b.condition(qScore, qList.length)) {
+      earned.add(b.id);
+      const el = document.getElementById('badge-' + b.id);
+      if (el) el.classList.add('earned');
+    }
+  });
+}
+
+function renderQuestion() {
+  if (qIdx >= qList.length) {
+    const pct = Math.round(qScore / qList.length * 100);
+    document.getElementById('q-question').textContent =
+      pct === 100 ? '🏆 ¡Perfecto! You got every answer right!' :
+      pct >= 70   ? '🌟 ¡Muy bien! Great work!' :
+                    '💪 ¡Sigue practicando! Keep practising!';
+    document.getElementById('q-options').innerHTML = `<button class="quiz-opt" style="grid-column:span 2" onclick="initQuiz()">🔄 Play Again</button>`;
+    document.getElementById('q-feedback').style.display = 'none';
+    document.getElementById('q-next').style.display = 'none';
+    return;
+  }
+  const q = qList[qIdx];
+  document.getElementById('q-progress-text').textContent = `Question ${qIdx+1} of ${qList.length}`;
+  document.getElementById('q-bar-fill').style.width = (qIdx / qList.length * 100) + '%';
+  document.getElementById('q-question').textContent = q.q;
+  document.getElementById('q-options').innerHTML = q.opts.sort(() => Math.random()-.5).map(o => `
+    <button class="quiz-opt" onclick="answerQ('${o.replace(/'/g,"\\'")}', this)">
+      ${o}
+    </button>`).join('');
+  const fb = document.getElementById('q-feedback');
+  fb.textContent = ''; fb.className = 'quiz-feedback';
+  document.getElementById('q-next').style.display = 'none';
+}
+
+function answerQ(choice, btn) {
+  const q = qList[qIdx];
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  const correct = choice === q.a;
+  if (correct) {
+    btn.classList.add('correct');
+    qScore++; qStreak++;
+    if (qStreak > qBest) qBest = qStreak;
+    setFeedback('¡Correcto! 🌟 Well done!', 'good');
+  } else {
+    btn.classList.add('wrong');
+    qStreak = 0;
+    document.querySelectorAll('.quiz-opt').forEach(b => {
+      if (b.textContent.trim() === q.a) b.classList.add('correct');
+    });
+    setFeedback('The answer was: ' + q.a, 'bad');
+  }
+  document.getElementById('q-score').textContent = qScore;
+  document.getElementById('q-total').textContent = qIdx + 1;
+  document.getElementById('q-stars').textContent = '⭐'.repeat(Math.min(qScore, 5));
+  document.getElementById('q-streak').textContent = qStreak > 1 ? '🔥 ' + qStreak + ' streak' : '';
+  document.getElementById('q-best').textContent   = qBest > 1   ? '🏅 Best: ' + qBest : '';
+  checkBadges();
+  document.getElementById('q-next').style.display = 'inline-block';
+  qIdx++;
+}
+
+function setFeedback(msg, type) {
+  const fb = document.getElementById('q-feedback');
+  fb.textContent = msg;
+  fb.className = 'quiz-feedback show ' + type;
+}
+
+function nextQuestion() { renderQuestion(); }
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+renderGrid('greetings-grid', GREETINGS);
+renderGrid('introduce-grid', INTRODUCE);
+renderNumbers();
+renderColours();
+renderDays();
+renderFamily();
+renderSounds();
+buildRecordPhrases();
+initQuiz();
+</script>
+</body>
+</html>
