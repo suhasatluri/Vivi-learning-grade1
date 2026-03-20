@@ -64,28 +64,29 @@ body{font-family:'Fredoka One',cursive;background:#040d04;
 
 /* ── QUESTION PANEL ── */
 #qpanel{
-  width:100%;padding:6px 10px 4px;
+  width:100%;padding:5px 10px 4px;
   background:rgba(0,0,0,.85);border-top:3px solid #1a6a1a;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
   flex-shrink:0;transition:background .25s;
 }
 #qpanel.flash-green{background:rgba(0,180,0,.28)}
 #qpanel.flash-red  {background:rgba(220,0,0,.28)}
-#q-label{font-size:clamp(.82rem,3.2vw,1.05rem);color:#90ee90;text-align:center;line-height:1.2}
-#q-eq{font-size:clamp(1.65rem,6.5vw,2.8rem);color:#fff;letter-spacing:4px;text-align:center;
+#q-label{font-size:clamp(.78rem,3vw,1rem);color:#90ee90;text-align:center;line-height:1.2}
+#q-eq{font-size:clamp(1.5rem,6vw,2.5rem);color:#fff;letter-spacing:4px;text-align:center;
   text-shadow:0 2px 12px rgba(0,0,0,.7);line-height:1.1}
 
-/* ── INPUT ROW: answer display left, numpad right ── */
+/* ── INPUT AREA: answer display above numpad ── */
 #inp-row{
-  display:flex;gap:8px;align-items:stretch;
-  width:100%;max-width:440px;
+  display:flex;flex-direction:column;gap:5px;
+  width:100%;max-width:340px;align-items:stretch;
 }
 #ans-display{
-  min-width:clamp(64px,18vw,90px);
+  height:clamp(44px,11vw,58px);
   background:rgba(255,255,255,.07);border:3px solid #2a8a2a;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,6vw,2.5rem);
-  color:#fff;transition:border-color .18s,background .18s;flex-shrink:0;
+  font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,7vw,2.5rem);
+  color:#fff;transition:border-color .18s,background .18s;
+  letter-spacing:4px;
 }
 #ans-display.right{border-color:#00e676;background:rgba(0,230,118,.14)}
 #ans-display.wrong{border-color:#ff4444;background:rgba(255,50,50,.14)}
@@ -190,7 +191,7 @@ body{font-family:'Fredoka One',cursive;background:#040d04;
     flex-direction:column;justify-content:center;border-top:none;border-left:3px solid #1a6a1a;
     padding:6px 8px;}
   #inp-row{flex-direction:column;align-items:stretch}
-  #ans-display{min-height:48px;font-size:clamp(1.4rem,4.5vw,2rem)}
+  #ans-display{min-height:44px;font-size:clamp(1.4rem,4.5vw,2rem)}
   #canopy{flex:0 0 16%}
   #undergrowth{flex:0 0 12%}
   .foot{display:none}
@@ -884,7 +885,10 @@ function buildFoliage(){
 // ═══════════════════════════════════════
 //  GAME STATE
 // ═══════════════════════════════════════
-const SCALE=68;  // pixels per 1 step unit — +1 feels close, +5 feels far
+// Responsive scale: phone≈32, tablet≈52, desktop≈68
+// Ensures the next stone is always visible on screen regardless of jump size
+function calcScale(){ return Math.round(Math.max(28, Math.min(68, window.innerWidth / 10))); }
+let SCALE=calcScale();
 let path=[], qIdx=0, pos=0, lives=3, wrongs=0, busy=false;
 let ansDigits='';  // numpad answer state
 
@@ -910,6 +914,7 @@ function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.r
 
 function startGame(){
   path=generatePath(); qIdx=0; pos=0; lives=3; wrongs=0; busy=false; ansDigits='';
+  SCALE=calcScale();
   particles=[]; ripples=[]; viewOffset=0; targetViewOffset=0;
   EA.state='idle'; EA.idleT=0; EA.onDone=null;
   CA.state='none';
@@ -1067,7 +1072,11 @@ function handleWin(){ sndTreasure(); document.getElementById('jump-count').textC
 })();
 
 let resizeT;
-window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{ if(document.getElementById('game-screen').classList.contains('active')){ initCanvas(); buildFoliage(); } if(document.getElementById('start-screen').classList.contains('active')) initStartFireflies(); },120); });
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{
+  SCALE=calcScale();
+  if(document.getElementById('game-screen').classList.contains('active')){ initCanvas(); buildFoliage(); scrollTrack(true); }
+  if(document.getElementById('start-screen').classList.contains('active')) initStartFireflies();
+},120); });
 
 window.addEventListener('load',()=>setTimeout(initStartFireflies,80));
 </script>
