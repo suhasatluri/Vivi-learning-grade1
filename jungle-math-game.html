@@ -62,58 +62,63 @@ body{font-family:'Fredoka One',cursive;background:#040d04;
   100%{opacity:0;transform:translateX(-50%) scale(.9) translateY(-85px)}
 }
 
-/* ── QUESTION PANEL ── */
+/* ── QUESTION PANEL — always fits, never overflows ── */
 #qpanel{
-  width:100%;padding:5px 10px 4px;
+  width:100%;
+  /* Take up at most 52% of the viewport height — jungle gets the rest */
+  max-height:52dvh;
+  padding:4px 10px 3px;
   background:rgba(0,0,0,.85);border-top:3px solid #1a6a1a;
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  flex-shrink:0;transition:background .25s;
+  flex-shrink:0;transition:background .25s;overflow:hidden;
 }
 #qpanel.flash-green{background:rgba(0,180,0,.28)}
 #qpanel.flash-red  {background:rgba(220,0,0,.28)}
-#q-label{font-size:clamp(.78rem,3vw,1rem);color:#90ee90;text-align:center;line-height:1.2}
-#q-eq{font-size:clamp(1.5rem,6vw,2.5rem);color:#fff;letter-spacing:4px;text-align:center;
-  text-shadow:0 2px 12px rgba(0,0,0,.7);line-height:1.1}
+#q-label{font-size:clamp(.72rem,2.5vw,.95rem);color:#90ee90;text-align:center;line-height:1.2;flex-shrink:0}
+#q-eq{font-size:clamp(1.3rem,5.5vw,2.4rem);color:#fff;letter-spacing:4px;text-align:center;
+  text-shadow:0 2px 12px rgba(0,0,0,.7);line-height:1.1;flex-shrink:0}
 
 /* ── INPUT AREA: answer display above numpad ── */
 #inp-row{
-  display:flex;flex-direction:column;gap:5px;
-  width:100%;max-width:340px;align-items:stretch;
+  display:flex;flex-direction:column;gap:4px;
+  width:100%;max-width:360px;
+  flex:1;min-height:0; /* fill remaining qpanel space */
 }
 #ans-display{
-  height:clamp(44px,11vw,58px);
-  background:rgba(255,255,255,.07);border:3px solid #2a8a2a;border-radius:12px;
+  height:clamp(38px,7dvh,56px);
+  flex-shrink:0;
+  background:rgba(255,255,255,.07);border:3px solid #2a8a2a;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,7vw,2.5rem);
-  color:#fff;transition:border-color .18s,background .18s;
-  letter-spacing:4px;
+  font-family:'Fredoka One',cursive;font-size:clamp(1.4rem,6vw,2.4rem);
+  color:#fff;transition:border-color .18s,background .18s;letter-spacing:4px;
 }
 #ans-display.right{border-color:#00e676;background:rgba(0,230,118,.14)}
 #ans-display.wrong{border-color:#ff4444;background:rgba(255,50,50,.14)}
 #ans-display:empty::before{content:'?';color:rgba(255,255,255,.28)}
 
-/* ── NUMPAD: 3-col standard calculator layout ── */
+/* ── NUMPAD: fills remaining space, no fixed min-height on rows ── */
 #numpad{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   grid-template-rows:repeat(4,1fr);
-  gap:5px;flex:1;
+  gap:4px;
+  flex:1;min-height:0; /* shrink to fit */
+  width:100%;
 }
 .np-btn{
-  min-height:clamp(40px,10.5vw,56px);
-  border:none;border-radius:10px;
+  /* No min-height — let the grid rows determine the height */
+  border:none;border-radius:8px;
   font-family:'Fredoka One',cursive;
-  font-size:clamp(1.1rem,4.2vw,1.6rem);
+  font-size:clamp(.95rem,3.5vw,1.5rem);
   cursor:pointer;
   background:linear-gradient(160deg,#2a5a2a,#1a3a1a);
   color:#b8e8b8;
-  box-shadow:0 3px 0 #0a1a0a;
+  box-shadow:0 2px 0 #0a1a0a;
   user-select:none;
-  /* no webkit-tap so we control feedback ourselves */
 }
 .np-btn.active-press{
   transform:translateY(2px);
-  box-shadow:0 1px 0 #0a1a0a;
+  box-shadow:0 0 0 #0a1a0a;
   background:linear-gradient(160deg,#3a8a3a,#1a5a1a);
 }
 .np-btn.np-back{
@@ -122,10 +127,10 @@ body{font-family:'Fredoka One',cursive;background:#040d04;
 .np-btn.np-go{
   grid-column:span 2;
   background:linear-gradient(160deg,#4ac84a,#2a9a2a);
-  color:#fff;font-size:clamp(1rem,3.8vw,1.45rem);
-  box-shadow:0 3px 0 #1a6a1a;
+  color:#fff;font-size:clamp(.95rem,3.5vw,1.45rem);
+  box-shadow:0 2px 0 #1a6a1a;
 }
-.np-btn.np-go.active-press{box-shadow:0 1px 0 #1a6a1a}
+.np-btn.np-go.active-press{box-shadow:0 0 0 #1a6a1a}
 .np-btn.np-go:disabled{background:linear-gradient(160deg,#444,#333);
   box-shadow:none;color:#888;transform:none}
 
@@ -181,17 +186,21 @@ body{font-family:'Fredoka One',cursive;background:#040d04;
   60%{transform:translate(6px,-2px)}75%{transform:translate(-3px,1px)}90%{transform:translate(3px,-1px)}}
 .shaking{animation:screenShake .45s ease-out}
 
-/* ── LANDSCAPE: numpad sits beside the river, not below ── */
-@media (orientation:landscape) and (max-height:500px) {
+/* ── LANDSCAPE: numpad sits beside the river ── */
+@media (orientation:landscape) {
   #game-screen{flex-direction:row;flex-wrap:wrap}
   #hdr{order:0;flex:0 0 100%}
   #pb-wrap{order:1;flex:0 0 100%}
-  #jungle-scene{order:2;flex:1;height:calc(100dvh - 80px);min-height:0}
-  #qpanel{order:3;width:clamp(200px,38vw,260px);height:calc(100dvh - 80px);
-    flex-direction:column;justify-content:center;border-top:none;border-left:3px solid #1a6a1a;
-    padding:6px 8px;}
-  #inp-row{flex-direction:column;align-items:stretch}
-  #ans-display{min-height:44px;font-size:clamp(1.4rem,4.5vw,2rem)}
+  #jungle-scene{order:2;flex:1;height:calc(100dvh - 42px);min-height:0}
+  #qpanel{
+    order:3;
+    width:clamp(180px,35vw,280px);
+    height:calc(100dvh - 42px);
+    max-height:none; /* override portrait limit — height is fixed in landscape */
+    flex-direction:column;justify-content:center;
+    border-top:none;border-left:3px solid #1a6a1a;
+    padding:6px 8px;
+  }
   #canopy{flex:0 0 16%}
   #undergrowth{flex:0 0 12%}
   .foot{display:none}
