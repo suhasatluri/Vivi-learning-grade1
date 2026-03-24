@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🌟 Learning Adventures – Grade 1 Week 9 & 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:     #0f0e17;
+    --card:   #1a1830;
+    --blue:   #4a90e2;
+    --pink:   #e86dbd;
+    --orange: #f5a623;
+    --green:  #52c478;
+    --purple: #9b59b6;
+    --yellow: #f1c40f;
+    --teal:   #1abc9c;
+    --red:    #e74c3c;
+    --muted:  #8888aa;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Stars */
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .star { position: absolute; border-radius: 50%; background: white;
+    animation: twinkle var(--dur,3s) var(--del,0s) infinite alternate ease-in-out; }
+  @keyframes twinkle { from{opacity:.05} to{opacity:.5} }
+
+  #app { position: relative; z-index: 1; min-height: 100vh; }
+
+  /* Header */
+  #header {
+    text-align: center; padding: 24px 24px 10px;
+    position: sticky; top: 0;
+    background: rgba(15,14,23,0.93); backdrop-filter: blur(12px);
+    z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  #header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(24px,5.5vw,46px);
+    background: linear-gradient(120deg,var(--orange),var(--pink),var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  #header p { color: var(--muted); font-size: 13px; font-weight: 700; margin-top: 2px; }
+  #star-bar { color: var(--yellow); font-size: 17px; font-weight: 900; margin-top: 6px; }
+
+  /* Menu */
+  #menu {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 14px; padding: 24px 20px 40px;
+    max-width: 780px; margin: 0 auto;
+  }
+  @media(max-width:520px){ #menu { grid-template-columns: repeat(2,1fr); } }
+
+  .menu-card {
+    background: var(--card); border: 2px solid transparent;
+    border-radius: 22px; padding: 22px 10px; text-align: center;
+    cursor: pointer; transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-card:hover { transform: translateY(-6px) scale(1.04); }
+  .menu-card .mc-icon { font-size: 44px; display: block; margin-bottom: 8px; }
+  .menu-card .mc-title { font-family: 'Fredoka One', cursive; font-size: 18px; }
+  .menu-card .mc-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* Screen */
+  .screen { display: none; max-width: 640px; margin: 0 auto; padding: 16px 18px 60px; animation: fadeUp .35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Back */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08); border: none; color: white;
+    font-family: 'Nunito',sans-serif; font-size: 15px; font-weight: 800;
+    padding: 8px 16px; border-radius: 12px; cursor: pointer;
+    margin-bottom: 14px; transition: background .2s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.16); }
+
+  /* Game card */
+  .gcard {
+    background: var(--card); border: 2px solid rgba(255,255,255,0.06);
+    border-radius: 24px; padding: 22px 20px;
+  }
+  @media(min-width:600px){ .gcard { padding: 28px 28px; } }
+
+  /* Progress */
+  .prog-row { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); font-weight:800; margin-bottom:6px; }
+  .prog-bar  { background:rgba(255,255,255,0.08); border-radius:50px; height:9px; margin-bottom:18px; overflow:hidden; }
+  .prog-fill { height:100%; border-radius:50px; transition:width .4s ease; }
+
+  /* Question */
+  .q-text { font-size:clamp(17px,4vw,22px); font-weight:900; text-align:center; margin-bottom:16px; line-height:1.35; }
+  .q-sub  { font-size:13px; color:var(--muted); text-align:center; margin-top:-10px; margin-bottom:14px; }
+
+  /* Buttons */
+  .opts-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .opts-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+  .opts-4 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+
+  .opt-btn {
+    background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 16px; color: white;
+    font-family: 'Nunito',sans-serif; font-size: clamp(17px,4vw,24px); font-weight:900;
+    padding: 15px 8px; cursor: pointer;
+    transition: transform .15s, background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn:not(:disabled):hover { transform:scale(1.04); background:rgba(255,255,255,0.13); }
+  .opt-btn:disabled { cursor:default; }
+  .opt-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .opt-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
+  /* Feedback */
+  .feedback { text-align:center; font-size:17px; font-weight:900; min-height:26px; margin:6px 0 10px; }
+  .feedback.good { color:var(--green); }
+  .feedback.bad  { color:var(--red); }
+  .feedback.info { color:var(--yellow); }
+
+  /* Action buttons */
+  .action-btn {
+    display:block; margin:4px auto 0; border:none; color:white;
+    font-family:'Fredoka One',cursive; font-size:19px;
+    padding:12px 36px; border-radius:50px; cursor:pointer;
+    transition:transform .18s; box-shadow:0 4px 18px rgba(0,0,0,0.35);
+  }
+  .action-btn:hover { transform:scale(1.06); }
+  .action-btn.hidden { display:none !important; }
+  .btn-blue   { background:linear-gradient(135deg,var(--blue),#6a4fe8); }
+  .btn-orange { background:linear-gradient(135deg,var(--orange),#e8844a); color:#111; }
+  .btn-green  { background:linear-gradient(135deg,var(--green),#2ea85b); }
+  .btn-purple { background:linear-gradient(135deg,var(--purple),#6a2fa8); }
+  .btn-teal   { background:linear-gradient(135deg,var(--teal),#16a085); }
+  .btn-pink   { background:linear-gradient(135deg,var(--pink),#a83dbd); }
+
+  /* Sound pill */
+  .sound-pill {
+    display:inline-block; margin-top:6px;
+    font-family:'Fredoka One',cursive; font-size:30px;
+    padding:4px 24px; border-radius:50px; border:3px solid currentColor;
+  }
+
+  /* Symbol btns */
+  .sym-btn {
+    background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; color:white;
+    font-family:'Fredoka One',cursive; font-size:clamp(28px,8vw,44px);
+    padding:18px 8px; cursor:pointer;
+    transition:transform .15s, background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .sym-btn:not(:disabled):hover { transform:scale(1.08); background:rgba(255,255,255,0.15); }
+  .sym-btn:disabled { cursor:default; }
+  .sym-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .sym-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
+  /* Number display */
+  .num-display {
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    margin-bottom:18px; flex-wrap:wrap;
+  }
+  .num-box {
+    background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.18);
+    border-radius:20px; padding:14px 24px;
+    font-family:'Fredoka One',cursive; font-size:clamp(36px,10vw,56px);
+    min-width:90px; text-align:center;
+  }
+  .sym-gap {
+    font-family:'Fredoka One',cursive; font-size:40px;
+    color:var(--muted); min-width:50px; text-align:center;
+    transition:color .3s, transform .3s;
+  }
+  .sym-gap.revealed { color:var(--yellow); transform:scale(1.3); }
+
+  /* Odd/Even sort */
+  .oe-bucket {
+    min-height:68px; border-radius:18px; padding:10px 12px;
+    border:2px dashed rgba(255,255,255,0.18);
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:14px; transition:border-color .2s, background .2s;
+  }
+  .oe-bucket.droppable { border-color:rgba(255,255,255,0.5); background:rgba(255,255,255,0.04); cursor:pointer; }
+  .oe-bucket .ph { color:#555; font-size:13px; align-self:center; }
+  .oe-label { font-family:'Fredoka One',cursive; font-size:18px; margin-bottom:7px; }
+  .num-chip {
+    background:rgba(74,144,226,0.22); border:2px solid var(--blue);
+    border-radius:11px; padding:8px 14px;
+    font-size:20px; font-weight:900; cursor:pointer;
+    transition:transform .15s, background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .num-chip:hover { transform:scale(1.1); }
+  .num-chip.selected { background:rgba(245,166,35,0.3); border-color:var(--orange); }
+  .num-chip.placed-ok   { background:rgba(82,196,120,0.25); border-color:var(--green); cursor:default; pointer-events:none; }
+  .num-chip.placed-bad  { background:rgba(231,76,60,0.25);  border-color:var(--red);   cursor:default; pointer-events:none; }
+  .nums-pool { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:14px; }
+
+  /* Tally marks */
+  .tally-group {
+    display:inline-flex; align-items:center; gap:3px;
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.14);
+    border-radius:16px; padding:14px 18px; margin-bottom:16px;
+    flex-wrap:wrap; justify-content:center;
+  }
+  .tally-set { display:inline-flex; align-items:center; margin:0 4px; gap:2px; }
+  .t-stick {
+    display:inline-block; width:5px; height:34px;
+    background:#fff; border-radius:3px;
+  }
+  .t-cross {
+    display:inline-block; width:5px; height:34px;
+    background:var(--orange); border-radius:3px;
+    transform:rotate(15deg); margin-left:-18px; margin-right:8px;
+  }
+  .tally-num-opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+
+  /* Sentence Builder */
+  .sentence-display {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; padding:16px 18px; margin-bottom:16px;
+    font-size:clamp(16px,3.5vw,20px); font-weight:800; line-height:1.6;
+    min-height:64px; text-align:center; color:white;
+  }
+  .sentence-display .base { color:var(--muted); }
+  .sentence-display .added-word {
+    display:inline-block; background:rgba(82,196,120,0.25);
+    border:1px solid var(--green); border-radius:8px;
+    padding:1px 8px; margin:2px 3px;
+    color:var(--green); font-weight:900;
+    animation:popIn .25s ease;
+  }
+  @keyframes popIn { from{transform:scale(0.7);opacity:0} to{transform:scale(1);opacity:1} }
+
+  .word-category { margin-bottom:14px; }
+  .cat-label { font-size:12px; font-weight:900; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
+  .word-tiles { display:flex; flex-wrap:wrap; gap:8px; }
+  .word-tile {
+    background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.15);
+    border-radius:12px; padding:8px 14px;
+    font-size:16px; font-weight:800; cursor:pointer;
+    transition:transform .15s, background .15s, border-color .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .word-tile:hover { transform:scale(1.06); background:rgba(255,255,255,0.14); }
+  .word-tile.used { background:rgba(82,196,120,0.2); border-color:var(--green); color:var(--green); cursor:default; pointer-events:none; }
+  .word-tile.adj-tile:not(.used)  { border-color:var(--pink);   color:var(--pink); }
+  .word-tile.when-tile:not(.used) { border-color:var(--blue);   color:var(--blue); }
+  .word-tile.where-tile:not(.used){ border-color:var(--orange); color:var(--orange); }
+
+  .sb-requirements {
+    display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; justify-content:center;
+  }
+  .sb-req {
+    font-size:13px; font-weight:800; padding:5px 12px; border-radius:50px;
+    border:2px solid rgba(255,255,255,0.15); color:var(--muted);
+    transition:all .3s;
+  }
+  .sb-req.met { border-color:var(--green); color:var(--green); background:rgba(82,196,120,0.15); }
+
+  /* Complete */
+  #complete-screen {
+    display:none; text-align:center; padding:50px 24px;
+    max-width:520px; margin:0 auto;
+    animation:fadeUp .4s ease;
+  }
+  #complete-screen.active { display:block; }
+  .complete-emoji { font-size:90px; margin-bottom:14px; }
+  .complete-title { font-family:'Fredoka One',cursive; font-size:clamp(28px,6vw,42px); margin-bottom:8px; }
+  .complete-msg   { color:var(--muted); font-size:16px; margin-bottom:22px; }
+  .complete-badge {
+    display:inline-block;
+    background:linear-gradient(135deg,var(--orange),var(--pink));
+    padding:12px 36px; border-radius:50px;
+    font-family:'Fredoka One',cursive; font-size:30px;
+    color:white; margin-bottom:28px;
+    box-shadow:0 6px 28px rgba(245,166,35,0.38);
+  }
+
+  /* Confetti */
+  .conf-piece {
+    position:fixed; z-index:999; pointer-events:none; border-radius:3px;
+    animation:conf-fall var(--cd,1.4s) var(--cdd,0s) ease-in forwards;
+  }
+  @keyframes conf-fall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(105vh) rotate(780deg);opacity:0} }
+
+  .hidden { display:none !important; }
+  .tc { text-align:center; }
+
+  /* Footer */
+  #footer {
+    text-align:center; padding:32px 20px 28px;
+    border-top:1px solid rgba(255,255,255,0.06); margin-top:16px;
+  }
+  .footer-tagline {
+    font-family:'Fredoka One',cursive; font-size:15px;
+    background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .footer-sub { font-size:11px; color:var(--muted); margin-top:4px; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div id="bg-canvas"></div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <h1>🌟 Learning Adventures</h1>
+    <p>Grade 1 &nbsp;·&nbsp; Term 1 &nbsp;·&nbsp; Week 9 – 10</p>
+    <div id="star-bar">⭐ <span id="star-count">0</span> Stars Collected</div>
+  </div>
+
+  <!-- MENU -->
+  <div id="menu">
+    <div class="menu-card" onclick="startGame('ph')" style="border-color:rgba(74,144,226,0.4)">
+      <span class="mc-icon">🐘</span>
+      <div class="mc-title" style="color:#4a90e2">PH Sounds</div>
+      <div class="mc-sub">elephants &amp; dolphins</div>
+    </div>
+    <div class="menu-card" onclick="startGame('wh')" style="border-color:rgba(232,109,189,0.4)">
+      <span class="mc-icon">🐳</span>
+      <div class="mc-title" style="color:#e86dbd">WH Sounds</div>
+      <div class="mc-sub">where are the whales</div>
+    </div>
+    <div class="menu-card" onclick="startGame('symbols')" style="border-color:rgba(241,196,15,0.4)">
+      <span class="mc-icon">🔣</span>
+      <div class="mc-title" style="color:#f1c40f">Symbols</div>
+      <div class="mc-sub">&gt; &lt; = up to 120</div>
+    </div>
+    <div class="menu-card" onclick="startGame('oddeven')" style="border-color:rgba(82,196,120,0.4)">
+      <span class="mc-icon">🔢</span>
+      <div class="mc-title" style="color:#52c478">Odd or Even?</div>
+      <div class="mc-sub">Sort the numbers</div>
+    </div>
+    <div class="menu-card" onclick="startGame('tally')" style="border-color:rgba(155,89,182,0.4)">
+      <span class="mc-icon">🗂️</span>
+      <div class="mc-title" style="color:#9b59b6">Tally Marks</div>
+      <div class="mc-sub">Count &amp; match</div>
+    </div>
+    <div class="menu-card" onclick="startGame('sentence')" style="border-color:rgba(26,188,156,0.4)">
+      <span class="mc-icon">✍️</span>
+      <div class="mc-title" style="color:#1abc9c">Sentences</div>
+      <div class="mc-sub">Expand with adjectives</div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="screen" id="screen-ph">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="ph-card"></div>
+  </div>
+
+  <div class="screen" id="screen-wh">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="wh-card"></div>
+  </div>
+
+  <div class="screen" id="screen-symbols">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="symbols-card"></div>
+  </div>
+
+  <div class="screen" id="screen-oddeven">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="oddeven-card"></div>
+  </div>
+
+  <div class="screen" id="screen-tally">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="tally-card"></div>
+  </div>
+
+  <div class="screen" id="screen-sentence">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="sentence-card"></div>
+  </div>
+
+  <!-- COMPLETE -->
+  <div id="complete-screen">
+    <div class="complete-emoji" id="cmp-emoji">🎉</div>
+    <div class="complete-title" id="cmp-title">Amazing!</div>
+    <div class="complete-msg"   id="cmp-msg">You finished the game!</div>
+    <div class="complete-badge" id="cmp-badge">⭐ 5 / 8</div>
+    <br>
+    <button class="action-btn btn-blue" onclick="goHome()">🏠 More Games</button>
+  </div>
+
+</div><!-- /app -->
+
+<!-- FOOTER -->
+<div id="footer">
+  <div class="footer-tagline">✨ Helping little learners shine ✨</div>
+  <div class="footer-sub">Created with ❤️ by &nbsp;<strong style="-webkit-text-fill-color:white;color:white">Suhas Atluri</strong>&nbsp; · Grade 1 Learning Adventures · 2026</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STARFIELD
+// ══════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('bg-canvas');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div'), sz=Math.random()*2.5+1;
+    s.className='star';
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--del:${Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ══════════════════════════════════════════════
+//  GLOBALS
+// ══════════════════════════════════════════════
+let totalStars=0;
+function addStar(){ totalStars++; document.getElementById('star-count').textContent=totalStars; }
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('complete-screen').classList.remove('active');
+  document.getElementById('menu').classList.remove('hidden');
+}
+
+function startGame(name){
+  document.getElementById('menu').classList.add('hidden');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('complete-screen').classList.remove('active');
+  const inits={ph:initPH, wh:initWH, symbols:initSymbols, oddeven:initOddEven, tally:initTally, sentence:initSentence};
+  inits[name]();
+  document.getElementById('screen-'+name).classList.add('active');
+}
+
+function showComplete(emoji,title,score,total){
+  for(let i=0;i<score;i++) setTimeout(()=>addStar(),i*120);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cmp-emoji').textContent=emoji;
+  document.getElementById('cmp-title').textContent=title;
+  document.getElementById('cmp-msg').textContent='You scored '+score+' out of '+total+'!';
+  document.getElementById('cmp-badge').textContent='⭐ '+score+' / '+total;
+  document.getElementById('complete-screen').classList.add('active');
+  if(score>=Math.floor(total*0.6)) confetti();
+}
+
+function confetti(){
+  const cols=['#f5a623','#e86dbd','#4a90e2','#52c478','#f1c40f','#9b59b6','#1abc9c','#ffffff'];
+  for(let i=0;i<70;i++){
+    const d=document.createElement('div'); d.className='conf-piece';
+    const sz=6+Math.random()*8;
+    d.style.cssText=`width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-12px;--cd:${1.2+Math.random()*.8}s;--cdd:${Math.random()*1}s;border-radius:${Math.random()>.5?'50%':'3px'};`;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),3000);
+  }
+}
+
+function progHTML(cur,tot,color){
+  return `<div class="prog-row"><span>Question ${cur+1} of ${tot}</span><span id="gscore">Score: 0</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${(cur/tot)*100}%;background:linear-gradient(90deg,${color},#e86dbd)"></div></div>`;
+}
+
+function setScore(id,val){ const el=document.getElementById(id); if(el) el.textContent='Score: '+val; }
+function setFb(id,msg,cls){ const el=document.getElementById(id); if(!el)return; el.textContent=msg; el.className='feedback'+(cls?' '+cls:''); }
+function showEl(id){ const el=document.getElementById(id); if(el) el.classList.remove('hidden'); }
+
+// ══════════════════════════════════════════════
+//  GAME 1 – PH SOUNDS
+// ══════════════════════════════════════════════
+const PH_Q=[
+  {q:'Does 🐘 "elephant" have a PH sound?', ans:'Yes'},
+  {q:'Does 🐬 "dolphin" have a PH sound?',  ans:'Yes'},
+  {q:'Does 📷 "photo" have a PH sound?',    ans:'Yes'},
+  {q:'Does 🌳 "tree" have a PH sound?',     ans:'No'},
+  {q:'Does 📞 "phone" have a PH sound?',    ans:'Yes'},
+  {q:'Does 🍎 "apple" have a PH sound?',    ans:'No'},
+  {q:'Does 🏆 "trophy" have a PH sound?',   ans:'Yes'},
+  {q:'Does 🌊 "ocean" have a PH sound?',    ans:'No'},
+  {q:'Does 🧪 "alphabet" have a PH sound?', ans:'Yes'},
+  {q:'Does 🐠 "fish" have a PH sound?',     ans:'No'},
+];
+let phIdx=0, phScore=0;
+
+function initPH(){ phIdx=0; phScore=0; renderPH(); }
+
+function renderPH(){
+  const q=PH_Q[phIdx];
+  document.getElementById('ph-card').innerHTML=
+    progHTML(phIdx,PH_Q.length,'#4a90e2')+
+    `<div class="q-text">${q.q}</div>
+     <div class="tc" style="margin-bottom:16px">
+       <span class="sound-pill" style="color:#4a90e2;border-color:#4a90e2">PH</span>
+     </div>
+     <div class="opts-2" id="ph-opts">
+       <button class="opt-btn" onclick="ansPH('Yes',this)">✅ Yes</button>
+       <button class="opt-btn" onclick="ansPH('No',this)">❌ No</button>
+     </div>
+     <div class="feedback" id="ph-fb"></div>
+     <button class="action-btn btn-blue hidden" id="ph-next" onclick="nextPH()">Next ➜</button>`;
+  setScore('gscore',phScore);
+}
+
+function ansPH(choice,btn){
+  const q=PH_Q[phIdx];
+  document.querySelectorAll('#ph-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===q.ans){ btn.classList.add('correct'); phScore++; setFb('ph-fb','⭐ Correct! Great ear!','good'); }
+  else { btn.classList.add('wrong'); document.querySelectorAll('#ph-opts .opt-btn').forEach(b=>{ if(b.textContent.includes(q.ans)) b.classList.add('correct'); }); setFb('ph-fb','The answer was '+q.ans+'!','bad'); }
+  setScore('gscore',phScore);
+  showEl('ph-next');
+}
+
+function nextPH(){
+  phIdx++;
+  if(phIdx>=PH_Q.length) showComplete('🐘',phScore>=8?'PH Sound Star! 🌟':phScore>=5?'Great Listening! 😊':'Keep Practising! 💪',phScore,PH_Q.length);
+  else renderPH();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 2 – WH SOUNDS
+// ══════════════════════════════════════════════
+const WH_Q=[
+  {q:'Does 🐳 "whale" have a WH sound?',   ans:'Yes'},
+  {q:'Does ❓ "where" have a WH sound?',   ans:'Yes'},
+  {q:'Does 🌬️ "whisper" have a WH sound?', ans:'Yes'},
+  {q:'Does 🚗 "wheel" have a WH sound?',   ans:'Yes'},
+  {q:'Does 🍎 "apple" have a WH sound?',   ans:'No'},
+  {q:'Does 🌟 "while" have a WH sound?',   ans:'Yes'},
+  {q:'Does 🏠 "house" have a WH sound?',   ans:'No'},
+  {q:'Does 🌈 "white" have a WH sound?',   ans:'Yes'},
+  {q:'Does 🐶 "dog" have a WH sound?',     ans:'No'},
+  {q:'Does 🕐 "when" have a WH sound?',    ans:'Yes'},
+];
+let whIdx=0, whScore=0;
+
+function initWH(){ whIdx=0; whScore=0; renderWH(); }
+
+function renderWH(){
+  const q=WH_Q[whIdx];
+  document.getElementById('wh-card').innerHTML=
+    progHTML(whIdx,WH_Q.length,'#e86dbd')+
+    `<div class="q-text">${q.q}</div>
+     <div class="tc" style="margin-bottom:16px">
+       <span class="sound-pill" style="color:#e86dbd;border-color:#e86dbd">WH</span>
+     </div>
+     <div class="opts-2" id="wh-opts">
+       <button class="opt-btn" onclick="ansWH('Yes',this)">✅ Yes</button>
+       <button class="opt-btn" onclick="ansWH('No',this)">❌ No</button>
+     </div>
+     <div class="feedback" id="wh-fb"></div>
+     <button class="action-btn btn-pink hidden" id="wh-next" onclick="nextWH()">Next ➜</button>`;
+  setScore('gscore',whScore);
+}
+
+function ansWH(choice,btn){
+  const q=WH_Q[whIdx];
+  document.querySelectorAll('#wh-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===q.ans){ btn.classList.add('correct'); whScore++; setFb('wh-fb','⭐ Correct! Super work!','good'); }
+  else { btn.classList.add('wrong'); document.querySelectorAll('#wh-opts .opt-btn').forEach(b=>{ if(b.textContent.includes(q.ans)) b.classList.add('correct'); }); setFb('wh-fb','The answer was '+q.ans+'!','bad'); }
+  setScore('gscore',whScore);
+  showEl('wh-next');
+}
+
+function nextWH(){
+  whIdx++;
+  if(whIdx>=WH_Q.length) showComplete('🐳',whScore>=8?'WH Sound Wizard! 🌟':whScore>=5?'Great Listening! 😊':'Keep Practising! 💪',whScore,WH_Q.length);
+  else renderWH();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 3 – SYMBOLS  > < =
+// ══════════════════════════════════════════════
+const SYM_Q=[
+  {a:45,  b:72},
+  {a:100, b:99},
+  {a:58,  b:58},
+  {a:30,  b:87},
+  {a:115, b:115},
+  {a:73,  b:37},
+  {a:12,  b:120},
+  {a:99,  b:100},
+  {a:64,  b:46},
+  {a:88,  b:88},
+];
+let symIdx=0, symScore=0;
+
+function initSymbols(){ symIdx=0; symScore=0; renderSymbols(); }
+
+function renderSymbols(){
+  const q=SYM_Q[symIdx];
+  const ans=q.a>q.b?'>':q.a<q.b?'<':'=';
+  document.getElementById('symbols-card').innerHTML=
+    progHTML(symIdx,SYM_Q.length,'#f1c40f')+
+    `<div class="q-text">Pick the right symbol!</div>
+     <div class="num-display">
+       <div class="num-box">${q.a}</div>
+       <div class="sym-gap" id="sym-gap">?</div>
+       <div class="num-box">${q.b}</div>
+     </div>
+     <div class="opts-3" id="sym-opts">
+       <button class="sym-btn" onclick="ansSym('>',this,'${ans}')">&gt;</button>
+       <button class="sym-btn" onclick="ansSym('=',this,'${ans}')">=</button>
+       <button class="sym-btn" onclick="ansSym('<',this,'${ans}')">&lt;</button>
+     </div>
+     <div class="feedback" id="sym-fb"></div>
+     <button class="action-btn btn-orange hidden" id="sym-next" onclick="nextSym()">Next ➜</button>`;
+  setScore('gscore',symScore);
+}
+
+function ansSym(choice,btn,ans){
+  document.querySelectorAll('#sym-opts .sym-btn').forEach(b=>b.disabled=true);
+  const gap=document.getElementById('sym-gap');
+  if(choice===ans){
+    btn.classList.add('correct'); symScore++;
+    gap.textContent=ans; gap.classList.add('revealed');
+    setFb('sym-fb','⭐ Correct! Great comparing!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#sym-opts .sym-btn').forEach(b=>{ if(b.textContent.trim()===ans) b.classList.add('correct'); });
+    gap.textContent=ans; gap.classList.add('revealed');
+    setFb('sym-fb','The answer was "'+ans+'"!','bad');
+  }
+  setScore('gscore',symScore);
+  showEl('sym-next');
+}
+
+function nextSym(){
+  symIdx++;
+  if(symIdx>=SYM_Q.length) showComplete('🔣',symScore>=8?'Symbol Champion! 🌟':symScore>=6?'Great Comparing! 😊':'Keep Trying! 💪',symScore,SYM_Q.length);
+  else renderSymbols();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 4 – ODD OR EVEN
+// ══════════════════════════════════════════════
+const OE_ROUNDS=[
+  [4,7,12,9,20,15],
+  [3,8,11,16,5,22],
+  [6,13,18,7,24,1],
+  [10,17,2,19,14,3],
+];
+let oeRound=0, oeSelected=null, oeScore=0, oeEvenPlaced=0, oeOddPlaced=0;
+
+function initOddEven(){ oeRound=0; oeScore=0; oeSelected=null; renderOE(); }
+
+function renderOE(){
+  const nums=OE_ROUNDS[oeRound];
+  oeSelected=null; oeEvenPlaced=0; oeOddPlaced=0;
+  const even=nums.filter(n=>n%2===0).length;
+  const odd=nums.filter(n=>n%2!==0).length;
+  document.getElementById('oddeven-card').innerHTML=
+    progHTML(oeRound,OE_ROUNDS.length,'#52c478')+
+    `<p class="tc" style="color:var(--muted);font-weight:800;font-size:14px;margin-bottom:14px">Tap a number, then tap the right bucket!</p>
+     <div class="oe-label" style="color:#52c478">✅ EVEN &nbsp;<span id="oe-even-count" style="font-size:13px;color:var(--muted)">(0/${even})</span></div>
+     <div class="oe-bucket" id="oe-bucket-even" onclick="oeDropNum('even')">
+       <span class="ph" id="oe-ph-even">Even numbers go here (2, 4, 6…)</span>
+     </div>
+     <div class="oe-label" style="color:#e86dbd">🔵 ODD &nbsp;<span id="oe-odd-count" style="font-size:13px;color:var(--muted)">(0/${odd})</span></div>
+     <div class="oe-bucket" id="oe-bucket-odd" onclick="oeDropNum('odd')">
+       <span class="ph" id="oe-ph-odd">Odd numbers go here (1, 3, 5…)</span>
+     </div>
+     <div style="font-weight:800;font-size:14px;color:var(--muted);margin-bottom:10px">Choose a number:</div>
+     <div class="nums-pool" id="oe-pool"></div>
+     <div class="feedback" id="oe-fb"></div>
+     <button class="action-btn btn-green hidden" id="oe-next" onclick="nextOE()">Next Round ➜</button>`;
+  renderOEPool(nums);
+  setScore('gscore',oeScore);
+}
+
+function renderOEPool(nums){
+  const pool=document.getElementById('oe-pool');
+  pool.innerHTML='';
+  nums.forEach(n=>{
+    const chip=document.createElement('span');
+    chip.className='num-chip'; chip.textContent=n; chip.dataset.num=n;
+    chip.onclick=()=>oeSelectChip(chip,n);
+    pool.appendChild(chip);
+  });
+}
+
+function oeSelectChip(chip,n){
+  document.querySelectorAll('.num-chip').forEach(c=>c.classList.remove('selected'));
+  chip.classList.add('selected'); oeSelected=n;
+  setFb('oe-fb','Now tap the EVEN or ODD bucket!','info');
+  document.getElementById('oe-bucket-even').classList.add('droppable');
+  document.getElementById('oe-bucket-odd').classList.add('droppable');
+}
+
+function oeDropNum(bucket){
+  if(oeSelected===null){ setFb('oe-fb','Tap a number first!','bad'); return; }
+  document.getElementById('oe-bucket-even').classList.remove('droppable');
+  document.getElementById('oe-bucket-odd').classList.remove('droppable');
+  const isEven=oeSelected%2===0;
+  const correct=(bucket==='even'&&isEven)||(bucket==='odd'&&!isEven);
+
+  // Remove from pool
+  const chips=document.querySelectorAll('.num-chip');
+  let placedChip=null;
+  chips.forEach(c=>{ if(parseInt(c.dataset.num)===oeSelected&&c.classList.contains('selected')) placedChip=c; });
+  if(placedChip){
+    placedChip.classList.remove('selected');
+    placedChip.classList.add(correct?'placed-ok':'placed-bad');
+    placedChip.onclick=null;
+    // move to bucket
+    const ph=document.getElementById('oe-ph-'+bucket);
+    if(ph) ph.remove();
+    document.getElementById('oe-bucket-'+bucket).appendChild(placedChip);
+  }
+
+  if(correct){
+    oeScore++;
+    if(bucket==='even') oeEvenPlaced++;
+    else oeOddPlaced++;
+    setFb('oe-fb','✅ '+(isEven?'Even':'Odd')+' — well done!','good');
+  } else {
+    setFb('oe-fb','❌ '+oeSelected+' is '+(isEven?'even':'odd')+'!','bad');
+    // also move correct display
+    if(bucket==='even') oeEvenPlaced++;
+    else oeOddPlaced++;
+  }
+
+  // Update counts
+  const nums=OE_ROUNDS[oeRound];
+  const evenTotal=nums.filter(n=>n%2===0).length;
+  const oddTotal=nums.filter(n=>n%2!==0).length;
+  const currentEven=document.getElementById('oe-bucket-even').querySelectorAll('.num-chip').length;
+  const currentOdd=document.getElementById('oe-bucket-odd').querySelectorAll('.num-chip').length;
+  document.getElementById('oe-even-count').textContent='('+currentEven+'/'+evenTotal+')';
+  document.getElementById('oe-odd-count').textContent='('+currentOdd+'/'+oddTotal+')';
+
+  oeSelected=null;
+  setScore('gscore',oeScore);
+
+  // Check if all placed
+  const remaining=document.querySelectorAll('#oe-pool .num-chip:not(.placed-ok):not(.placed-bad)');
+  if(remaining.length===0) showEl('oe-next');
+}
+
+function nextOE(){
+  oeRound++;
+  if(oeRound>=OE_ROUNDS.length){
+    const total=OE_ROUNDS.reduce((s,r)=>s+r.length,0);
+    showComplete('🔢',oeScore>=total-2?'Odd & Even Expert! 🌟':oeScore>=Math.floor(total*0.6)?'Great Sorting! 😊':'Keep Practising! 💪',oeScore,total);
+  } else renderOE();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 5 – TALLY MARKS
+// ══════════════════════════════════════════════
+// type 'read': show tallies → pick number
+// type 'make': show number → pick correct tally count
+const TALLY_Q=[
+  {type:'read', tally:3,  opts:[2,3,4,5]},
+  {type:'read', tally:7,  opts:[5,6,7,8]},
+  {type:'read', tally:5,  opts:[4,5,6,7]},
+  {type:'read', tally:11, opts:[9,10,11,12]},
+  {type:'make', num:4,    opts:[3,4,5,6]},
+  {type:'read', tally:8,  opts:[6,7,8,9]},
+  {type:'make', num:6,    opts:[5,6,7,8]},
+  {type:'read', tally:13, opts:[11,12,13,14]},
+  {type:'make', num:9,    opts:[8,9,10,11]},
+  {type:'read', tally:15, opts:[13,14,15,16]},
+];
+let talIdx=0, talScore=0;
+
+function tallyHTML(n){
+  let html='<div class="tally-group">';
+  const full=Math.floor(n/5), rem=n%5;
+  for(let g=0;g<full;g++){
+    html+='<div class="tally-set">';
+    for(let i=0;i<4;i++) html+='<span class="t-stick"></span>';
+    html+='<span class="t-cross"></span>';
+    html+='</div>';
+  }
+  if(rem>0){
+    html+='<div class="tally-set">';
+    for(let i=0;i<rem;i++) html+='<span class="t-stick"></span>';
+    html+='</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
+function initTally(){ talIdx=0; talScore=0; renderTally(); }
+
+function renderTally(){
+  const q=TALLY_Q[talIdx];
+  let body=progHTML(talIdx,TALLY_Q.length,'#9b59b6');
+
+  if(q.type==='read'){
+    body+=`<div class="q-text">How many tally marks are there?</div>
+           <div class="tc">${tallyHTML(q.tally)}</div>
+           <div class="tally-num-opts" id="tal-opts">`;
+    shuffle(q.opts).forEach(o=>{ body+=`<button class="opt-btn" onclick="ansTally(${o},${q.tally},this)">${o}</button>`; });
+    body+=`</div>`;
+  } else {
+    body+=`<div class="q-text">Which shows <span style="color:var(--purple);font-size:1.3em">${q.num}</span> tally marks?</div>
+           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px" id="tal-opts">`;
+    const distractors=q.opts.filter(o=>o!==q.num);
+    const choices=shuffle(q.opts);
+    choices.forEach(o=>{
+      body+=`<button onclick="ansTally(${o},${q.num},this)" style="background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.14);border-radius:16px;padding:12px 6px;cursor:pointer;display:flex;justify-content:center;align-items:center;min-height:80px;transition:transform .15s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">${tallyHTML(o)}</button>`;
+    });
+    body+=`</div>`;
+  }
+
+  body+=`<div class="feedback" id="tal-fb"></div>
+         <button class="action-btn btn-purple hidden" id="tal-next" onclick="nextTally()">Next ➜</button>`;
+  document.getElementById('tally-card').innerHTML=body;
+  setScore('gscore',talScore);
+}
+
+function ansTally(choice,ans,btn){
+  document.querySelectorAll('#tal-opts button').forEach(b=>b.disabled=true);
+  if(choice===ans){
+    btn.classList.add('correct'); talScore++;
+    setFb('tal-fb','⭐ Correct! You can count tallies!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#tal-opts button').forEach(b=>{ if(parseInt(b.getAttribute('onclick').match(/ansTally\((\d+)/)[1])===ans) b.classList.add('correct'); });
+    setFb('tal-fb','The answer was '+ans+'!','bad');
+  }
+  setScore('gscore',talScore);
+  showEl('tal-next');
+}
+
+function nextTally(){
+  talIdx++;
+  if(talIdx>=TALLY_Q.length) showComplete('🗂️',talScore>=8?'Tally Champion! 🌟':talScore>=6?'Great Counting! 😊':'Keep Practising! 💪',talScore,TALLY_Q.length);
+  else renderTally();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 6 – SENTENCE BUILDER
+// ══════════════════════════════════════════════
+const SB_ROUNDS=[
+  {
+    base:'The dog runs.',
+    baseWords:['The','dog','runs.'],
+    adjectives:[{w:'big',emoji:'💪'},{w:'fast',emoji:'⚡'},{w:'fluffy',emoji:'🐶'},{w:'brown',emoji:'🟤'}],
+    when:[{w:'In the morning',emoji:'🌅'},{w:'At night',emoji:'🌙'},{w:'After school',emoji:'🎒'}],
+    where:[{w:'in the park',emoji:'🌳'},{w:'down the street',emoji:'🏠'},{w:'around the garden',emoji:'🌸'}],
+  },
+  {
+    base:'The girl jumps.',
+    baseWords:['The','girl','jumps.'],
+    adjectives:[{w:'tall',emoji:'📏'},{w:'happy',emoji:'😊'},{w:'little',emoji:'🤏'},{w:'brave',emoji:'🦁'}],
+    when:[{w:'Every day',emoji:'☀️'},{w:'On weekends',emoji:'🎉'},{w:'In summer',emoji:'🏖️'}],
+    where:[{w:'over the fence',emoji:'🏡'},{w:'at the playground',emoji:'🛝'},{w:'in the sand',emoji:'🏖️'}],
+  },
+  {
+    base:'The cat sleeps.',
+    baseWords:['The','cat','sleeps.'],
+    adjectives:[{w:'tiny',emoji:'🐱'},{w:'soft',emoji:'🫧'},{w:'lazy',emoji:'😴'},{w:'orange',emoji:'🟠'}],
+    when:[{w:'All afternoon',emoji:'☀️'},{w:'In winter',emoji:'❄️'},{w:'After lunch',emoji:'🍽️'}],
+    where:[{w:'on the sofa',emoji:'🛋️'},{w:'by the fire',emoji:'🔥'},{w:'under the blanket',emoji:'🛏️'}],
+  },
+  {
+    base:'The bird flies.',
+    baseWords:['The','bird','flies.'],
+    adjectives:[{w:'small',emoji:'🐦'},{w:'bright',emoji:'✨'},{w:'loud',emoji:'📢'},{w:'colourful',emoji:'🎨'}],
+    when:[{w:'Every morning',emoji:'🌄'},{w:'In spring',emoji:'🌼'},{w:'When it is warm',emoji:'☀️'}],
+    where:[{w:'above the trees',emoji:'🌲'},{w:'near the lake',emoji:'💧'},{w:'across the sky',emoji:'☁️'}],
+  },
+];
+
+let sbRound=0, sbScore=0;
+let sbChosenAdj=null, sbChosenWhen=null, sbChosenWhere=null;
+
+function initSentence(){ sbRound=0; sbScore=0; sbChosenAdj=null; sbChosenWhen=null; sbChosenWhere=null; renderSB(); }
+
+function renderSB(){
+  const r=SB_ROUNDS[sbRound];
+  sbChosenAdj=null; sbChosenWhen=null; sbChosenWhere=null;
+
+  let adjHTML='', whenHTML='', whereHTML='';
+  shuffle(r.adjectives).forEach(w=>{ adjHTML+=`<span class="word-tile adj-tile" data-word="${w.w}" data-type="adj" onclick="sbPick(this,'adj')">${w.emoji} ${w.w}</span>`; });
+  shuffle(r.when).forEach(w=>{       whenHTML+=`<span class="word-tile when-tile" data-word="${w.w}" data-type="when" onclick="sbPick(this,'when')">${w.emoji} ${w.w}</span>`; });
+  shuffle(r.where).forEach(w=>{      whereHTML+=`<span class="word-tile where-tile" data-word="${w.w}" data-type="where" onclick="sbPick(this,'where')">${w.emoji} ${w.w}</span>`; });
+
+  document.getElementById('sentence-card').innerHTML=
+    progHTML(sbRound,SB_ROUNDS.length,'#1abc9c')+
+    `<div class="q-text" style="margin-bottom:10px">Expand this sentence! 📝</div>
+     <div class="sentence-display" id="sb-display">
+       <span class="base">${r.base}</span>
+     </div>
+     <div class="sb-requirements">
+       <div class="sb-req" id="req-adj">🎨 Add an adjective</div>
+       <div class="sb-req" id="req-when">⏰ Add a WHEN</div>
+       <div class="sb-req" id="req-where">📍 Add a WHERE</div>
+     </div>
+     <div class="word-category">
+       <div class="cat-label" style="color:#e86dbd">🎨 Adjectives (describing words)</div>
+       <div class="word-tiles" id="adj-tiles">${adjHTML}</div>
+     </div>
+     <div class="word-category">
+       <div class="cat-label" style="color:#4a90e2">⏰ When?</div>
+       <div class="word-tiles" id="when-tiles">${whenHTML}</div>
+     </div>
+     <div class="word-category">
+       <div class="cat-label" style="color:#f5a623">📍 Where?</div>
+       <div class="word-tiles" id="where-tiles">${whereHTML}</div>
+     </div>
+     <div class="feedback" id="sb-fb"></div>
+     <button class="action-btn btn-teal hidden" id="sb-submit" onclick="submitSB()">✅ That's my sentence!</button>
+     <button class="action-btn btn-teal hidden" id="sb-next" onclick="nextSB()" style="margin-top:10px">Next ➜</button>`;
+  setScore('gscore',sbScore);
+}
+
+function sbPick(tile,type){
+  if(tile.classList.contains('used')) return;
+  const word=tile.dataset.word;
+
+  // Deselect previous in same category
+  const tileContainer={ adj:'adj-tiles', when:'when-tiles', where:'where-tiles' }[type];
+  document.querySelectorAll('#'+tileContainer+' .word-tile').forEach(t=>t.classList.remove('used'));
+
+  tile.classList.add('used');
+  if(type==='adj')   sbChosenAdj=word;
+  if(type==='when')  sbChosenWhen=word;
+  if(type==='where') sbChosenWhere=word;
+
+  // Update requirements
+  if(type==='adj')   document.getElementById('req-adj').classList.add('met');
+  if(type==='when')  document.getElementById('req-when').classList.add('met');
+  if(type==='where') document.getElementById('req-where').classList.add('met');
+
+  // Update live sentence display
+  updateSBDisplay();
+
+  // Show submit when all 3 chosen
+  if(sbChosenAdj && sbChosenWhen && sbChosenWhere) showEl('sb-submit');
+}
+
+function updateSBDisplay(){
+  const r=SB_ROUNDS[sbRound];
+  const noun=r.baseWords[1];
+  const verb=r.baseWords[2];
+  let parts=[];
+  if(sbChosenWhen)  parts.push(`<span class="added-word">${sbChosenWhen},</span>`);
+  parts.push('the');
+  if(sbChosenAdj)   parts.push(`<span class="added-word">${sbChosenAdj}</span>`);
+  parts.push(noun);
+  parts.push(verb.replace('.',''));
+  if(sbChosenWhere) parts.push(`<span class="added-word">${sbChosenWhere}.</span>`);
+  else parts[parts.length-1]+= '.';
+  document.getElementById('sb-display').innerHTML=parts.join(' ');
+}
+
+function submitSB(){
+  sbScore++;
+  document.getElementById('sb-submit').classList.add('hidden');
+  document.querySelectorAll('.word-tile').forEach(t=>t.onclick=null);
+  setFb('sb-fb','⭐ Amazing sentence! You\'re a writer! 📖','good');
+  setScore('gscore',sbScore);
+  showEl('sb-next');
+}
+
+function nextSB(){
+  sbRound++;
+  if(sbRound>=SB_ROUNDS.length) showComplete('✍️',sbScore>=4?'Super Writer! 🌟':sbScore>=2?'Great Sentences! 😊':'Good Try! 💪',sbScore,SB_ROUNDS.length);
+  else { sbChosenAdj=null; sbChosenWhen=null; sbChosenWhere=null; renderSB(); }
+}
+</script>
+</body>
+</html>
