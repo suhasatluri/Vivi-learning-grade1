@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>📚 Grammar Adventures – Grade 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:     #0f0e17;
+    --card:   #1a1830;
+    --blue:   #4a90e2;
+    --pink:   #e86dbd;
+    --orange: #f5a623;
+    --green:  #52c478;
+    --purple: #9b59b6;
+    --yellow: #f1c40f;
+    --teal:   #1abc9c;
+    --red:    #e74c3c;
+    --muted:  #8888aa;
+  }
+
+  html, body { min-height: 100%; background: var(--bg); color: #fff; font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+
+  /* ── Stars ── */
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .star { position: absolute; border-radius: 50%; background: white; animation: twinkle var(--dur,3s) var(--del,0s) infinite alternate ease-in-out; }
+  @keyframes twinkle { from{opacity:.05} to{opacity:.5} }
+
+  #app { position: relative; z-index: 1; min-height: 100vh; }
+
+  /* ── Header ── */
+  #header {
+    text-align: center; padding: 24px 24px 10px;
+    position: sticky; top: 0;
+    background: rgba(15,14,23,0.93); backdrop-filter: blur(12px);
+    z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  #header h1 {
+    font-family: 'Fredoka One', cursive; font-size: clamp(24px,5.5vw,46px);
+    background: linear-gradient(120deg,var(--orange),var(--pink),var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  #header p { color: var(--muted); font-size: 13px; font-weight: 700; margin-top: 2px; }
+  #star-bar { color: var(--yellow); font-size: 17px; font-weight: 900; margin-top: 6px; }
+
+  /* ── What is a noun? banner ── */
+  #noun-tip {
+    max-width: 640px; margin: 20px auto 0; padding: 0 18px;
+    display: block;
+  }
+  .tip-box {
+    background: linear-gradient(135deg, rgba(74,144,226,0.15), rgba(155,89,182,0.15));
+    border: 2px solid rgba(74,144,226,0.3);
+    border-radius: 20px; padding: 14px 20px; text-align: center;
+  }
+  .tip-box .tip-title { font-family:'Fredoka One',cursive; font-size: 16px; color: var(--blue); margin-bottom: 4px; }
+  .tip-box p { font-size: 14px; color: #ccc; line-height: 1.5; }
+  .tip-box .examples { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .tip-box .ex-pill {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px; padding: 3px 12px; font-size: 13px; font-weight: 800;
+  }
+
+  /* ── Menu ── */
+  #menu {
+    display: grid; grid-template-columns: repeat(2,1fr);
+    gap: 14px; padding: 20px 20px 40px;
+    max-width: 640px; margin: 0 auto;
+  }
+
+  .menu-card {
+    background: var(--card); border: 2px solid transparent;
+    border-radius: 22px; padding: 26px 14px; text-align: center;
+    cursor: pointer; transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-card:hover { transform: translateY(-6px) scale(1.04); }
+  .menu-card .mc-icon { font-size: 48px; display: block; margin-bottom: 10px; }
+  .menu-card .mc-title { font-family: 'Fredoka One', cursive; font-size: 20px; }
+  .menu-card .mc-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Screen ── */
+  .screen { display: none; max-width: 640px; margin: 0 auto; padding: 16px 18px 60px; animation: fadeUp .35s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── Back ── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08); border: none; color: white;
+    font-family: 'Nunito',sans-serif; font-size: 15px; font-weight: 800;
+    padding: 8px 16px; border-radius: 12px; cursor: pointer;
+    margin-bottom: 14px; transition: background .2s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── Game card ── */
+  .gcard { background: var(--card); border: 2px solid rgba(255,255,255,0.06); border-radius: 24px; padding: 22px 20px; }
+  @media(min-width:600px){ .gcard { padding: 28px 28px; } }
+
+  /* ── Progress ── */
+  .prog-row { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); font-weight:800; margin-bottom:6px; }
+  .prog-bar  { background:rgba(255,255,255,0.08); border-radius:50px; height:9px; margin-bottom:18px; overflow:hidden; }
+  .prog-fill { height:100%; border-radius:50px; transition:width .4s ease; }
+
+  /* ── Question ── */
+  .q-text { font-size:clamp(17px,4vw,23px); font-weight:900; text-align:center; margin-bottom:18px; line-height:1.35; }
+  .q-sub  { font-size:13px; color:var(--muted); text-align:center; margin-top:-12px; margin-bottom:16px; }
+
+  /* ── The BIG word display (Noun Spotter) ── */
+  .word-spotlight {
+    text-align: center; margin-bottom: 22px;
+  }
+  .word-spotlight .big-word {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(44px, 12vw, 72px);
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    display: block; line-height: 1.1;
+  }
+  .word-spotlight .word-type-hint {
+    font-size: 13px; color: var(--muted); font-weight: 700; margin-top: 4px;
+  }
+
+  /* ── Yes/No opts ── */
+  .opts-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+
+  .opt-btn {
+    background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 16px; color: white;
+    font-family: 'Nunito',sans-serif; font-size: clamp(18px,4vw,24px); font-weight:900;
+    padding: 16px 8px; cursor: pointer;
+    transition: transform .15s, background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opt-btn:not(:disabled):hover { transform:scale(1.04); background:rgba(255,255,255,0.13); }
+  .opt-btn:disabled { cursor:default; }
+  .opt-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .opt-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
+  /* ── Feedback ── */
+  .feedback { text-align:center; font-size:17px; font-weight:900; min-height:26px; margin:6px 0 10px; }
+  .feedback.good { color:var(--green); }
+  .feedback.bad  { color:var(--red); }
+
+  /* ── Explanation chip (appears after wrong) ── */
+  .explain-chip {
+    display: inline-block;
+    background: rgba(74,144,226,0.18); border: 1px solid rgba(74,144,226,0.4);
+    border-radius: 50px; padding: 4px 16px;
+    font-size: 13px; font-weight: 800; color: var(--blue);
+    margin-top: -4px; margin-bottom: 8px;
+  }
+
+  /* ── Action btns ── */
+  .action-btn {
+    display:block; margin:4px auto 0; border:none; color:white;
+    font-family:'Fredoka One',cursive; font-size:19px;
+    padding:12px 36px; border-radius:50px; cursor:pointer;
+    transition:transform .18s; box-shadow:0 4px 18px rgba(0,0,0,0.35);
+  }
+  .action-btn:hover { transform:scale(1.06); }
+  .action-btn.hidden { display:none !important; }
+  .btn-blue   { background:linear-gradient(135deg,var(--blue),#6a4fe8); }
+  .btn-orange { background:linear-gradient(135deg,var(--orange),#e8844a); color:#111; }
+  .btn-green  { background:linear-gradient(135deg,var(--green),#2ea85b); }
+  .btn-purple { background:linear-gradient(135deg,var(--purple),#6a2fa8); }
+
+  /* ── Fill the Sentence ── */
+  .sentence-frame {
+    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.14);
+    border-radius: 20px; padding: 18px 20px; margin-bottom: 18px;
+    font-size: clamp(17px,4vw,22px); font-weight: 800;
+    text-align: center; line-height: 1.7; color: white;
+  }
+  .blank {
+    display: inline-block;
+    min-width: 120px; border-bottom: 3px solid var(--orange);
+    padding: 0 8px; color: var(--orange);
+    font-family: 'Fredoka One', cursive; font-size: 1em;
+    transition: all .3s;
+  }
+  .blank.filled { border-bottom-color: var(--green); color: var(--green); }
+  .blank.wrong  { border-bottom-color: var(--red);   color: var(--red); animation: shake .4s ease; }
+
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+  .noun-choices { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:14px; }
+  .noun-choice {
+    background: rgba(155,89,182,0.18); border: 2px solid rgba(155,89,182,0.45);
+    border-radius: 14px; padding: 10px 20px;
+    font-size: clamp(17px,4vw,22px); font-weight: 900; cursor: pointer; color: white;
+    transition: transform .15s, background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .noun-choice:not(:disabled):hover { transform:scale(1.07); background:rgba(155,89,182,0.35); }
+  .noun-choice:disabled { cursor:default; }
+  .noun-choice.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .noun-choice.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
+  /* ── Score strip ── */
+  .score-strip {
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px;
+  }
+  .score-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.2);
+    transition: all .3s;
+  }
+  .score-dot.hit  { background: var(--green); border-color: var(--green); }
+  .score-dot.miss { background: var(--red);   border-color: var(--red); }
+
+  /* ── Complete ── */
+  #complete-screen {
+    display:none; text-align:center; padding:50px 24px;
+    max-width:520px; margin:0 auto; animation:fadeUp .4s ease;
+  }
+  #complete-screen.active { display:block; }
+  .complete-emoji  { font-size:90px; margin-bottom:14px; }
+  .complete-title  { font-family:'Fredoka One',cursive; font-size:clamp(28px,6vw,42px); margin-bottom:8px; }
+  .complete-msg    { color:var(--muted); font-size:16px; margin-bottom:22px; }
+  .complete-badge  {
+    display:inline-block;
+    background:linear-gradient(135deg,var(--orange),var(--pink));
+    padding:12px 36px; border-radius:50px;
+    font-family:'Fredoka One',cursive; font-size:30px;
+    color:white; margin-bottom:28px;
+    box-shadow:0 6px 28px rgba(245,166,35,0.38);
+  }
+
+  /* ── Confetti ── */
+  .conf-piece {
+    position:fixed; z-index:999; pointer-events:none; border-radius:3px;
+    animation:conf-fall var(--cd,1.4s) var(--cdd,0s) ease-in forwards;
+  }
+  @keyframes conf-fall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(105vh) rotate(780deg);opacity:0} }
+
+  .hidden { display:none !important; }
+
+  /* ── Footer ── */
+  #footer {
+    text-align:center; padding:32px 20px 28px;
+    border-top:1px solid rgba(255,255,255,0.06); margin-top:16px;
+  }
+  .footer-tagline {
+    font-family:'Fredoka One',cursive; font-size:15px;
+    background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .footer-sub { font-size:11px; color:var(--muted); margin-top:4px; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div id="bg-canvas"></div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <h1>📚 Grammar Adventures</h1>
+    <p>Grade 1 &nbsp;·&nbsp; Term 1 &nbsp;·&nbsp; Nouns</p>
+    <div id="star-bar">⭐ <span id="star-count">0</span> Stars Collected</div>
+  </div>
+
+  <!-- NOUN TIP -->
+  <div id="noun-tip">
+    <div class="tip-box">
+      <div class="tip-title">💡 What is a noun?</div>
+      <p>A noun is a <strong>person, place, or thing</strong>. Nouns are naming words!</p>
+      <div class="examples">
+        <span class="ex-pill">🧑 person → Sarah</span>
+        <span class="ex-pill">🌳 place → garden</span>
+        <span class="ex-pill">🐱 thing → cat</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div id="menu">
+    <div class="menu-card" onclick="startGame('spotter')" style="border-color:rgba(241,196,15,0.45)">
+      <span class="mc-icon">🔍</span>
+      <div class="mc-title" style="color:var(--yellow)">Noun Spotter</div>
+      <div class="mc-sub">Is this word a noun?</div>
+    </div>
+    <div class="menu-card" onclick="startGame('fill')" style="border-color:rgba(155,89,182,0.45)">
+      <span class="mc-icon">✏️</span>
+      <div class="mc-title" style="color:var(--purple)">Fill the Gap</div>
+      <div class="mc-sub">Complete the sentence</div>
+    </div>
+  </div>
+
+  <!-- NOUN SPOTTER SCREEN -->
+  <div class="screen" id="screen-spotter">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="spotter-card"></div>
+  </div>
+
+  <!-- FILL THE GAP SCREEN -->
+  <div class="screen" id="screen-fill">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="fill-card"></div>
+  </div>
+
+  <!-- COMPLETE SCREEN -->
+  <div id="complete-screen">
+    <div class="complete-emoji" id="cmp-emoji">🎉</div>
+    <div class="complete-title" id="cmp-title">Brilliant!</div>
+    <div class="complete-msg"   id="cmp-msg">You finished the game!</div>
+    <div class="complete-badge" id="cmp-badge">⭐ 8 / 15</div>
+    <br>
+    <button class="action-btn btn-blue" onclick="goHome()">🏠 More Games</button>
+  </div>
+
+</div><!-- /app -->
+
+<!-- FOOTER -->
+<div id="footer">
+  <div class="footer-tagline">✨ Helping little learners shine ✨</div>
+  <div class="footer-sub">Created with ❤️ by &nbsp;<strong style="-webkit-text-fill-color:white;color:white">Suhas Atluri</strong>&nbsp; · Grade 1 Grammar Adventures · 2026</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  STARFIELD
+// ══════════════════════════════════════════
+(function(){
+  const c=document.getElementById('bg-canvas');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div'), sz=Math.random()*2.5+1;
+    s.className='star';
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--del:${Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ══════════════════════════════════════════
+//  GLOBALS
+// ══════════════════════════════════════════
+let totalStars=0;
+function addStar(){ totalStars++; document.getElementById('star-count').textContent=totalStars; }
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('complete-screen').classList.remove('active');
+  document.getElementById('menu').classList.remove('hidden');
+  document.getElementById('noun-tip').classList.remove('hidden');
+}
+
+function startGame(name){
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('noun-tip').classList.add('hidden');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('complete-screen').classList.remove('active');
+  if(name==='spotter') initSpotter();
+  if(name==='fill')    initFill();
+  document.getElementById('screen-'+name).classList.add('active');
+}
+
+function showComplete(emoji,title,score,total){
+  for(let i=0;i<score;i++) setTimeout(()=>addStar(),i*120);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cmp-emoji').textContent=emoji;
+  document.getElementById('cmp-title').textContent=title;
+  document.getElementById('cmp-msg').textContent='You scored '+score+' out of '+total+'!';
+  document.getElementById('cmp-badge').textContent='⭐ '+score+' / '+total;
+  document.getElementById('complete-screen').classList.add('active');
+  if(score>=Math.floor(total*0.6)) confetti();
+}
+
+function confetti(){
+  const cols=['#f5a623','#e86dbd','#4a90e2','#52c478','#f1c40f','#9b59b6','#ffffff'];
+  for(let i=0;i<70;i++){
+    const d=document.createElement('div'); d.className='conf-piece';
+    const sz=6+Math.random()*8;
+    d.style.cssText=`width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-12px;--cd:${1.2+Math.random()*.8}s;--cdd:${Math.random()*1}s;border-radius:${Math.random()>.5?'50%':'3px'};`;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),3000);
+  }
+}
+
+function progHTML(cur,tot,color){
+  return `<div class="prog-row"><span>Question ${cur+1} of ${tot}</span><span id="gscore">Score: 0</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${(cur/tot)*100}%;background:linear-gradient(90deg,${color},#e86dbd)"></div></div>`;
+}
+
+function setScore(val){ const el=document.getElementById('gscore'); if(el) el.textContent='Score: '+val; }
+function setFb(id,msg,cls){ const el=document.getElementById(id); if(!el)return; el.textContent=msg; el.className='feedback'+(cls?' '+cls:''); }
+function showEl(id){ const el=document.getElementById(id); if(el) el.classList.remove('hidden'); }
+
+// ══════════════════════════════════════════
+//  GAME 1 – NOUN SPOTTER
+//  All 15 words from the worksheet
+// ══════════════════════════════════════════
+const SPOTTER_WORDS = shuffle([
+  // NOUNS (10)
+  {word:'brother', isNoun:true,  emoji:'👦', why:'a person'},
+  {word:'chairs',  isNoun:true,  emoji:'🪑', why:'a thing'},
+  {word:'flowers', isNoun:true,  emoji:'🌸', why:'a thing'},
+  {word:'garden',  isNoun:true,  emoji:'🌳', why:'a place'},
+  {word:'piano',   isNoun:true,  emoji:'🎹', why:'a thing'},
+  {word:'Sarah',   isNoun:true,  emoji:'🧑', why:'a person'},
+  {word:'cat',     isNoun:true,  emoji:'🐱', why:'a thing'},
+  {word:'pizza',   isNoun:true,  emoji:'🍕', why:'a thing'},
+  {word:'friend',  isNoun:true,  emoji:'🤝', why:'a person'},
+  {word:'table',   isNoun:true,  emoji:'🪑', why:'a thing'},
+  // NOT NOUNS (5) — verbs & adjectives
+  {word:'run',     isNoun:false, emoji:'🏃', why:'an action word (verb)'},
+  {word:'sit',     isNoun:false, emoji:'🧘', why:'an action word (verb)'},
+  {word:'green',   isNoun:false, emoji:'🟢', why:'a colour word (adjective)'},
+  {word:'fast',    isNoun:false, emoji:'⚡', why:'a describing word (adjective)'},
+  {word:'sad',     isNoun:false, emoji:'😢', why:'a describing word (adjective)'},
+]);
+
+let spIdx=0, spScore=0;
+
+function initSpotter(){ spIdx=0; spScore=0; renderSpotter(); }
+
+function renderSpotter(){
+  const w=SPOTTER_WORDS[spIdx];
+  document.getElementById('spotter-card').innerHTML=
+    progHTML(spIdx, SPOTTER_WORDS.length, '#f1c40f')+
+    `<div class="q-text">Is this word a <span style="color:var(--yellow)">noun</span>?</div>
+     <div class="q-sub">A noun is a person, place, or thing</div>
+     <div class="score-strip" id="sp-dots"></div>
+     <div class="word-spotlight">
+       <span class="big-word">${w.word}</span>
+       <div class="word-type-hint">${w.emoji}</div>
+     </div>
+     <div class="opts-2" id="sp-opts">
+       <button class="opt-btn" onclick="ansSpotter(true,this)">✅ Yes, noun!</button>
+       <button class="opt-btn" onclick="ansSpotter(false,this)">❌ Not a noun</button>
+     </div>
+     <div class="feedback" id="sp-fb"></div>
+     <div id="sp-explain" class="hidden" style="text-align:center;margin-bottom:10px"></div>
+     <button class="action-btn btn-blue hidden" id="sp-next" onclick="nextSpotter()">Next ➜</button>`;
+  setScore(spScore);
+  renderDots('sp-dots', SPOTTER_WORDS.length, spIdx);
+}
+
+function renderDots(id, total, current){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.innerHTML='';
+  SPOTTER_WORDS.forEach((w,i)=>{
+    const d=document.createElement('div');
+    d.className='score-dot';
+    if(i<current){
+      // determine if they got it right — we track per-word results
+      d.classList.add(w._result==='hit'?'hit':'miss');
+    }
+    el.appendChild(d);
+  });
+}
+
+function ansSpotter(choice, btn){
+  const w=SPOTTER_WORDS[spIdx];
+  document.querySelectorAll('#sp-opts .opt-btn').forEach(b=>b.disabled=true);
+  const correct=(choice===w.isNoun);
+  w._result=correct?'hit':'miss';
+  if(correct){
+    btn.classList.add('correct'); spScore++;
+    const msg = w.isNoun
+      ? `⭐ Yes! "${w.word}" is a noun — ${w.why}!`
+      : `⭐ Correct! "${w.word}" is ${w.why} — not a noun!`;
+    setFb('sp-fb', msg, 'good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#sp-opts .opt-btn').forEach(b=>{
+      if((b.textContent.includes('Yes'))===w.isNoun) b.classList.add('correct');
+    });
+    const explain=document.getElementById('sp-explain');
+    explain.innerHTML=`<span class="explain-chip">"${w.word}" is ${w.why}</span>`;
+    explain.classList.remove('hidden');
+    const msg = w.isNoun
+      ? `"${w.word}" IS a noun — ${w.why}!`
+      : `"${w.word}" is NOT a noun — it's ${w.why}!`;
+    setFb('sp-fb', msg, 'bad');
+  }
+  setScore(spScore);
+  showEl('sp-next');
+}
+
+function nextSpotter(){
+  spIdx++;
+  if(spIdx>=SPOTTER_WORDS.length){
+    showComplete('🔍',
+      spScore>=13?'Noun Superstar! 🌟':spScore>=10?'Great Spotting! 😊':'Keep Learning! 💪',
+      spScore, SPOTTER_WORDS.length);
+  } else renderSpotter();
+}
+
+// ══════════════════════════════════════════
+//  GAME 2 – FILL THE GAP
+//  7 sentences from the worksheet
+// ══════════════════════════════════════════
+const FILL_Q = [
+  {
+    parts: ['This is my ', ' _1_ ', '. Her name is ', ' _2_ ', '.'],
+    blanks: [
+      { id:'_1_', ans:'cat',   label:'friend/cat/piano', distractors:['friend','piano'] },
+      { id:'_2_', ans:'Sarah', label:'table/Sarah/garden', distractors:['table','garden'] },
+    ],
+    hint: '🐱 Think about a pet with a name!'
+  },
+  {
+    parts: ['I like to eat ', ' _1_ ', '.'],
+    blanks: [
+      { id:'_1_', ans:'pizza', label:'pizza/chair/run', distractors:['chairs','garden'] },
+    ],
+    hint: '🍕 Yum, what is delicious to eat?'
+  },
+  {
+    parts: ['My pet is a ', ' _1_ ', '.'],
+    blanks: [
+      { id:'_1_', ans:'cat', label:'cat/sad/fast', distractors:['piano','friend'] },
+    ],
+    hint: '🐱 What animal might you have as a pet?'
+  },
+  {
+    parts: ['I play the ', ' _1_ ', '.'],
+    blanks: [
+      { id:'_1_', ans:'piano', label:'piano/flower/sit', distractors:['table','garden'] },
+    ],
+    hint: '🎹 What instrument can you play?'
+  },
+  {
+    parts: ['There are four ', ' _1_ ', ' at our ', ' _2_ ', '.'],
+    blanks: [
+      { id:'_1_', ans:'chairs', label:'chairs/run/green', distractors:['flowers','brother'] },
+      { id:'_2_', ans:'table',  label:'table/fast/sad',   distractors:['piano','garden'] },
+    ],
+    hint: '🪑 Think about seats around something!'
+  },
+  {
+    parts: ['The ', ' _1_ ', ' smell so good in the ', ' _2_ ', '.'],
+    blanks: [
+      { id:'_1_', ans:'flowers', label:'flowers/sit/fast', distractors:['chairs','cat'] },
+      { id:'_2_', ans:'garden',  label:'garden/sad/run',   distractors:['table','piano'] },
+    ],
+    hint: '🌸 What smells beautiful outside?'
+  },
+  {
+    parts: ['Your ', ' _1_ ', ' is tall!'],
+    blanks: [
+      { id:'_1_', ans:'friend', label:'friend/green/sit', distractors:['flowers','piano'] },
+    ],
+    hint: '🤝 Who is tall — someone you know?'
+  },
+];
+
+let fillIdx=0, fillScore=0;
+let fillState={}; // tracks filled blanks per question
+
+function initFill(){ fillIdx=0; fillScore=0; fillState={}; renderFill(); }
+
+function renderFill(){
+  const q=FILL_Q[fillIdx];
+  // initialise blank state
+  fillState={};
+  q.blanks.forEach(b=>{ fillState[b.id]={answered:false,correct:false}; });
+
+  document.getElementById('fill-card').innerHTML=
+    progHTML(fillIdx, FILL_Q.length, '#9b59b6')+
+    `<div class="q-text">Fill the gap with the right <span style="color:var(--purple)">noun</span>!</div>
+     <div class="sentence-frame" id="fill-sentence">${buildSentenceHTML(q)}</div>
+     <div class="q-sub">${q.hint}</div>
+     <div id="fill-blanks-area"></div>
+     <div class="feedback" id="fill-fb"></div>
+     <button class="action-btn btn-purple hidden" id="fill-next" onclick="nextFill()">Next ➜</button>`;
+  setScore(fillScore);
+  renderChoiceGroups(q);
+}
+
+function buildSentenceHTML(q){
+  let html='';
+  q.parts.forEach(p=>{
+    if(p.startsWith(' _') && p.endsWith('_ ')){
+      const id=p.trim();
+      html+=`<span class="blank" id="blank-${id}">_______</span>`;
+    } else {
+      html+=p;
+    }
+  });
+  return html;
+}
+
+function renderChoiceGroups(q){
+  const area=document.getElementById('fill-blanks-area');
+  area.innerHTML='';
+  q.blanks.forEach(b=>{
+    const group=document.createElement('div');
+    group.style.marginBottom='14px';
+    if(q.blanks.length>1){
+      const lbl=document.createElement('div');
+      lbl.style.cssText='font-size:12px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;';
+      lbl.textContent='Blank '+(q.blanks.indexOf(b)+1);
+      group.appendChild(lbl);
+    }
+    const row=document.createElement('div');
+    row.className='noun-choices'; row.id='choices-'+b.id;
+    const opts=shuffle([b.ans,...b.distractors]);
+    opts.forEach(o=>{
+      const btn=document.createElement('button');
+      btn.className='noun-choice'; btn.textContent=o;
+      btn.dataset.blank=b.id; btn.dataset.ans=b.ans;
+      btn.onclick=()=>answerBlank(b.id, o, btn, b.ans);
+      row.appendChild(btn);
+    });
+    group.appendChild(row);
+    area.appendChild(group);
+  });
+}
+
+function answerBlank(blankId, choice, btn, ans){
+  if(fillState[blankId].answered) return;
+  fillState[blankId].answered=true;
+
+  // Disable all choices for this blank
+  document.querySelectorAll(`[data-blank="${blankId}"]`).forEach(b=>b.disabled=true);
+
+  const blankEl=document.getElementById('blank-'+blankId);
+  if(choice===ans){
+    fillState[blankId].correct=true;
+    btn.classList.add('correct');
+    blankEl.textContent=choice;
+    blankEl.classList.add('filled');
+    setFb('fill-fb','⭐ "'+choice+'" is correct!','good');
+  } else {
+    btn.classList.add('wrong');
+    // show correct answer
+    document.querySelectorAll(`[data-blank="${blankId}"]`).forEach(b=>{ if(b.textContent===ans) b.classList.add('correct'); });
+    blankEl.textContent=ans;
+    blankEl.classList.add('wrong');
+    setTimeout(()=>{ blankEl.classList.remove('wrong'); blankEl.classList.add('filled'); }, 600);
+    setFb('fill-fb','The answer was "'+ans+'"!','bad');
+  }
+
+  // check if all blanks answered
+  const q=FILL_Q[fillIdx];
+  const allDone=q.blanks.every(b=>fillState[b.id].answered);
+  if(allDone){
+    const allCorrect=q.blanks.every(b=>fillState[b.id].correct);
+    if(allCorrect) fillScore++;
+    setScore(fillScore);
+    showEl('fill-next');
+  }
+}
+
+function nextFill(){
+  fillIdx++;
+  if(fillIdx>=FILL_Q.length){
+    showComplete('✏️',
+      fillScore>=6?'Sentence Star! 🌟':fillScore>=4?'Great Work! 😊':'Keep Practising! 💪',
+      fillScore, FILL_Q.length);
+  } else renderFill();
+}
+</script>
+</body>
+</html>
