@@ -6,90 +6,106 @@
 <title>🎨 Make It With Shapes! – Grade 1</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
-  :root{--bg:#0f0e17;--card:#1a1830;--blue:#4a90e2;--pink:#e86dbd;--orange:#f5a623;--green:#52c478;--purple:#9b59b6;--yellow:#f1c40f;--teal:#1abc9c;--red:#e74c3c;--muted:#8888aa}
-  html,body{height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-serif;overflow:hidden;touch-action:none}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
+:root{--bg:#0f0e17;--card:#1a1830;--blue:#4a90e2;--pink:#e86dbd;--orange:#f5a623;--green:#52c478;--purple:#9b59b6;--yellow:#f1c40f;--teal:#1abc9c;--red:#e74c3c;--muted:#8888aa}
+html,body{height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-serif;overflow:hidden;touch-action:none}
 
-  #bg-stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-  .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) var(--dl,0s) infinite alternate}
-  @keyframes twinkle{from{opacity:.04}to{opacity:.45}}
+#bg-stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) var(--dl,0s) infinite alternate}
+@keyframes twinkle{from{opacity:.04}to{opacity:.45}}
 
-  #app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column}
+#app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column}
 
-  /* Header */
-  #header{flex-shrink:0;padding:10px 14px 8px;background:rgba(15,14,23,0.96);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:8px}
-  #header h1{font-family:'Fredoka One',cursive;font-size:clamp(16px,4.5vw,24px);background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
-  #star-bar{font-size:13px;font-weight:900;color:var(--yellow);white-space:nowrap;flex-shrink:0}
+/* Header */
+#header{flex-shrink:0;padding:10px 14px 8px;background:rgba(15,14,23,0.96);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:8px}
+#header h1{font-family:'Fredoka One',cursive;font-size:clamp(16px,4.5vw,24px);background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#star-bar{font-size:13px;font-weight:900;color:var(--yellow);white-space:nowrap;flex-shrink:0}
+#hdr-btns{display:none;gap:5px;align-items:center}
 
-  /* Phase 1 – card pick */
-  #phase-pick{flex:1;overflow-y:auto;padding:12px 12px 20px;display:flex;flex-direction:column;align-items:center;gap:10px}
-  #phase-pick h2{font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,28px);background:linear-gradient(120deg,var(--orange),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center}
-  #phase-pick p{color:var(--muted);font-size:13px;font-weight:800;text-align:center}
-  .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:540px}
-  @media(min-width:460px){.card-grid{grid-template-columns:repeat(3,1fr)}}
-  .ch-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent}
-  .ch-card:hover{transform:scale(1.06)}
-  .ch-card img{width:100%;height:80px;object-fit:cover;display:block}
-  .ch-card-foot{padding:6px 6px 7px;text-align:center;font-family:'Fredoka One',cursive;font-size:13px}
-  .ch-card.done{border-color:var(--green)}
+/* Shared scroll area */
+.phase{flex:1;overflow-y:auto;padding:12px 12px 36px;display:none;flex-direction:column;align-items:center;gap:10px}
+.phase.show{display:flex}
 
-  /* Phase 2 – studio */
-  #phase-studio{flex:1;display:none;flex-direction:column;overflow:hidden}
-  #studio-body{flex:1;display:flex;gap:7px;padding:7px 9px;min-height:0;overflow:hidden}
+.phase-title{font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,28px);background:linear-gradient(120deg,var(--orange),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center}
+.phase-sub{color:var(--muted);font-size:13px;font-weight:800;text-align:center}
 
-  /* Reference panel */
-  .side-panel{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
-  .side-label{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);text-align:center;flex-shrink:0}
-  #ref-img-box{flex:1;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}
-  #ref-img{width:100%;height:100%;object-fit:contain}
+/* ── Phase 1: Home ── */
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:500px}
+@media(min-width:520px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
+.cat-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent}
+.cat-card:hover{transform:scale(1.06)}
+.cat-emoji{font-size:38px;line-height:1.2}
+.cat-name{font-family:'Fredoka One',cursive;font-size:15px;margin-top:4px}
+.cat-count{font-size:11px;font-weight:800;color:var(--muted);margin-top:2px}
 
-  /* Canvas */
-  #canvas-box{flex:1;display:flex;align-items:stretch}
-  #canvas-area{flex:1;position:relative;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.18);touch-action:none}
-  #shapes-layer{position:absolute;inset:0;z-index:2}
+/* ── Phase 2: Category cards ── */
+.back-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:50px;color:white;font-family:'Fredoka One',cursive;font-size:13px;padding:5px 14px;cursor:pointer;align-self:flex-start;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.back-btn:hover{background:rgba(255,255,255,0.16)}
 
-  .placed-shape{position:absolute;transform:translate(-50%,-50%);cursor:grab;touch-action:none;transition:filter .1s}
-  .placed-shape.selected{filter:drop-shadow(0 0 7px rgba(241,196,15,0.95))}
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:540px}
+@media(min-width:460px){.card-grid{grid-template-columns:repeat(3,1fr)}}
+.ch-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;position:relative}
+.ch-card:hover{transform:scale(1.06)}
+.ch-card img{width:100%;height:90px;object-fit:cover;display:block;background:rgba(255,255,255,0.04)}
+.ch-card-foot{padding:6px 6px 7px;text-align:center;font-family:'Fredoka One',cursive;font-size:13px}
+.ch-card.done{border-color:var(--green)}
+.ch-card .done-badge{position:absolute;top:4px;right:4px;font-size:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6))}
 
-  /* Toolbar */
-  #toolbar{flex-shrink:0;background:rgba(15,14,23,0.97);border-top:1px solid rgba(255,255,255,0.08);padding:5px 9px 9px;display:flex;flex-direction:column;gap:5px}
-  .t-row{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}
-  .t-row::-webkit-scrollbar{display:none}
-  .t-lbl{font-size:9px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;flex-shrink:0;min-width:32px}
+/* ── Phase 3: Studio ── */
+#phase-studio{flex:1;display:none;flex-direction:column;overflow:hidden}
+#phase-studio.show{display:flex}
+#studio-body{flex:1;display:flex;gap:7px;padding:7px 9px;min-height:0;overflow:hidden}
 
-  .col-chip{width:22px;height:22px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .15s,border-color .15s}
-  .col-chip:hover{transform:scale(1.2)}
-  .col-chip.active{border-color:#fff;transform:scale(1.25)}
+.side-panel{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.side-label{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);text-align:center;flex-shrink:0}
+#ref-img-box{flex:1;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}
+#ref-img{width:100%;height:100%;object-fit:contain}
 
-  .sz-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:3px 9px;cursor:pointer;flex-shrink:0;transition:all .15s}
-  .sz-btn.active{background:rgba(245,166,35,0.25);border-color:var(--orange);color:var(--orange)}
+#canvas-box{flex:1;display:flex;align-items:stretch}
+#canvas-area{flex:1;position:relative;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.18);touch-action:none}
+#shapes-layer{position:absolute;inset:0;z-index:2}
 
-  .shp-btn{background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:9px;padding:3px;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
-  .shp-btn:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
-  .shp-btn.active{border-color:var(--yellow);background:rgba(241,196,15,0.18)}
+.placed-shape{position:absolute;transform:translate(-50%,-50%);cursor:grab;touch-action:none;transition:filter .1s}
+.placed-shape.selected{filter:drop-shadow(0 0 7px rgba(241,196,15,0.95))}
 
-  .act-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:9px;color:white;font-family:'Fredoka One',cursive;font-size:12px;padding:4px 9px;cursor:pointer;flex-shrink:0;white-space:nowrap;transition:all .15s;-webkit-tap-highlight-color:transparent}
-  .act-btn:hover{background:rgba(255,255,255,0.16)}
-  .act-btn.red{border-color:rgba(231,76,60,0.45);color:var(--red)}
-  .act-btn.grn{background:linear-gradient(135deg,var(--green),#2ea85b);border-color:transparent}
+/* Toolbar */
+#toolbar{flex-shrink:0;background:rgba(15,14,23,0.97);border-top:1px solid rgba(255,255,255,0.08);padding:5px 9px 9px;display:flex;flex-direction:column;gap:5px}
+.t-row{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}
+.t-row::-webkit-scrollbar{display:none}
+.t-lbl{font-size:9px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;flex-shrink:0;min-width:32px}
 
-  /* Phase 3 – done */
-  #phase-done{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;gap:12px;overflow-y:auto}
-  .dn-title{font-family:'Fredoka One',cursive;font-size:clamp(22px,6vw,36px);background:linear-gradient(120deg,var(--orange),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .dn-sub{font-family:'Fredoka One',cursive;font-size:clamp(18px,4.5vw,26px);color:var(--yellow)}
-  .dn-compare{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .dn-panel{display:flex;flex-direction:column;align-items:center;gap:5px}
-  .dn-panel span{font-size:11px;font-weight:800;color:var(--muted)}
-  .dn-panel img,.dn-snap{width:min(42vw,190px);height:min(32vw,140px);border-radius:12px;object-fit:contain;box-shadow:0 4px 16px rgba(0,0,0,0.5);background:#fff}
-  .dn-stars{font-size:17px;font-weight:900;color:var(--yellow)}
-  .dn-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-  .dn-btn{border:none;color:white;font-family:'Fredoka One',cursive;font-size:16px;padding:10px 24px;border-radius:50px;cursor:pointer;transition:transform .18s;box-shadow:0 4px 14px rgba(0,0,0,0.3);-webkit-tap-highlight-color:transparent}
-  .dn-btn:hover{transform:scale(1.06)}
-  .btn-o{background:linear-gradient(135deg,var(--orange),var(--pink))}
-  .btn-b{background:linear-gradient(135deg,var(--blue),var(--purple))}
+.col-chip{width:22px;height:22px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .15s,border-color .15s}
+.col-chip:hover{transform:scale(1.2)}
+.col-chip.active{border-color:#fff;transform:scale(1.25)}
 
-  .cpcs{position:fixed;z-index:999;pointer-events:none;border-radius:3px;animation:cfall var(--cd,1.4s) var(--cdd,0s) ease-in forwards}
-  @keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(780deg);opacity:0}}
+.sz-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:3px 9px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.sz-btn.active{background:rgba(245,166,35,0.25);border-color:var(--orange);color:var(--orange)}
+
+.shp-btn{background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:9px;padding:3px;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.shp-btn:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
+.shp-btn.active{border-color:var(--yellow);background:rgba(241,196,15,0.18)}
+
+.act-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:9px;color:white;font-family:'Fredoka One',cursive;font-size:12px;padding:4px 9px;cursor:pointer;flex-shrink:0;white-space:nowrap;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.act-btn:hover{background:rgba(255,255,255,0.16)}
+.act-btn.red{border-color:rgba(231,76,60,0.45);color:var(--red)}
+.act-btn.grn{background:linear-gradient(135deg,var(--green),#2ea85b);border-color:transparent}
+
+/* ── Phase 4: Done ── */
+.dn-title{font-family:'Fredoka One',cursive;font-size:clamp(22px,6vw,36px);background:linear-gradient(120deg,var(--orange),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.dn-sub{font-family:'Fredoka One',cursive;font-size:clamp(18px,4.5vw,26px);color:var(--yellow)}
+.dn-compare{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.dn-panel{display:flex;flex-direction:column;align-items:center;gap:5px}
+.dn-panel span{font-size:11px;font-weight:800;color:var(--muted)}
+.dn-panel img,.dn-snap{width:min(42vw,190px);height:min(32vw,140px);border-radius:12px;object-fit:contain;box-shadow:0 4px 16px rgba(0,0,0,0.5);background:#fff}
+.dn-stars{font-size:17px;font-weight:900;color:var(--yellow)}
+.dn-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.dn-btn{border:none;color:white;font-family:'Fredoka One',cursive;font-size:16px;padding:10px 24px;border-radius:50px;cursor:pointer;transition:transform .18s;box-shadow:0 4px 14px rgba(0,0,0,0.3);-webkit-tap-highlight-color:transparent}
+.dn-btn:hover{transform:scale(1.06)}
+.btn-o{background:linear-gradient(135deg,var(--orange),var(--pink))}
+.btn-b{background:linear-gradient(135deg,var(--blue),var(--purple))}
+
+.cpcs{position:fixed;z-index:999;pointer-events:none;border-radius:3px;animation:cfall var(--cd,1.4s) var(--cdd,0s) ease-in forwards}
+@keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(780deg);opacity:0}}
 </style>
 </head>
 <body>
@@ -98,8 +114,8 @@
 
   <!-- HEADER -->
   <div id="header">
-    <h1>🎨 Make It With Shapes!</h1>
-    <div id="hdr-btns" style="display:none;gap:5px">
+    <h1 id="hdr-title">🎨 Make It With Shapes!</h1>
+    <div id="hdr-btns">
       <button class="act-btn" onclick="undoLast()">↩</button>
       <button class="act-btn" onclick="rotateSelected()">↻</button>
       <button class="act-btn red" onclick="clearAll()">🗑</button>
@@ -108,14 +124,22 @@
     <div id="star-bar">⭐ <span id="sc">0</span></div>
   </div>
 
-  <!-- PHASE 1 -->
-  <div id="phase-pick">
-    <h2>🃏 Pick your challenge!</h2>
-    <p>Look at the card, then build it with shapes!</p>
+  <!-- PHASE 1: Home / Categories -->
+  <div id="phase-home" class="phase show">
+    <div class="phase-title">🃏 Pick a category!</div>
+    <div class="phase-sub">Choose a theme, then build cards with shapes!</div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+
+  <!-- PHASE 2: Category cards -->
+  <div id="phase-category" class="phase">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="phase-title" id="cat-title"></div>
+    <div class="phase-sub" id="cat-sub"></div>
     <div class="card-grid" id="card-grid"></div>
   </div>
 
-  <!-- PHASE 2 -->
+  <!-- PHASE 3: Studio -->
   <div id="phase-studio">
     <div id="studio-body">
       <div class="side-panel">
@@ -132,14 +156,14 @@
       <div class="t-row">
         <span class="t-lbl">Size</span><div id="sz-strip"></div>
         <div style="flex:1"></div>
-        <button class="act-btn" onclick="goHome()" style="font-size:11px;padding:3px 8px">← Cards</button>
+        <button class="act-btn" onclick="goCategory()" style="font-size:11px;padding:3px 8px">← Cards</button>
       </div>
       <div class="t-row"><span class="t-lbl">Shape</span><div id="shp-palette"></div></div>
     </div>
   </div>
 
-  <!-- PHASE 3 -->
-  <div id="phase-done">
+  <!-- PHASE 4: Done -->
+  <div id="phase-done" class="phase">
     <div style="font-size:56px">🎉</div>
     <div class="dn-title">Amazing work!</div>
     <div class="dn-sub" id="dn-name"></div>
@@ -149,8 +173,8 @@
     </div>
     <div class="dn-stars">⭐ <span id="dn-count">0</span> shapes used!</div>
     <div class="dn-btns">
-      <button class="dn-btn btn-o" onclick="goHome()">🃏 Try Another!</button>
-      <button class="dn-btn btn-b" onclick="keepEditing()">✏️ Keep Going</button>
+      <button class="dn-btn btn-o" onclick="goCategory()">🃏 Try Another!</button>
+      <button class="dn-btn btn-b" onclick="keepEditing()">✏️ Keep Editing</button>
     </div>
   </div>
 
@@ -160,28 +184,24 @@
 <div style="position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:9px;color:rgba(255,255,255,0.18);padding:2px;pointer-events:none;z-index:999">✨ Helping little learners shine · Suhas Atluri · 2026</div>
 
 <script>
-// Stars
+// ── Stars background ──
 (function(){
   const c=document.getElementById('bg-stars');
   for(let i=0;i<55;i++){const s=document.createElement('div'),sz=Math.random()*2.5+1;s.className='star';s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`;c.appendChild(s);}
 })();
 
-// Card data
-const BASE='https://suhasatluri.github.io/Vivi-learning-grade1/assets/shape-cards/';
-const CARDS=[
-  {id:'ride',        label:'Ride',         emoji:'🚴',color:'#4a90e2'},
-  {id:'excavator',   label:'Excavator',    emoji:'🏗️',color:'#f5a623'},
-  {id:'ceiling-lamp',label:'Ceiling Lamp', emoji:'💡',color:'#f1c40f'},
-  {id:'motorcycle',  label:'Motorcycle',   emoji:'🏍️',color:'#e86dbd'},
-  {id:'fish',        label:'Fish',         emoji:'🐟',color:'#1abc9c'},
-  {id:'elephant',    label:'Elephant',     emoji:'🐘',color:'#4a90e2'},
-  {id:'crab',        label:'Crab',         emoji:'🦀',color:'#e74c3c'},
-  {id:'dragonfly',   label:'Dragonfly',    emoji:'🪲',color:'#52c478'},
-  {id:'hourglass',   label:'Hourglass',    emoji:'⏳',color:'#9b59b6'},
-  {id:'caterpillar', label:'Caterpillar',  emoji:'🐛',color:'#52c478'},
-];
+// ── Card data (loaded from cards.json) ──
+let ALL_CARDS = [];
+const CATEGORY_META = {
+  Animals:  {emoji:'🐾', color:'var(--green)'},
+  Vehicles: {emoji:'🚀', color:'var(--blue)'},
+  Nature:   {emoji:'🌿', color:'var(--teal)'},
+  Objects:  {emoji:'🎁', color:'var(--purple)'},
+  People:   {emoji:'👧', color:'var(--pink)'},
+  Food:     {emoji:'🍕', color:'var(--orange)'},
+};
 
-// Shapes
+// ── Shapes / palette ──
 const COLS=['#e74c3c','#f5a623','#f1c40f','#52c478','#4a90e2','#9b59b6','#e86dbd','#1abc9c','#2c3e50','#ffffff'];
 const SIZES={S:42,M:72,L:115};
 const SHAPES=['circle','semicircle','oval','triangle','square','rectangle','thin-rect','quarter'];
@@ -201,46 +221,139 @@ function mkSVG(type,color,sz){
   }
 }
 
-// State
-let totalStars=0,curColor=COLS[4],curSize='M',selPal=null;
-let placed=[],selId=null,nid=1,drag=null,hist=[];
-let done=new Set(),activeCard=null,cW=200,cH=200,lastMoved=false;
+// ── State ──
+let totalStars=0, curColor=COLS[4], curSize='M', selPal=null;
+let placed=[], selId=null, nid=1, drag=null, hist=[];
+let doneSet=new Set(), activeCard=null, activeCat=null, cW=200, cH=200, lastMoved=false;
 
-window.addEventListener('DOMContentLoaded',()=>{buildGrid();buildColors();buildSizes();buildPalette();sizeCanvas();});
+// Load persisted stars
+try{
+  const saved=JSON.parse(localStorage.getItem('shapeArtState')||'{}');
+  if(saved.stars) totalStars=saved.stars;
+  if(saved.done) doneSet=new Set(saved.done);
+}catch(e){}
+
+function saveState(){
+  try{localStorage.setItem('shapeArtState',JSON.stringify({stars:totalStars,done:[...doneSet]}));}catch(e){}
+}
+
+// ── Init ──
+window.addEventListener('DOMContentLoaded', async ()=>{
+  document.getElementById('sc').textContent=totalStars;
+  try{
+    const r=await fetch('assets/shape-cards/cards.json');
+    ALL_CARDS=await r.json();
+  }catch(e){
+    console.error('Failed to load cards.json',e);
+    ALL_CARDS=[];
+  }
+  buildHome();
+  buildColors();
+  buildSizes();
+  buildPalette();
+});
 window.addEventListener('resize',sizeCanvas);
+
+// ── Phase navigation ──
+function showPhase(name){
+  ['phase-home','phase-category','phase-studio','phase-done'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(id==='phase-studio'){el.style.display=name==='studio'?'flex':'none';}
+    else{el.classList.toggle('show',id==='phase-'+name);}
+  });
+  document.getElementById('hdr-btns').style.display=name==='studio'?'flex':'none';
+  if(name==='studio') setTimeout(sizeCanvas,40);
+}
+
+// ── PHASE 1: Home ──
+function buildHome(){
+  const g=document.getElementById('cat-grid');
+  g.innerHTML='';
+  const cats={};
+  ALL_CARDS.forEach(c=>{if(!cats[c.category])cats[c.category]=[];cats[c.category].push(c);});
+
+  Object.keys(CATEGORY_META).forEach(cat=>{
+    const cards=cats[cat]||[];
+    if(!cards.length) return;
+    const meta=CATEGORY_META[cat];
+    const doneCount=cards.filter(c=>doneSet.has(c.id)).length;
+    const d=document.createElement('div');
+    d.className='cat-card';
+    d.innerHTML=`
+      <div class="cat-emoji">${meta.emoji}</div>
+      <div class="cat-name">${cat}</div>
+      <div class="cat-count">${cards.length} cards${doneCount?' · '+doneCount+'✅':''}</div>`;
+    d.onclick=()=>openCategory(cat, cards);
+    g.appendChild(d);
+  });
+  document.getElementById('sc').textContent=totalStars;
+}
+
+function goHome(){
+  showPhase('home');
+  buildHome();
+}
+
+// ── PHASE 2: Category ──
+let currentCatCards=[];
+
+function openCategory(cat, cards){
+  activeCat=cat;
+  currentCatCards=cards;
+  const meta=CATEGORY_META[cat]||{emoji:'📦'};
+  document.getElementById('cat-title').textContent=meta.emoji+' '+cat;
+  const doneCount=cards.filter(c=>doneSet.has(c.id)).length;
+  document.getElementById('cat-sub').textContent=`${cards.length} challenge cards · ${doneCount} completed`;
+
+  const g=document.getElementById('card-grid');
+  g.innerHTML='';
+  cards.forEach(c=>{
+    const isDone=doneSet.has(c.id);
+    const d=document.createElement('div');
+    d.className='ch-card'+(isDone?' done':'');
+    d.innerHTML=`
+      <img src="${c.img}" alt="${c.label}" loading="lazy">
+      ${isDone?'<div class="done-badge">✅</div>':''}
+      <div class="ch-card-foot">${c.emoji} ${c.label}</div>`;
+    d.onclick=()=>startChallenge(c);
+    g.appendChild(d);
+  });
+  showPhase('category');
+}
+
+function goCategory(){
+  if(activeCat && currentCatCards.length){
+    openCategory(activeCat, currentCatCards);
+  } else {
+    goHome();
+  }
+}
+
+// ── PHASE 3: Studio ──
+function startChallenge(c){
+  activeCard=c;
+  placed=[];hist=[];selId=null;selPal=null;
+  document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('ref-img').src=c.img;
+  document.getElementById('ref-lbl').textContent='📸 '+c.label;
+  renderShapes();
+  showPhase('studio');
+  sizeCanvas();
+  const sl=document.getElementById('shapes-layer');
+  sl.onclick=onCvClick;
+  sl.ontouchend=null;
+  sl.addEventListener('touchend',onCvTouch,{passive:false});
+}
 
 function sizeCanvas(){
   const sb=document.getElementById('studio-body');
+  if(!sb) return;
   const r=sb.getBoundingClientRect();
   cW=Math.max(Math.floor((r.width-7-18)/2),90);
   cH=Math.max(r.height-26,90);
   const ca=document.getElementById('canvas-area');
   ca.style.width=cW+'px';ca.style.height=cH+'px';
   renderShapes();
-}
-
-function buildGrid(){
-  const g=document.getElementById('card-grid');g.innerHTML='';
-  CARDS.forEach(c=>{
-    const d=document.createElement('div');
-    d.className='ch-card'+(done.has(c.id)?' done':'');
-    d.style.borderColor=c.color+'55';
-    d.innerHTML=`<img src="${BASE}${c.id}.jpg" alt="${c.label}" loading="lazy" style="height:80px;object-fit:cover;width:100%" onerror="this.style.height='50px';this.style.background='${c.color}22'">
-      <div class="ch-card-foot">${c.emoji} ${c.label}${done.has(c.id)?' ✅':''}</div>`;
-    d.onclick=()=>startChallenge(c);
-    g.appendChild(d);
-  });
-}
-
-function startChallenge(c){
-  activeCard=c;placed=[];hist=[];selId=null;selPal=null;
-  document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('ref-img').src=BASE+c.id+'.jpg';
-  document.getElementById('ref-lbl').textContent='📸 '+c.label;
-  renderShapes();showPhase('studio');sizeCanvas();
-  const sl=document.getElementById('shapes-layer');
-  sl.onclick=onCvClick;
-  sl.addEventListener('touchend',onCvTouch,{passive:false});
 }
 
 function buildColors(){
@@ -274,6 +387,7 @@ function buildPalette(){
   });
 }
 
+// ── Canvas interactions ──
 function onCvClick(e){
   if(e.target.closest('.placed-shape'))return;
   if(!selPal)return;
@@ -318,6 +432,7 @@ function renderShapes(){
 
 function selShape(id){selId=id;selPal=null;document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));renderShapes();}
 
+// Touch drag
 function onShTS(e){
   e.preventDefault();e.stopPropagation();lastMoved=false;
   const id=parseInt(e.currentTarget.dataset.id);selShape(id);
@@ -331,6 +446,7 @@ function onShTM(e){
 }
 function onShTE(e){e.preventDefault();drag=null;}
 
+// Mouse drag
 function onShMD(e){
   e.preventDefault();e.stopPropagation();
   const id=parseInt(e.currentTarget.dataset.id);selShape(id);
@@ -341,17 +457,23 @@ function onShMD(e){
   document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
 }
 
+// Toolbar actions
 function rotateSelected(){const s=placed.find(p=>p.id===selId);if(s){s.rot=(s.rot||0)+45;renderShapes();}}
 function undoLast(){if(!hist.length)return;const l=hist.pop();if(l.action==='place'){placed=placed.filter(s=>s.id!==l.id);if(selId===l.id)selId=null;renderShapes();}}
 function clearAll(){if(!placed.length)return;if(!confirm('Clear all shapes?'))return;placed=[];hist=[];selId=null;renderShapes();}
 
+// ── PHASE 4: Done ──
 function finishArt(){
   if(!placed.length){alert('Add some shapes first! 🎨');return;}
-  done.add(activeCard.id);
+  doneSet.add(activeCard.id);
   totalStars+=placed.length;
   document.getElementById('sc').textContent=totalStars;
+  saveState();
+
   document.getElementById('dn-name').textContent=activeCard.emoji+' '+activeCard.label;
-  document.getElementById('dn-ref').src=BASE+activeCard.id+'.jpg';
+  document.getElementById('dn-ref').src=activeCard.img;
+
+  // Clone canvas snapshot
   const snap=document.getElementById('canvas-area').cloneNode(true);
   snap.style.position='relative';snap.style.zIndex='';snap.classList.add('dn-snap');
   const sw=document.getElementById('dn-snap');sw.innerHTML='';sw.appendChild(snap);
@@ -360,15 +482,6 @@ function finishArt(){
 }
 
 function keepEditing(){showPhase('studio');sizeCanvas();}
-function goHome(){showPhase('pick');buildGrid();}
-
-function showPhase(n){
-  document.getElementById('phase-pick').style.display  =n==='pick'  ?'flex':'none';
-  document.getElementById('phase-studio').style.display=n==='studio'?'flex':'none';
-  document.getElementById('phase-done').style.display  =n==='done'  ?'flex':'none';
-  document.getElementById('hdr-btns').style.display    =n==='studio'?'flex':'none';
-  if(n==='studio')setTimeout(sizeCanvas,40);
-}
 
 function confetti(){
   const cols=['#f5a623','#e86dbd','#4a90e2','#52c478','#f1c40f','#9b59b6','#fff'];
