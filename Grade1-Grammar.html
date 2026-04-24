@@ -346,6 +346,104 @@
     border:3px solid var(--orange); color:var(--orange);
   }
 
+
+  /* ── READING CORNER ── */
+  .section-divider {
+    text-align:center; margin:8px 0 4px;
+    font-size:11px; font-weight:900; color:var(--muted);
+    text-transform:uppercase; letter-spacing:2px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-divider::before,.section-divider::after {
+    content:''; flex:1; height:1px; background:rgba(255,255,255,0.1);
+  }
+
+  /* Story display */
+  .story-reading-box {
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.12);
+    border-radius:20px; padding:18px 18px; margin-bottom:16px;
+    font-size:clamp(15px,3.8vw,18px); font-weight:700; line-height:1.85;
+    color:#ddd;
+  }
+  .story-reading-box p { margin-bottom:10px; }
+  .story-reading-box p:last-child { margin-bottom:0; }
+  .story-title-bar {
+    font-family:'Fredoka One',cursive; font-size:22px; color:white;
+    margin-bottom:14px; text-align:center;
+    background:linear-gradient(135deg,var(--orange),var(--pink));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+
+  /* Comprehension */
+  .comp-q { font-size:clamp(17px,4vw,21px); font-weight:900; text-align:center; margin-bottom:16px; line-height:1.4; color:white; }
+  .comp-opts { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:14px; }
+  .comp-btn {
+    background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.12);
+    border-radius:16px; color:white; font-family:'Nunito',sans-serif;
+    font-size:clamp(16px,3.8vw,20px); font-weight:800; padding:14px 16px;
+    cursor:pointer; text-align:left; transition:transform .15s,background .15s;
+    -webkit-tap-highlight-color:transparent; display:flex; align-items:center; gap:12px;
+  }
+  .comp-btn:not(:disabled):hover { transform:scale(1.02); background:rgba(255,255,255,0.13); }
+  .comp-btn:disabled { cursor:default; }
+  .comp-btn .opt-letter { font-family:'Fredoka One',cursive; font-size:20px; color:var(--muted); min-width:24px; }
+  .comp-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .comp-btn.correct .opt-letter { color:var(--green); }
+  .comp-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
+  /* Sequencer */
+  .seq-instruction { font-size:13px; color:var(--muted); font-weight:800; text-align:center; margin-bottom:12px; }
+  .seq-order-row { display:flex; gap:10px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+  .seq-slot {
+    background:rgba(255,255,255,0.05); border:2px dashed rgba(255,255,255,0.2);
+    border-radius:14px; padding:8px 16px; font-family:'Fredoka One',cursive;
+    font-size:16px; color:var(--muted); min-width:80px; text-align:center;
+    transition:all .3s;
+  }
+  .seq-slot.filled { border-style:solid; border-color:var(--teal); color:var(--teal); background:rgba(26,188,156,0.12); }
+  .seq-cards { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+  .seq-card {
+    background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.14);
+    border-radius:16px; padding:14px 16px; cursor:pointer;
+    font-size:clamp(15px,3.5vw,18px); font-weight:800; color:white;
+    transition:transform .15s,background .15s,border-color .15s;
+    display:flex; align-items:center; gap:12px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .seq-card:not(.used):hover { transform:scale(1.02); background:rgba(255,255,255,0.13); }
+  .seq-card .seq-num {
+    font-family:'Fredoka One',cursive; font-size:22px;
+    min-width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.15); color:var(--muted);
+    flex-shrink:0; transition:all .3s;
+  }
+  .seq-card.used { cursor:default; border-color:var(--teal); }
+  .seq-card.used .seq-num { background:var(--teal); border-color:var(--teal); color:white; }
+  .seq-card.correct-end { border-color:var(--green); background:rgba(82,196,120,0.18); }
+  .seq-card.wrong-end   { border-color:var(--red);   background:rgba(231,76,60,0.18); }
+
+  /* Vocab Match */
+  .vocab-scene {
+    text-align:center; margin-bottom:18px;
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.12);
+    border-radius:20px; padding:16px;
+  }
+  .vocab-scene .v-emoji { font-size:clamp(52px,14vw,80px); display:block; margin-bottom:8px; }
+  .vocab-scene .v-clue  { font-size:14px; color:var(--muted); font-weight:800; line-height:1.4; }
+  .vocab-opts { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+  .vocab-btn {
+    background:rgba(255,255,255,0.07); border:2px solid rgba(155,89,182,0.35);
+    border-radius:14px; color:white; font-family:'Nunito',sans-serif;
+    font-size:clamp(15px,3.5vw,20px); font-weight:900; padding:12px 6px;
+    cursor:pointer; transition:transform .15s,background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .vocab-btn:not(:disabled):hover { transform:scale(1.05); background:rgba(155,89,182,0.25); }
+  .vocab-btn:disabled { cursor:default; }
+  .vocab-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .vocab-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
 </style>
 </head>
 <body>
@@ -395,6 +493,28 @@
       <div class="mc-title" style="color:var(--orange)">Phonics Decoder</div>
       <div class="mc-sub">Stage 7.1 sounds · Blends &amp; digraphs</div>
     </div>
+
+    <!-- READING CORNER -->
+    <div class="section-divider" style="grid-column:1/-1;margin-top:8px">📖 Reading Corner</div>
+
+    <div class="menu-card mc-full" onclick="startGame('readstory')" style="border-color:rgba(241,196,15,0.45)">
+      <span class="mc-icon">📖</span>
+      <div class="mc-title" style="color:var(--yellow)">The Missing Doll</div>
+      <div class="mc-sub">Read the story · Answer questions</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('sequencer')" style="border-color:rgba(26,188,156,0.45)">
+      <span class="mc-icon">🔢</span>
+      <div class="mc-title" style="color:var(--teal)">Story Sequencer</div>
+      <div class="mc-sub">What happened first?</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('vocabmatch')" style="border-color:rgba(155,89,182,0.45)">
+      <span class="mc-icon">🔤</span>
+      <div class="mc-title" style="color:var(--purple)">Vocab Match</div>
+      <div class="mc-sub">Match words to pictures</div>
+    </div>
+
   </div>
 
   <!-- NOUN SPOTTER SCREEN -->
@@ -467,6 +587,25 @@
     <div class="gcard" id="phonics-card"></div>
   </div>
 
+
+  <!-- READING: STORY + COMPREHENSION -->
+  <div class="screen" id="screen-readstory">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="readstory-card"></div>
+  </div>
+
+  <!-- SEQUENCER -->
+  <div class="screen" id="screen-sequencer">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="sequencer-card"></div>
+  </div>
+
+  <!-- VOCAB MATCH -->
+  <div class="screen" id="screen-vocabmatch">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="vocabmatch-card"></div>
+  </div>
+
   <!-- COMPLETE SCREEN -->
   <div id="complete-screen">
     <div class="complete-emoji" id="cmp-emoji">🎉</div>
@@ -533,7 +672,10 @@ function startGame(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('complete-screen').classList.remove('active');
   if(name==='spotter') initSpotter();
-  if(name==='phonics')  initPhonics();
+  if(name==='phonics')    initPhonics();
+  if(name==='readstory')  initReadStory();
+  if(name==='sequencer')  initSequencer();
+  if(name==='vocabmatch') initVocabMatch();
   if(name==='fill')    initFill();
   if(name==='story')   initStoryGame();
   document.getElementById('screen-'+name).classList.add('active');
@@ -1104,6 +1246,235 @@ function nextPhonics(){
   if(phIdx>=PH_WORDS.length)
     showComplete('🔤',phScore>=17?'Phonics Star! 🌟':phScore>=12?'Great Decoding! 😊':'Keep Practising! 💪',phScore,PH_WORDS.length);
   else renderPhonics();
+}
+
+
+// ══════════════════════════════════════════
+//  THE MISSING DOLL — STORY + COMPREHENSION
+// ══════════════════════════════════════════
+const STORY_TEXT = [
+  "Jane was very sad. She could not find her doll. Her mum said, <em>\"Look in your room. Maybe your doll is there.\"</em>",
+  "Jane looked in her room. It was a terrible mess. She started to clean her room.",
+  "She put all the books on the shelf. She put her blankets on her bed. She picked up her clothes off the floor.",
+  "<em>\"I found her!\"</em> Jane said. <em>\"My doll was hiding under my clothes. I think she was playing hide and seek.\"</em>",
+  "Jane put her doll in the dollhouse. Her room was clean, and now it was time to play. 🎉"
+];
+
+const COMP_Q = [
+  { q:'Jane lost her ___.',
+    opts:['a. pet','b. doll','c. truck'], ans:1 },
+  { q:'Jane found her doll under her ___.',
+    opts:['a. clothes','b. blanket','c. hat'], ans:0 },
+  { q:'At the <strong>start</strong> of the story, Jane's room was ___.',
+    opts:['a. clean','b. messy','c. green'], ans:1 },
+  { q:'At the <strong>end</strong> of the story, Jane's room was ___.',
+    opts:['a. clean','b. messy','c. wet'], ans:0 },
+];
+
+let rsPhase='story', rsQIdx=0, rsScore=0;
+
+function initReadStory(){rsPhase='story';rsQIdx=0;rsScore=0;renderReadStory();}
+
+function renderReadStory(){
+  const card=document.getElementById('readstory-card');
+  if(rsPhase==='story'){
+    let storyHTML=`<div class="story-title-bar">📖 The Missing Doll</div>
+    <div class="story-reading-box">`;
+    STORY_TEXT.forEach(p=>{storyHTML+=`<p>${p}</p>`;});
+    storyHTML+=`</div>
+    <p style="text-align:center;font-size:13px;color:var(--muted);font-weight:800;margin-bottom:14px">Read the story carefully, then answer the questions!</p>
+    <button class="action-btn btn-orange" onclick="rsPhase='quiz';rsQIdx=0;renderReadStory()">I've read it — Let's answer! ➜</button>`;
+    card.innerHTML=storyHTML;
+  } else {
+    const q=COMP_Q[rsQIdx];
+    let body=progHTML(rsQIdx,COMP_Q.length,'#f1c40f');
+    body+=`<div class="comp-q">${q.q}</div>
+    <div class="comp-opts" id="comp-opts">`;
+    const letters=['a','b','c'];
+    q.opts.forEach((opt,i)=>{
+      const text=opt.slice(3);
+      body+=`<button class="comp-btn" onclick="ansComp(${i},${q.ans},this)">
+        <span class="opt-letter">${letters[i]}.</span>${text}
+      </button>`;
+    });
+    body+=`</div><div class="feedback" id="comp-fb"></div>
+    <button class="action-btn btn-orange hidden" id="comp-next" onclick="nextComp()">Next ➜</button>`;
+    card.innerHTML=body;
+    setScore(rsScore);
+  }
+}
+
+function ansComp(choice,ans,btn){
+  document.querySelectorAll('#comp-opts .comp-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){
+    btn.classList.add('correct');rsScore++;
+    setFb('comp-fb','⭐ Correct! You read carefully!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#comp-opts .comp-btn')[ans].classList.add('correct');
+    setFb('comp-fb','Read again carefully — the answer is option '+'abc'[ans]+'!','bad');
+  }
+  setScore(rsScore);showEl('comp-next');
+}
+
+function nextComp(){
+  rsQIdx++;
+  if(rsQIdx>=COMP_Q.length)
+    showComplete('📖',rsScore>=4?'Reading Star! 🌟':rsScore>=3?'Great Reading! 😊':'Try Reading Again! 💪',rsScore,COMP_Q.length);
+  else renderReadStory();
+}
+
+// ══════════════════════════════════════════
+//  STORY SEQUENCER
+// ══════════════════════════════════════════
+const SEQ_EVENTS = [
+  {text:'Jane could not find her doll.',     emoji:'😢', correct:1},
+  {text:'Jane cleaned her room.',            emoji:'🧹', correct:2},
+  {text:'Jane found her doll!',              emoji:'🎉', correct:3},
+];
+
+let seqOrder=[], seqDone=false;
+
+function initSequencer(){
+  seqOrder=[];seqDone=false;
+  const shuffled=[...SEQ_EVENTS].sort(()=>Math.random()-0.5);
+  const card=document.getElementById('sequencer-card');
+  card.innerHTML=`
+    <div class="q-text">Put the events in order! 🔢</div>
+    <div class="seq-instruction">Tap each event to place it 1st, 2nd, then 3rd</div>
+    <div class="seq-order-row" id="seq-slots">
+      <div class="seq-slot" id="slot-1">1st</div>
+      <div class="seq-slot" id="slot-2">2nd</div>
+      <div class="seq-slot" id="slot-3">3rd</div>
+    </div>
+    <div class="seq-cards" id="seq-cards">
+      ${shuffled.map((e,i)=>`
+        <div class="seq-card" id="seqcard-${i}" data-idx="${i}" data-correct="${e.correct}" onclick="tapSeqCard(${i})">
+          <div class="seq-num" id="seqnum-${i}">?</div>
+          <div>${e.emoji} ${e.text}</div>
+        </div>`).join('')}
+    </div>
+    <div class="feedback" id="seq-fb"></div>
+    <button class="action-btn btn-teal hidden" id="seq-check" onclick="checkSeq()">✅ Check my order!</button>`;
+  // store shuffled reference
+  card._shuffled=shuffled;
+}
+
+function tapSeqCard(idx){
+  if(seqDone) return;
+  const card=document.querySelector(`#seqcard-${idx}`);
+  const numEl=document.getElementById(`seqnum-${idx}`);
+  // If already placed, remove
+  const existing=seqOrder.indexOf(idx);
+  if(existing>-1){
+    seqOrder.splice(existing,1);
+    numEl.textContent='?'; card.classList.remove('used');
+    updateSlots();
+    document.getElementById('seq-check').classList.add('hidden');
+    return;
+  }
+  if(seqOrder.length>=3) return;
+  seqOrder.push(idx);
+  const pos=seqOrder.length;
+  numEl.textContent=pos; card.classList.add('used');
+  updateSlots();
+  if(seqOrder.length===3) showEl('seq-check');
+}
+
+function updateSlots(){
+  ['1st','2nd','3rd'].forEach((label,i)=>{
+    const slot=document.getElementById('slot-'+(i+1));
+    const cardIdx=seqOrder[i];
+    if(cardIdx!==undefined){
+      const card=document.getElementById('sequencer-card');
+      const ev=card._shuffled[cardIdx];
+      slot.textContent=ev.emoji;
+      slot.classList.add('filled');
+    } else {
+      slot.textContent=label; slot.classList.remove('filled');
+    }
+  });
+}
+
+function checkSeq(){
+  seqDone=true;
+  document.getElementById('seq-check').classList.add('hidden');
+  const card=document.getElementById('sequencer-card');
+  let correct=0;
+  seqOrder.forEach((cardIdx,pos)=>{
+    const ev=card._shuffled[cardIdx];
+    const cardEl=document.getElementById('seqcard-'+cardIdx);
+    const expectedPos=ev.correct; // 1,2,3
+    if(expectedPos===pos+1){ cardEl.classList.add('correct-end'); correct++; }
+    else cardEl.classList.add('wrong-end');
+  });
+  if(correct===3){
+    setFb('seq-fb','⭐ Perfect! You got the order right!','good');
+    setTimeout(()=>showComplete('🔢','Sequencing Star! 🌟','You ordered the story perfectly!',3,3),1200);
+  } else {
+    setFb('seq-fb','Almost! The correct order is: 😢 → 🧹 → 🎉','bad');
+    setTimeout(()=>showComplete('🔢',correct>=2?'Good Try! 😊':'Try Again! 💪','Can you remember the order?',correct,3),1600);
+  }
+}
+
+// ══════════════════════════════════════════
+//  VOCAB MATCH
+// ══════════════════════════════════════════
+const VOCAB = shuffle([
+  {word:'shelf',   emoji:'📚', clue:'Books go here — up on the wall'},
+  {word:'clothes', emoji:'👕', clue:'Shirts, pants, socks — we wear these'},
+  {word:'blanket', emoji:'🛏️', clue:'Keeps you warm in bed at night'},
+  {word:'floor',   emoji:'🦶', clue:'We walk on this — it's down below'},
+  {word:'room',    emoji:'🚪', clue:'Jane cleaned her whole ___ '},
+  {word:'doll',    emoji:'🪆', clue:'Jane's favourite toy that went missing'},
+]);
+
+let vmIdx=0, vmScore=0;
+
+function initVocabMatch(){vmIdx=0;vmScore=0;renderVocab();}
+
+function renderVocab(){
+  const v=VOCAB[vmIdx];
+  // Build 3 options: correct + 2 random distractors
+  const others=VOCAB.filter((_,i)=>i!==vmIdx);
+  const distractors=shuffle(others).slice(0,2).map(o=>o.word);
+  const opts=shuffle([v.word,...distractors]);
+
+  const card=document.getElementById('vocabmatch-card');
+  let body=progHTML(vmIdx,VOCAB.length,'#9b59b6');
+  body+=`<div class="q-text">Match the word to the picture! 🔤</div>
+  <div class="vocab-scene">
+    <span class="v-emoji">${v.emoji}</span>
+    <div class="v-clue">${v.clue}</div>
+  </div>
+  <div class="vocab-opts" id="vm-opts">`;
+  opts.forEach(o=>{
+    body+=`<button class="vocab-btn" onclick="ansVocab('${o}','${v.word}',this)">${o}</button>`;
+  });
+  body+=`</div><div class="feedback" id="vm-fb"></div>
+  <button class="action-btn btn-purple hidden" id="vm-next" onclick="nextVocab()">Next ➜</button>`;
+  card.innerHTML=body;
+  setScore(vmScore);
+}
+
+function ansVocab(choice,ans,btn){
+  document.querySelectorAll('#vm-opts .vocab-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){
+    btn.classList.add('correct');vmScore++;
+    setFb('vm-fb','⭐ Correct! "'+ans+'" — great word knowledge!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#vm-opts .vocab-btn').forEach(b=>{if(b.textContent===ans)b.classList.add('correct');});
+    setFb('vm-fb','The word was "'+ans+'"!','bad');
+  }
+  setScore(vmScore);showEl('vm-next');
+}
+
+function nextVocab(){
+  vmIdx++;
+  if(vmIdx>=VOCAB.length)
+    showComplete('🔤',vmScore>=5?'Vocab Champion! 🌟':vmScore>=4?'Great Words! 😊':'Keep Practising! 💪',vmScore,VOCAB.length);
+  else renderVocab();
 }
 
 </script>
