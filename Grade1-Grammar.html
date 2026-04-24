@@ -323,6 +323,29 @@
   #footer { text-align:center; padding:32px 20px 28px; border-top:1px solid rgba(255,255,255,0.06); margin-top:16px; }
   .footer-tagline { font-family:'Fredoka One',cursive; font-size:15px; background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
   .footer-sub { font-size:11px; color:var(--muted); margin-top:4px; font-weight:700; }
+
+  /* ── PHONICS GAME ── */
+  .phonics-word {
+    text-align:center; margin-bottom:18px;
+  }
+  .phonics-word .pw-main {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(44px,12vw,70px);
+    color:white; display:block; line-height:1.1;
+  }
+  .phonics-word .pw-highlight {
+    color:var(--orange);
+  }
+  .phonics-word .pw-emoji {
+    font-size:40px; display:block; margin-top:4px;
+  }
+  .sound-pill-ph {
+    display:inline-block; margin-bottom:14px;
+    font-family:'Fredoka One',cursive; font-size:24px;
+    padding:4px 22px; border-radius:50px;
+    border:3px solid var(--orange); color:var(--orange);
+  }
+
 </style>
 </head>
 <body>
@@ -366,6 +389,11 @@
       <span class="mc-icon">📖</span>
       <div class="mc-title" style="color:var(--teal)">Story Spotter</div>
       <div class="mc-sub">Find nouns, adjectives &amp; verbs in a story!</div>
+    </div>
+  <div class="menu-card mc-full" onclick="startGame('phonics')" style="border-color:rgba(245,166,35,0.45)">
+      <span class="mc-icon">🔤</span>
+      <div class="mc-title" style="color:var(--orange)">Phonics Decoder</div>
+      <div class="mc-sub">Stage 7.1 sounds · Blends &amp; digraphs</div>
     </div>
   </div>
 
@@ -430,6 +458,13 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <!-- PHONICS SCREEN -->
+  <div class="screen" id="screen-phonics">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="phonics-card"></div>
   </div>
 
   <!-- COMPLETE SCREEN -->
@@ -498,6 +533,7 @@ function startGame(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('complete-screen').classList.remove('active');
   if(name==='spotter') initSpotter();
+  if(name==='phonics')  initPhonics();
   if(name==='fill')    initFill();
   if(name==='story')   initStoryGame();
   document.getElementById('screen-'+name).classList.add('active');
@@ -938,6 +974,138 @@ function backToStorySelect(){
   document.getElementById('story-reading').style.display='none';
   buildStorySelector();
 }
+
+// ══════════════════════════════════════════
+//  GAME 4 – PHONICS DECODER (Stage 7.1)
+//  Covers: blends bl/cl/fl/pl/sl/br/cr/dr/gr/tr
+//          digraphs ch/sh/wh/ph and vowel teams
+// ══════════════════════════════════════════
+const PH_WORDS = [
+  // Identify the blend/sound in the word
+  {word:'bl-ue',  display:'blue',   highlight:'bl', sound:'bl', emoji:'🔵', type:'blend',
+   q:'What sound does "blue" start with?', opts:['bl','cl','fl','sl'], ans:'bl'},
+  {word:'cl-ap',  display:'clap',   highlight:'cl', sound:'cl', emoji:'👏', type:'blend',
+   q:'What sound does "clap" start with?', opts:['bl','cl','pl','gl'], ans:'cl'},
+  {word:'fl-ag',  display:'flag',   highlight:'fl', sound:'fl', emoji:'🚩', type:'blend',
+   q:'What sound does "flag" start with?', opts:['fl','bl','cl','sl'], ans:'fl'},
+  {word:'pl-ay',  display:'play',   highlight:'pl', sound:'pl', emoji:'🎮', type:'blend',
+   q:'What sound does "play" start with?', opts:['pl','cl','fl','bl'], ans:'pl'},
+  {word:'sl-ide', display:'slide',  highlight:'sl', sound:'sl', emoji:'🛝', type:'blend',
+   q:'What sound does "slide" start with?', opts:['sl','fl','pl','cl'], ans:'sl'},
+  {word:'br-ead', display:'bread',  highlight:'br', sound:'br', emoji:'🍞', type:'blend',
+   q:'What sound does "bread" start with?', opts:['br','cr','dr','gr'], ans:'br'},
+  {word:'cr-ab',  display:'crab',   highlight:'cr', sound:'cr', emoji:'🦀', type:'blend',
+   q:'What sound does "crab" start with?', opts:['cr','br','tr','dr'], ans:'cr'},
+  {word:'dr-um',  display:'drum',   highlight:'dr', sound:'dr', emoji:'🥁', type:'blend',
+   q:'What sound does "drum" start with?', opts:['dr','br','gr','tr'], ans:'dr'},
+  {word:'gr-een', display:'green',  highlight:'gr', sound:'gr', emoji:'🟢', type:'blend',
+   q:'What sound does "green" start with?', opts:['gr','cr','br','dr'], ans:'gr'},
+  {word:'tr-ee',  display:'tree',   highlight:'tr', sound:'tr', emoji:'🌳', type:'blend',
+   q:'What sound does "tree" start with?', opts:['tr','dr','cr','gr'], ans:'tr'},
+  // Yes/No — does this word have the sound?
+  {word:'ch-ip',  display:'chip',   highlight:'ch', sound:'ch', emoji:'🍟', type:'yesno',
+   q:'Does "chip" have the CH sound?', ans:'Yes', opts:['Yes','No']},
+  {word:'sh-ip',  display:'ship',   highlight:'sh', sound:'sh', emoji:'🚢', type:'yesno',
+   q:'Does "ship" have the SH sound?', ans:'Yes', opts:['Yes','No']},
+  {word:'fish',   display:'fish',   highlight:'sh', sound:'sh', emoji:'🐟', type:'yesno',
+   q:'Does "fish" have the SH sound?', ans:'Yes', opts:['Yes','No']},
+  {word:'chat',   display:'chat',   highlight:'ch', sound:'ch', emoji:'💬', type:'yesno',
+   q:'Does "chat" have the CH sound?', ans:'Yes', opts:['Yes','No']},
+  {word:'cat',    display:'cat',    highlight:'',   sound:'ch', emoji:'🐱', type:'yesno',
+   q:'Does "cat" have the CH sound?', ans:'No', opts:['Yes','No']},
+  // Pick the word with the sound
+  {type:'pickWord', sound:'br',
+   q:'Which word starts with the BR sound?', emoji:'👂',
+   opts:['brick','click','flag','drip'], ans:'brick'},
+  {type:'pickWord', sound:'fl',
+   q:'Which word starts with the FL sound?', emoji:'👂',
+   opts:['grape','flame','clap','slide'], ans:'flame'},
+  {type:'pickWord', sound:'sh',
+   q:'Which word has the SH sound?', emoji:'👂',
+   opts:['stop','ship','blue','drum'], ans:'ship'},
+  {type:'pickWord', sound:'ch',
+   q:'Which word has the CH sound?', emoji:'👂',
+   opts:['frog','plan','chip','crab'], ans:'chip'},
+  {type:'pickWord', sound:'tr',
+   q:'Which word starts with the TR sound?', emoji:'👂',
+   opts:['brick','slime','truck','flag'], ans:'truck'},
+];
+
+let phIdx=0, phScore=0;
+function initPhonics(){ phIdx=0; phScore=0; renderPhonics(); }
+
+function renderPhonics(){
+  const q=PH_WORDS[phIdx];
+  let body=progHTML(phIdx,PH_WORDS.length,'#f5a623');
+
+  if(q.type==='blend'){
+    // Render word with blend highlighted
+    const rest=q.display.slice(q.sound.length);
+    body+=`<div class="q-text">${q.q}</div>
+    <div class="phonics-word">
+      <span class="pw-main"><span class="pw-highlight">${q.sound}</span>${rest}</span>
+      <span class="pw-emoji">${q.emoji}</span>
+    </div>
+    <div class="tc" style="margin-bottom:14px"><span class="sound-pill-ph">${q.sound.toUpperCase()}</span></div>
+    <div class="opts-4" id="ph-opts">`;
+    shuffle(q.opts).forEach(o=>{
+      body+=`<button class="opt-btn" style="font-size:clamp(22px,6vw,32px);letter-spacing:1px" onclick="ansPhonics('${o}','${q.ans}',this)">${o}</button>`;
+    });
+    body+=`</div>`;
+  } else if(q.type==='yesno'){
+    const highlighted = q.highlight
+      ? q.display.replace(q.highlight, `<span class="pw-highlight">${q.highlight}</span>`)
+      : q.display;
+    body+=`<div class="q-text">${q.q}</div>
+    <div class="phonics-word">
+      <span class="pw-main">${highlighted}</span>
+      <span class="pw-emoji">${q.emoji}</span>
+    </div>
+    <div class="tc" style="margin-bottom:14px"><span class="sound-pill-ph">${q.sound.toUpperCase()}</span></div>
+    <div class="opts-2" id="ph-opts">
+      <button class="opt-btn" onclick="ansPhonics('Yes','${q.ans}',this)">✅ Yes</button>
+      <button class="opt-btn" onclick="ansPhonics('No','${q.ans}',this)">❌ No</button>
+    </div>`;
+  } else if(q.type==='pickWord'){
+    body+=`<div class="q-text">${q.q}</div>
+    <div class="tc mb14" style="font-size:40px;margin-bottom:14px">${q.emoji}</div>
+    <div class="tc" style="margin-bottom:14px"><span class="sound-pill-ph">${q.sound.toUpperCase()}</span></div>
+    <div class="opts-4" id="ph-opts">`;
+    shuffle(q.opts).forEach(o=>{
+      body+=`<button class="opt-btn" style="font-size:clamp(18px,4vw,24px)" onclick="ansPhonics('${o}','${q.ans}',this)">${o}</button>`;
+    });
+    body+=`</div>`;
+  }
+
+  body+=`<div class="feedback" id="ph-fb"></div>
+  <button class="action-btn btn-orange hidden" id="ph-next" onclick="nextPhonics()">Next ➜</button>`;
+  document.getElementById('phonics-card').innerHTML=body;
+  setScore(phScore);
+}
+
+function ansPhonics(choice,ans,btn){
+  document.querySelectorAll('#ph-opts button').forEach(b=>b.disabled=true);
+  if(choice===ans){
+    btn.classList.add('correct'); phScore++;
+    setFb('ph-fb','⭐ Correct! Great phonics!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#ph-opts button').forEach(b=>{
+      if(b.textContent.trim()===ans||b.textContent.includes('Yes')&&ans==='Yes'||b.textContent.includes('No')&&ans==='No')
+        b.classList.add('correct');
+    });
+    setFb('ph-fb','The answer was "'+ans+'"!','bad');
+  }
+  setScore(phScore); showEl('ph-next');
+}
+
+function nextPhonics(){
+  phIdx++;
+  if(phIdx>=PH_WORDS.length)
+    showComplete('🔤',phScore>=17?'Phonics Star! 🌟':phScore>=12?'Great Decoding! 😊':'Keep Practising! 💪',phScore,PH_WORDS.length);
+  else renderPhonics();
+}
+
 </script>
 </body>
 </html>
