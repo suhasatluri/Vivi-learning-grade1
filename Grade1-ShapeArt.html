@@ -7,7 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
-:root{--bg:#0f0e17;--card:#1a1830;--blue:#4a90e2;--pink:#e86dbd;--orange:#f5a623;--green:#52c478;--purple:#9b59b6;--yellow:#f1c40f;--teal:#1abc9c;--red:#e74c3c;--muted:#8888aa}
+:root{--bg:#0f0e17;--card:#1a1830;--blue:#4a90e2;--pink:#e86dbd;--orange:#f5a623;--green:#52c478;--purple:#9b59b6;--yellow:#f1c40f;--teal:#1abc9c;--red:#e74c3c;--muted:#8888aa;
+  /* Emil Kowalski easing curves */
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-in-out:cubic-bezier(0.77,0,0.175,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1)}
 html,body{height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-serif;overflow:hidden;touch-action:none}
 
 #bg-stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
@@ -32,20 +36,36 @@ html,body{height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-
 /* ── Phase 1: Home ── */
 .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:500px}
 @media(min-width:520px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
-.cat-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent}
-.cat-card:hover{transform:scale(1.06)}
+.cat-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:transform 200ms var(--ease-out);-webkit-tap-highlight-color:transparent;
+  /* Stagger entry animation — never from scale(0) */
+  opacity:0;transform:translateY(8px);animation:fadeInUp 280ms var(--ease-out) forwards;animation-delay:var(--stagger,0ms)}
+.cat-card:active{transform:scale(0.97)}
 .cat-emoji{font-size:38px;line-height:1.2}
 .cat-name{font-family:'Fredoka One',cursive;font-size:15px;margin-top:4px}
 .cat-count{font-size:11px;font-weight:800;color:var(--muted);margin-top:2px}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+
+/* Hover only on pointer devices — Emil: gate behind media query */
+@media(hover:hover) and (pointer:fine){
+  .cat-card:hover{transform:scale(1.05)}
+  .ch-card:hover{transform:scale(1.05)}
+  .back-btn:hover{background:rgba(255,255,255,0.16)}
+  .col-chip:hover{transform:scale(1.2)}
+  .shp-btn:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
+  .act-btn:hover{background:rgba(255,255,255,0.16)}
+  .dn-btn:hover{transform:scale(1.05)}
+}
 
 /* ── Phase 2: Category cards ── */
-.back-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:50px;color:white;font-family:'Fredoka One',cursive;font-size:13px;padding:5px 14px;cursor:pointer;align-self:flex-start;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.back-btn:hover{background:rgba(255,255,255,0.16)}
+.back-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:50px;color:white;font-family:'Fredoka One',cursive;font-size:13px;padding:5px 14px;cursor:pointer;align-self:flex-start;transition:transform 160ms var(--ease-out),background 160ms var(--ease-out);-webkit-tap-highlight-color:transparent}
+.back-btn:active{transform:scale(0.97)}
 
 .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:540px}
 @media(min-width:460px){.card-grid{grid-template-columns:repeat(3,1fr)}}
-.ch-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;position:relative}
-.ch-card:hover{transform:scale(1.06)}
+.ch-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform 200ms var(--ease-out);-webkit-tap-highlight-color:transparent;position:relative;
+  /* Stagger entry */
+  opacity:0;transform:translateY(8px);animation:fadeInUp 280ms var(--ease-out) forwards;animation-delay:var(--stagger,0ms)}
+.ch-card:active{transform:scale(0.97)}
 .ch-card img{width:100%;height:90px;object-fit:cover;display:block;background:rgba(255,255,255,0.04)}
 .ch-card-foot{padding:6px 6px 7px;text-align:center;font-family:'Fredoka One',cursive;font-size:13px}
 .ch-card.done{border-color:var(--green)}
@@ -74,19 +94,20 @@ html,body{height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-
 .t-row::-webkit-scrollbar{display:none}
 .t-lbl{font-size:9px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;flex-shrink:0;min-width:32px}
 
-.col-chip{width:22px;height:22px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .15s,border-color .15s}
-.col-chip:hover{transform:scale(1.2)}
+.col-chip{width:22px;height:22px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;transition:transform 150ms var(--ease-out),border-color 150ms var(--ease-out)}
 .col-chip.active{border-color:#fff;transform:scale(1.25)}
+.col-chip:active{transform:scale(0.9)}
 
-.sz-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:3px 9px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.sz-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:3px 9px;cursor:pointer;flex-shrink:0;transition:transform 160ms var(--ease-out),background 150ms var(--ease-out),border-color 150ms var(--ease-out),color 150ms var(--ease-out)}
+.sz-btn:active{transform:scale(0.95)}
 .sz-btn.active{background:rgba(245,166,35,0.25);border-color:var(--orange);color:var(--orange)}
 
-.shp-btn{background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:9px;padding:3px;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
-.shp-btn:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
+.shp-btn{background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:9px;padding:3px;cursor:pointer;flex-shrink:0;transition:transform 160ms var(--ease-out),background 150ms var(--ease-out),border-color 150ms var(--ease-out);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.shp-btn:active{transform:scale(0.93)}
 .shp-btn.active{border-color:var(--yellow);background:rgba(241,196,15,0.18)}
 
-.act-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:9px;color:white;font-family:'Fredoka One',cursive;font-size:12px;padding:4px 9px;cursor:pointer;flex-shrink:0;white-space:nowrap;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.act-btn:hover{background:rgba(255,255,255,0.16)}
+.act-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:9px;color:white;font-family:'Fredoka One',cursive;font-size:12px;padding:4px 9px;cursor:pointer;flex-shrink:0;white-space:nowrap;transition:transform 160ms var(--ease-out),background 150ms var(--ease-out);-webkit-tap-highlight-color:transparent}
+.act-btn:active{transform:scale(0.95)}
 .act-btn.red{border-color:rgba(231,76,60,0.45);color:var(--red)}
 .act-btn.grn{background:linear-gradient(135deg,var(--green),#2ea85b);border-color:transparent}
 
@@ -99,13 +120,33 @@ html,body{height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-
 .dn-panel img,.dn-snap{width:min(42vw,190px);height:min(32vw,140px);border-radius:12px;object-fit:contain;box-shadow:0 4px 16px rgba(0,0,0,0.5);background:#fff}
 .dn-stars{font-size:17px;font-weight:900;color:var(--yellow)}
 .dn-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.dn-btn{border:none;color:white;font-family:'Fredoka One',cursive;font-size:16px;padding:10px 24px;border-radius:50px;cursor:pointer;transition:transform .18s;box-shadow:0 4px 14px rgba(0,0,0,0.3);-webkit-tap-highlight-color:transparent}
-.dn-btn:hover{transform:scale(1.06)}
+.dn-btn{border:none;color:white;font-family:'Fredoka One',cursive;font-size:16px;padding:10px 24px;border-radius:50px;cursor:pointer;transition:transform 200ms var(--ease-out);box-shadow:0 4px 14px rgba(0,0,0,0.3);-webkit-tap-highlight-color:transparent}
+.dn-btn:active{transform:scale(0.96)}
 .btn-o{background:linear-gradient(135deg,var(--orange),var(--pink))}
 .btn-b{background:linear-gradient(135deg,var(--blue),var(--purple))}
 
+/* Done screen entry — stagger children, scale from 0.95 not 0 */
+#phase-done.show>*{opacity:0;transform:translateY(10px) scale(0.95);animation:fadeInScale 350ms var(--ease-out) forwards}
+#phase-done.show>*:nth-child(1){animation-delay:0ms}
+#phase-done.show>*:nth-child(2){animation-delay:60ms}
+#phase-done.show>*:nth-child(3){animation-delay:120ms}
+#phase-done.show>*:nth-child(4){animation-delay:180ms}
+#phase-done.show>*:nth-child(5){animation-delay:240ms}
+#phase-done.show>*:nth-child(6){animation-delay:300ms}
+@keyframes fadeInScale{to{opacity:1;transform:translateY(0) scale(1)}}
+
 .cpcs{position:fixed;z-index:999;pointer-events:none;border-radius:3px;animation:cfall var(--cd,1.4s) var(--cdd,0s) ease-in forwards}
 @keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(780deg);opacity:0}}
+
+/* Emil: prefers-reduced-motion — keep opacity/color, remove position/scale motion */
+@media(prefers-reduced-motion:reduce){
+  .cat-card,.ch-card{animation:none;opacity:1;transform:none}
+  #phase-done.show>*{animation:none;opacity:1;transform:none}
+  .star{animation:none;opacity:.2}
+  .cpcs{animation:none;display:none}
+  .placed-shape{transition:none}
+  .cat-card:active,.ch-card:active,.act-btn:active,.dn-btn:active,.shp-btn:active,.sz-btn:active,.back-btn:active,.col-chip:active{transform:none}
+}
 </style>
 </head>
 <body>
@@ -272,6 +313,7 @@ function buildHome(){
   const cats={};
   ALL_CARDS.forEach(c=>{if(!cats[c.category])cats[c.category]=[];cats[c.category].push(c);});
 
+  let idx=0;
   Object.keys(CATEGORY_META).forEach(cat=>{
     const cards=cats[cat]||[];
     if(!cards.length) return;
@@ -279,12 +321,14 @@ function buildHome(){
     const doneCount=cards.filter(c=>doneSet.has(c.id)).length;
     const d=document.createElement('div');
     d.className='cat-card';
+    d.style.setProperty('--stagger', (idx*50)+'ms'); // Emil: 30-80ms stagger
     d.innerHTML=`
       <div class="cat-emoji">${meta.emoji}</div>
       <div class="cat-name">${cat}</div>
       <div class="cat-count">${cards.length} cards${doneCount?' · '+doneCount+'✅':''}</div>`;
     d.onclick=()=>openCategory(cat, cards);
     g.appendChild(d);
+    idx++;
   });
   document.getElementById('sc').textContent=totalStars;
 }
@@ -307,10 +351,11 @@ function openCategory(cat, cards){
 
   const g=document.getElementById('card-grid');
   g.innerHTML='';
-  cards.forEach(c=>{
+  cards.forEach((c,i)=>{
     const isDone=doneSet.has(c.id);
     const d=document.createElement('div');
     d.className='ch-card'+(isDone?' done':'');
+    d.style.setProperty('--stagger', (i*40)+'ms'); // Emil: stagger 30-80ms
     d.innerHTML=`
       <img src="${c.img}" alt="${c.label}" loading="lazy">
       ${isDone?'<div class="done-badge">✅</div>':''}
