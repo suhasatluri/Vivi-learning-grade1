@@ -353,7 +353,7 @@ function ansShape(choice,ans,btn){
   } else {
     btn.classList.add('wrong');
     document.querySelectorAll('#sh-opts button').forEach(b=>{if(b.getAttribute('onclick').includes(`'${ans}'`))b.classList.add('correct')});
-    setFb('sh-fb','That\'s a '+SHAPES[ans]?.name+'!','bad');
+    const shapeName=SHAPES[ans]?.name||ans; setFb('sh-fb','That\'s a '+shapeName+'!','bad');
   }
   setScore(shScore);showEl('sh-next');
 }
