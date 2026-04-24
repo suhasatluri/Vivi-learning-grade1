@@ -3,496 +3,416 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>🎨 Make It With Shapes! – Grade 1</title>
+<title>Make It With Shapes! - Grade 1</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
 :root{
-  /* Impeccable: tinted neutrals toward brand hue (purple ~290), never pure black/white */
   --bg:oklch(8% 0.02 290);--card:oklch(13% 0.025 290);
   --surface:oklch(18% 0.02 290);--border:oklch(30% 0.015 290);
-  /* Brand palette */
   --blue:oklch(62% 0.15 250);--pink:oklch(62% 0.2 340);
   --orange:oklch(75% 0.17 70);--green:oklch(62% 0.15 155);
   --purple:oklch(52% 0.17 300);--yellow:oklch(82% 0.16 90);
   --teal:oklch(62% 0.12 185);--red:oklch(55% 0.2 25);
-  --muted:oklch(60% 0.02 290);
-  /* Impeccable: off-white, tinted toward brand */
-  --off-white:oklch(96% 0.005 290);
-  /* Impeccable motion: exponential ease-out, no bounce/elastic */
-  --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
-  --ease-out-quart:cubic-bezier(0.25,1,0.5,1);
-  --ease-in-out:cubic-bezier(0.65,0,0.35,1);
-  /* Spacing: 4pt base */
-  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-6:24px;--sp-8:32px}
-html,body{height:100%;background:var(--bg);color:var(--off-white);font-family:'Nunito',sans-serif;overflow:hidden;touch-action:none}
+  --muted:oklch(60% 0.02 290);--off-white:oklch(96% 0.005 290);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-quart:cubic-bezier(0.25,1,0.5,1)
+}
+html,body{height:100%;background:var(--bg);color:var(--off-white);font-family:'Nunito',sans-serif;overflow:hidden}
+h1,h2,h3,.fredoka{font-family:'Fredoka One',cursive}
 
+/* Stars */
 #bg-stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .star{position:absolute;border-radius:50%;background:var(--off-white);animation:twinkle var(--d,3s) var(--dl,0s) infinite alternate}
-@keyframes twinkle{from{opacity:.04}to{opacity:.45}}
+@keyframes twinkle{from{opacity:.04}to{opacity:.4}}
 
-#app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column}
+/* Focus visible */
+*:focus{outline:none}
+*:focus-visible{outline:2px solid var(--yellow);outline-offset:2px;border-radius:inherit}
+
+/* App shell */
+#app{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column}
 
 /* Header */
-/* Impeccable: safe-area insets for notch devices */
-#header{flex-shrink:0;padding:var(--sp-3) var(--sp-4) var(--sp-2);padding-top:max(var(--sp-3),env(safe-area-inset-top));background:oklch(8% 0.02 290 / 0.96);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2)}
-/* Impeccable absolute ban: no gradient text. Solid color with weight for emphasis */
-#header h1{font-family:'Fredoka One',cursive;font-size:clamp(16px,4.5vw,24px);color:var(--orange);white-space:nowrap;text-wrap:balance}
-#star-bar{font-size:13px;font-weight:900;color:var(--yellow);white-space:nowrap;flex-shrink:0}
-#hdr-btns{display:none;gap:var(--sp-1);align-items:center}
+#header{flex-shrink:0;height:44px;padding:0 16px;padding-top:env(safe-area-inset-top);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+#header h1{font-size:clamp(15px,4vw,22px);color:var(--orange);white-space:nowrap;text-wrap:balance}
+#star-bar{font-size:14px;font-weight:900;color:var(--yellow);white-space:nowrap}
 
-/* Shared scroll area */
-.phase{flex:1;overflow-y:auto;padding:12px 12px 36px;display:none;flex-direction:column;align-items:center;gap:10px}
-.phase.show{display:flex}
+/* ─── PHASE 1: Card Picker ─── */
+#phase-pick{flex:1;overflow-y:auto;padding:16px;display:none;flex-direction:column;align-items:center;gap:12px}
+#phase-pick.show{display:flex}
+#phase-pick h2{font-size:clamp(20px,5vw,32px);color:var(--orange);text-align:center;text-wrap:balance}
+#phase-pick .sub{color:var(--muted);font-size:14px;font-weight:800;text-align:center}
 
-/* Impeccable: solid color, text-wrap balance on headings */
-.phase-title{font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,28px);color:var(--orange);text-align:center;text-wrap:balance}
-.phase-sub{color:var(--muted);font-size:13px;font-weight:800;text-align:center}
+.pick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:640px}
+@media(max-width:500px){.pick-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* ── Phase 1: Home ── */
-.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:500px}
-@media(min-width:520px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
-.cat-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:transform 200ms var(--ease-out-expo);-webkit-tap-highlight-color:transparent;
-  /* Stagger entry animation — never from scale(0) */
-  opacity:0;transform:translateY(8px);animation:fadeInUp 280ms var(--ease-out-expo) forwards;animation-delay:var(--stagger,0ms)}
-.cat-card:active{transform:scale(0.97)}
-.cat-emoji{font-size:38px;line-height:1.2}
-.cat-name{font-family:'Fredoka One',cursive;font-size:15px;margin-top:4px}
-.cat-count{font-size:11px;font-weight:800;color:var(--muted);margin-top:2px}
-@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+.pick-card{background:var(--card);border:2px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform 200ms var(--ease-out);-webkit-tap-highlight-color:transparent;position:relative;
+  opacity:0;animation:cardIn 300ms var(--ease-out) forwards;animation-delay:var(--d,0ms)}
+.pick-card:active{transform:scale(0.97)}
+.pick-card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--surface)}
+.pick-card .label{padding:6px 8px;text-align:center;font-family:'Fredoka One',cursive;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick-card.done{border-color:var(--green)}
+.pick-card .done-badge{position:absolute;inset:0;background:oklch(0% 0 0 / 0.35);display:flex;align-items:center;justify-content:center;font-size:48px;pointer-events:none}
 
-/* Hover only on pointer devices — Emil: gate behind media query */
-@media(hover:hover) and (pointer:fine){
-  .cat-card:hover{transform:scale(1.05)}
-  .ch-card:hover{transform:scale(1.05)}
-  .back-btn:hover{background:rgba(255,255,255,0.16)}
-  .col-chip:hover{transform:scale(1.2)}
-  .shp-btn:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
-  .act-btn:hover{background:rgba(255,255,255,0.16)}
-  .dn-btn:hover{transform:scale(1.05)}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:none}}
+
+@media(hover:hover)and(pointer:fine){
+  .pick-card:hover{transform:scale(1.04)}
 }
 
-/* ── Phase 2: Category cards ── */
-.back-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:50px;color:white;font-family:'Fredoka One',cursive;font-size:13px;padding:5px 14px;cursor:pointer;align-self:flex-start;transition:transform 160ms var(--ease-out-expo),background 160ms var(--ease-out-expo);-webkit-tap-highlight-color:transparent}
-.back-btn:active{transform:scale(0.97)}
-
-.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:540px}
-@media(min-width:460px){.card-grid{grid-template-columns:repeat(3,1fr)}}
-.ch-card{background:var(--card);border:2px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform 200ms var(--ease-out-expo);-webkit-tap-highlight-color:transparent;position:relative;
-  /* Stagger entry */
-  opacity:0;transform:translateY(8px);animation:fadeInUp 280ms var(--ease-out-expo) forwards;animation-delay:var(--stagger,0ms)}
-.ch-card:active{transform:scale(0.97)}
-.ch-card img{width:100%;height:90px;object-fit:cover;display:block;background:rgba(255,255,255,0.04)}
-.ch-card-foot{padding:6px 6px 7px;text-align:center;font-family:'Fredoka One',cursive;font-size:13px}
-.ch-card.done{border-color:var(--green)}
-.ch-card .done-badge{position:absolute;top:4px;right:4px;font-size:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.6))}
-
-/* ── Phase 3: Studio ── */
+/* ─── PHASE 2: Studio (MS Paint layout) ─── */
 #phase-studio{flex:1;display:none;flex-direction:column;overflow:hidden}
 #phase-studio.show{display:flex}
-#studio-body{flex:1;display:flex;gap:7px;padding:7px 9px;min-height:0;overflow:hidden}
 
-.side-panel{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
-.side-label{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);text-align:center;flex-shrink:0}
-#ref-img-box{flex:1;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}
+/* Top area: reference + canvas side by side */
+#studio-main{flex:1;display:flex;gap:0;min-height:0;overflow:hidden}
+
+/* Reference panel (left ~40%) */
+#ref-panel{width:40%;min-width:200px;max-width:420px;flex-shrink:0;display:flex;flex-direction:column;background:var(--card);border-right:2px solid var(--border);padding:8px}
+#ref-panel .ref-header{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);text-align:center;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px}
+#ref-img-wrap{flex:1;border-radius:10px;overflow:hidden;background:var(--surface);display:flex;align-items:center;justify-content:center;min-height:0}
 #ref-img{width:100%;height:100%;object-fit:contain}
+#ref-card-name{font-family:'Fredoka One',cursive;font-size:clamp(18px,3.5vw,28px);text-align:center;color:var(--off-white);padding:6px 0 2px;text-wrap:balance}
 
-#canvas-box{flex:1;display:flex;align-items:stretch}
-/* Impeccable: no pure white, use tinted off-white */
-#canvas-area{flex:1;position:relative;background:var(--off-white);border-radius:12px;overflow:hidden;box-shadow:0 4px 18px oklch(0% 0 0 / 0.35);border:2px solid var(--border);touch-action:none}
+/* Canvas panel (right ~60%) */
+#canvas-panel{flex:1;display:flex;flex-direction:column;padding:8px;min-width:0}
+#canvas-panel .canvas-header{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);text-align:center;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px}
+#canvas-wrap{flex:1;position:relative;border-radius:10px;overflow:hidden;background:var(--off-white);border:2px solid var(--border);touch-action:none;min-height:0}
 #shapes-layer{position:absolute;inset:0;z-index:2}
 
-.placed-shape{position:absolute;transform:translate(-50%,-50%);cursor:grab;touch-action:none;transition:filter .1s}
-.placed-shape.selected{filter:drop-shadow(0 0 7px rgba(241,196,15,0.95))}
+/* Canvas hint (pulsing when no shape selected) */
+#canvas-hint{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:opacity 300ms var(--ease-out)}
+#canvas-hint span{font-family:'Fredoka One',cursive;font-size:clamp(14px,2.5vw,20px);color:oklch(40% 0.02 290);text-align:center;padding:16px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+#canvas-hint.hidden{opacity:0}
 
-/* Toolbar */
-#toolbar{flex-shrink:0;background:rgba(15,14,23,0.97);border-top:1px solid rgba(255,255,255,0.08);padding:5px 9px 9px;display:flex;flex-direction:column;gap:5px}
-.t-row{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}
-.t-row::-webkit-scrollbar{display:none}
-/* Impeccable: ALL-CAPS needs 5-12% letter-spacing */
-.t-lbl{font-size:9px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;flex-shrink:0;min-width:32px}
+/* Instruction banner */
+#instruction-banner{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:20;background:var(--yellow);color:oklch(15% 0.02 290);font-family:'Fredoka One',cursive;font-size:clamp(13px,2vw,17px);padding:10px 20px;border-radius:50px;box-shadow:0 4px 20px oklch(0% 0 0 / 0.3);white-space:nowrap;cursor:pointer;
+  animation:bannerIn 400ms var(--ease-out) both}
+@keyframes bannerIn{from{opacity:0;transform:translateX(-50%) translateY(-20px) scale(0.95)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+#instruction-banner.out{animation:bannerOut 250ms var(--ease-quart) forwards}
+@keyframes bannerOut{to{opacity:0;transform:translateX(-50%) translateY(-16px) scale(0.95)}}
 
-.col-chip{width:22px;height:22px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;transition:transform 150ms var(--ease-out-expo),border-color 150ms var(--ease-out-expo)}
-.col-chip.active{border-color:#fff;transform:scale(1.25)}
+/* Placed shapes */
+.placed-shape{position:absolute;cursor:grab;touch-action:none;transition:filter 100ms var(--ease-out)}
+.placed-shape.selected{filter:drop-shadow(0 0 8px oklch(82% 0.2 90 / 0.9))}
+
+/* ─── Bottom toolbar (horizontal, MS Paint style) ─── */
+#toolbar{flex-shrink:0;background:var(--card);border-top:2px solid var(--border);padding:6px 10px;padding-bottom:max(6px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
+
+/* Shape palette row */
+#shape-row{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+#shape-row::-webkit-scrollbar{display:none}
+.shp-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:4px 6px;cursor:pointer;flex-shrink:0;min-width:56px;min-height:56px;justify-content:center;transition:transform 160ms var(--ease-out),border-color 150ms var(--ease-out),background 150ms var(--ease-out);-webkit-tap-highlight-color:transparent}
+.shp-btn .shp-label{font-family:'Fredoka One',cursive;font-size:9px;color:var(--muted);letter-spacing:0.05em}
+.shp-btn:active{transform:scale(0.93)}
+.shp-btn.active{border-color:var(--yellow);background:oklch(82% 0.16 90 / 0.15);box-shadow:0 0 12px oklch(82% 0.16 90 / 0.3)}
+
+/* Color + size + actions row */
+#controls-row{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+#controls-row::-webkit-scrollbar{display:none}
+
+.ctrl-group{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.ctrl-sep{width:1px;height:24px;background:var(--border);flex-shrink:0;margin:0 4px}
+
+.col-chip{width:32px;height:32px;border-radius:50%;border:3px solid transparent;cursor:pointer;flex-shrink:0;transition:transform 150ms var(--ease-out),border-color 150ms var(--ease-out)}
+.col-chip.active{border-color:var(--off-white);transform:scale(1.15)}
 .col-chip:active{transform:scale(0.9)}
 
-.sz-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:3px 9px;cursor:pointer;flex-shrink:0;transition:transform 160ms var(--ease-out-expo),background 150ms var(--ease-out-expo),border-color 150ms var(--ease-out-expo),color 150ms var(--ease-out-expo)}
+.sz-btn{background:var(--surface);border:2px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:4px 10px;cursor:pointer;flex-shrink:0;min-height:32px;transition:transform 160ms var(--ease-out),background 150ms,border-color 150ms,color 150ms}
 .sz-btn:active{transform:scale(0.95)}
-.sz-btn.active{background:rgba(245,166,35,0.25);border-color:var(--orange);color:var(--orange)}
+.sz-btn.active{background:oklch(75% 0.17 70 / 0.2);border-color:var(--orange);color:var(--orange)}
 
-.shp-btn{background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);border-radius:9px;padding:3px;cursor:pointer;flex-shrink:0;transition:transform 160ms var(--ease-out-expo),background 150ms var(--ease-out-expo),border-color 150ms var(--ease-out-expo);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
-.shp-btn:active{transform:scale(0.93)}
-.shp-btn.active{border-color:var(--yellow);background:rgba(241,196,15,0.18)}
-
-.act-btn{background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:9px;color:white;font-family:'Fredoka One',cursive;font-size:12px;padding:4px 9px;cursor:pointer;flex-shrink:0;white-space:nowrap;transition:transform 160ms var(--ease-out-expo),background 150ms var(--ease-out-expo);-webkit-tap-highlight-color:transparent}
+.act-btn{background:var(--surface);border:2px solid var(--border);border-radius:10px;color:var(--off-white);font-family:'Fredoka One',cursive;font-size:13px;padding:4px 10px;cursor:pointer;flex-shrink:0;min-height:36px;white-space:nowrap;transition:transform 160ms var(--ease-out),background 150ms;-webkit-tap-highlight-color:transparent}
 .act-btn:active{transform:scale(0.95)}
-.act-btn.red{border-color:rgba(231,76,60,0.45);color:var(--red)}
-.act-btn.grn{background:linear-gradient(135deg,var(--green),#2ea85b);border-color:transparent}
+.act-btn.green{background:var(--green);border-color:var(--green);color:var(--off-white);font-size:14px;padding:6px 16px;min-height:40px}
+.act-btn.red{border-color:var(--red);color:var(--red)}
 
-/* ── Phase 4: Done ── */
-/* Impeccable: no gradient text */
-.dn-title{font-family:'Fredoka One',cursive;font-size:clamp(22px,6vw,36px);color:var(--orange);text-wrap:balance}
-.dn-sub{font-family:'Fredoka One',cursive;font-size:clamp(18px,4.5vw,26px);color:var(--yellow)}
-.dn-compare{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.dn-panel{display:flex;flex-direction:column;align-items:center;gap:5px}
-.dn-panel span{font-size:11px;font-weight:800;color:var(--muted)}
-.dn-panel img,.dn-snap{width:min(42vw,190px);height:min(32vw,140px);border-radius:12px;object-fit:contain;box-shadow:0 4px 16px oklch(0% 0 0 / 0.4);background:var(--off-white)}
-.dn-stars{font-size:17px;font-weight:900;color:var(--yellow)}
-.dn-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.dn-btn{border:none;color:white;font-family:'Fredoka One',cursive;font-size:16px;padding:10px 24px;border-radius:50px;cursor:pointer;transition:transform 200ms var(--ease-out-expo);box-shadow:0 4px 14px rgba(0,0,0,0.3);-webkit-tap-highlight-color:transparent}
+.back-link{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);cursor:pointer;padding:4px 10px;border-radius:8px;flex-shrink:0;transition:color 150ms var(--ease-out);-webkit-tap-highlight-color:transparent;background:none;border:none}
+.back-link:active{transform:scale(0.95)}
+
+@media(hover:hover)and(pointer:fine){
+  .shp-btn:hover{background:oklch(22% 0.02 290);transform:scale(1.05)}
+  .col-chip:hover{transform:scale(1.15)}
+  .act-btn:hover{background:oklch(22% 0.02 290)}
+  .pick-card:hover{transform:scale(1.04)}
+}
+@media(pointer:coarse){
+  .col-chip{width:36px;height:36px}
+  .shp-btn{min-width:60px;min-height:60px}
+  .act-btn{min-height:44px}
+  .sz-btn{min-height:40px}
+}
+
+/* ─── PHASE 3: Done ─── */
+#phase-done{flex:1;overflow-y:auto;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;gap:14px}
+#phase-done.show{display:flex}
+#phase-done>*{opacity:0;transform:translateY(10px) scale(0.95);animation:fadeUp 350ms var(--ease-out) forwards}
+#phase-done>*:nth-child(1){animation-delay:0ms}
+#phase-done>*:nth-child(2){animation-delay:60ms}
+#phase-done>*:nth-child(3){animation-delay:120ms}
+#phase-done>*:nth-child(4){animation-delay:180ms}
+#phase-done>*:nth-child(5){animation-delay:240ms}
+#phase-done>*:nth-child(6){animation-delay:300ms}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+
+.dn-title{font-family:'Fredoka One',cursive;font-size:clamp(24px,6vw,40px);color:var(--orange);text-wrap:balance}
+.dn-sub{font-family:'Fredoka One',cursive;font-size:clamp(18px,4vw,28px);color:var(--yellow)}
+.dn-compare{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.dn-panel{display:flex;flex-direction:column;align-items:center;gap:6px}
+.dn-panel span{font-size:12px;font-weight:800;color:var(--muted)}
+.dn-panel img,.dn-snap{width:min(42vw,200px);height:min(32vw,150px);border-radius:12px;object-fit:contain;box-shadow:0 4px 16px oklch(0% 0 0 / 0.4);background:var(--off-white)}
+.dn-count{font-size:20px;font-weight:900;color:var(--yellow)}
+.dn-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.dn-btn{border:none;color:var(--off-white);font-family:'Fredoka One',cursive;font-size:17px;padding:12px 28px;border-radius:50px;cursor:pointer;transition:transform 200ms var(--ease-out);box-shadow:0 4px 14px oklch(0% 0 0 / 0.25);-webkit-tap-highlight-color:transparent;min-height:48px}
 .dn-btn:active{transform:scale(0.96)}
-.btn-o{background:linear-gradient(135deg,var(--orange),var(--pink))}
-.btn-b{background:linear-gradient(135deg,var(--blue),var(--purple))}
+.dn-btn.orange{background:var(--orange)}
+.dn-btn.blue{background:var(--blue)}
 
-/* Done screen entry — stagger children, scale from 0.95 not 0 */
-#phase-done.show>*{opacity:0;transform:translateY(10px) scale(0.95);animation:fadeInScale 350ms var(--ease-out-expo) forwards}
-#phase-done.show>*:nth-child(1){animation-delay:0ms}
-#phase-done.show>*:nth-child(2){animation-delay:60ms}
-#phase-done.show>*:nth-child(3){animation-delay:120ms}
-#phase-done.show>*:nth-child(4){animation-delay:180ms}
-#phase-done.show>*:nth-child(5){animation-delay:240ms}
-#phase-done.show>*:nth-child(6){animation-delay:300ms}
-@keyframes fadeInScale{to{opacity:1;transform:translateY(0) scale(1)}}
-
+/* Confetti */
 .cpcs{position:fixed;z-index:999;pointer-events:none;border-radius:3px;animation:cfall var(--cd,1.4s) var(--cdd,0s) ease-in forwards}
 @keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(780deg);opacity:0}}
 
-/* Impeccable interaction: focus-visible rings for keyboard users, never outline:none */
-*:focus{outline:none}
-*:focus-visible{outline:2px solid var(--yellow);outline-offset:2px;border-radius:inherit}
-.col-chip:focus-visible{outline-offset:3px}
-
-/* Impeccable responsive: safe-area bottom for home indicator */
-.phase{padding-bottom:max(36px,env(safe-area-inset-bottom))}
-#toolbar{padding-bottom:max(9px,env(safe-area-inset-bottom))}
-
-/* Impeccable interaction: coarse pointer gets larger touch targets (44px min) */
-@media(pointer:coarse){
-  .act-btn{min-height:44px;min-width:44px;padding:8px 12px}
-  .shp-btn{min-height:44px;min-width:44px;padding:6px}
-  .sz-btn{min-height:44px;padding:6px 12px}
-  .col-chip{width:28px;height:28px}
-  .back-btn{min-height:44px;padding:8px 16px}
-}
-
-/* prefers-reduced-motion: keep opacity/color, remove position/scale motion */
+/* Reduced motion */
 @media(prefers-reduced-motion:reduce){
-  .cat-card,.ch-card{animation:none;opacity:1;transform:none}
-  #phase-done.show>*{animation:none;opacity:1;transform:none}
+  .pick-card,.shp-btn{animation:none;opacity:1;transform:none}
+  #phase-done>*{animation:none;opacity:1;transform:none}
   .star{animation:none;opacity:.2}
-  .cpcs{animation:none;display:none}
+  .cpcs{display:none}
+  #canvas-hint span{animation:none;opacity:.6}
+  #instruction-banner{animation:none}
   .placed-shape{transition:none}
-  .cat-card:active,.ch-card:active,.act-btn:active,.dn-btn:active,.shp-btn:active,.sz-btn:active,.back-btn:active,.col-chip:active{transform:none}
+  *:active{transform:none !important}
 }
+
+/* Footer */
+#footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:9px;color:oklch(50% 0.01 290 / 0.3);padding:2px;pointer-events:none;z-index:999}
 </style>
 </head>
 <body>
 <div id="bg-stars"></div>
 <div id="app">
 
-  <!-- HEADER -->
   <div id="header">
-    <h1 id="hdr-title">🎨 Make It With Shapes!</h1>
-    <div id="hdr-btns">
-      <button class="act-btn" onclick="undoLast()">↩</button>
-      <button class="act-btn" onclick="rotateSelected()">↻</button>
-      <button class="act-btn red" onclick="clearAll()">🗑</button>
-      <button class="act-btn grn" onclick="finishArt()">Finish drawing ✅</button>
-    </div>
-    <div id="star-bar">⭐ <span id="sc">0</span></div>
+    <h1>Make It With Shapes!</h1>
+    <div id="star-bar">Stars: <span id="sc">0</span></div>
   </div>
 
-  <!-- PHASE 1: Home / Categories -->
-  <div id="phase-home" class="phase show">
-    <div class="phase-title">🃏 Pick a category!</div>
-    <div class="phase-sub">Choose a theme, then build cards with shapes!</div>
-    <div class="cat-grid" id="cat-grid"></div>
+  <!-- PHASE 1: Card Picker -->
+  <div id="phase-pick" class="show">
+    <h2>Pick a card to copy with shapes!</h2>
+    <p class="sub">Tap any card, then draw it with shapes!</p>
+    <div class="pick-grid" id="pick-grid"></div>
   </div>
 
-  <!-- PHASE 2: Category cards -->
-  <div id="phase-category" class="phase">
-    <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="phase-title" id="cat-title"></div>
-    <div class="phase-sub" id="cat-sub"></div>
-    <div class="card-grid" id="card-grid"></div>
-  </div>
-
-  <!-- PHASE 3: Studio -->
+  <!-- PHASE 2: Studio -->
   <div id="phase-studio">
-    <div id="studio-body">
-      <div class="side-panel">
-        <div class="side-label" id="ref-lbl">📸 Challenge</div>
-        <div id="ref-img-box"><img id="ref-img" src="" alt="card"></div>
+    <div id="studio-main">
+      <div id="ref-panel">
+        <div class="ref-header">Look at this card</div>
+        <div id="ref-img-wrap"><img id="ref-img" src="" alt="Reference card"></div>
+        <div id="ref-card-name"></div>
       </div>
-      <div class="side-panel">
-        <div class="side-label">🎨 Your creation</div>
-        <div id="canvas-box"><div id="canvas-area"><div id="shapes-layer"></div></div></div>
+      <div id="canvas-panel">
+        <div class="canvas-header">Now you draw!</div>
+        <div id="canvas-wrap">
+          <div id="canvas-hint"><span>Tap a shape below, then tap here!</span></div>
+          <div id="shapes-layer"></div>
+          <div id="instruction-banner" style="display:none">Look at the picture on the left, then use shapes to copy it!</div>
+        </div>
       </div>
     </div>
     <div id="toolbar">
-      <div class="t-row"><span class="t-lbl">Colour</span><div id="col-strip"></div></div>
-      <div class="t-row">
-        <span class="t-lbl">Size</span><div id="sz-strip"></div>
+      <div id="shape-row"></div>
+      <div id="controls-row">
+        <div class="ctrl-group" id="color-strip"></div>
+        <div class="ctrl-sep"></div>
+        <div class="ctrl-group" id="size-strip"></div>
+        <div class="ctrl-sep"></div>
+        <div class="ctrl-group">
+          <button class="act-btn" onclick="undoLast()" title="Undo">Undo</button>
+          <button class="act-btn" onclick="rotateSelected()" title="Rotate">Rotate</button>
+          <button class="act-btn red" onclick="clearAll()" title="Clear all">Clear</button>
+        </div>
+        <div class="ctrl-sep"></div>
+        <button class="act-btn green" onclick="finishArt()">I'm Done!</button>
         <div style="flex:1"></div>
-        <button class="act-btn" onclick="goCategory()" style="font-size:11px;padding:3px 8px">← Cards</button>
+        <button class="back-link" onclick="goHome()">Choose a different card</button>
       </div>
-      <div class="t-row"><span class="t-lbl">Shape</span><div id="shp-palette"></div></div>
     </div>
   </div>
 
-  <!-- PHASE 4: Done -->
-  <div id="phase-done" class="phase">
-    <div style="font-size:56px">🎉</div>
+  <!-- PHASE 3: Done -->
+  <div id="phase-done">
+    <div style="font-size:64px">Wow!</div>
     <div class="dn-title">Amazing work!</div>
     <div class="dn-sub" id="dn-name"></div>
     <div class="dn-compare">
-      <div class="dn-panel"><span>The card</span><img id="dn-ref" src="" alt="ref"></div>
-      <div class="dn-panel"><span>Your version!</span><div class="dn-snap" id="dn-snap"></div></div>
+      <div class="dn-panel"><span>The card</span><img id="dn-ref" src="" alt="Reference"></div>
+      <div class="dn-panel"><span>Your drawing</span><div class="dn-snap" id="dn-snap"></div></div>
     </div>
-    <div class="dn-stars">⭐ <span id="dn-count">0</span> shapes used!</div>
+    <div class="dn-count">You used <span id="dn-count">0</span> shapes!</div>
     <div class="dn-btns">
-      <button class="dn-btn btn-o" onclick="goCategory()">🃏 Try Another!</button>
-      <button class="dn-btn btn-b" onclick="keepEditing()">✏️ Keep Editing</button>
+      <button class="dn-btn orange" onclick="goHome()">Try Another Card!</button>
+      <button class="dn-btn blue" onclick="keepEditing()">Keep Drawing</button>
     </div>
   </div>
 
 </div>
-
-<!-- Footer -->
-<div style="position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:9px;color:rgba(255,255,255,0.18);padding:2px;pointer-events:none;z-index:999">✨ Helping little learners shine · Suhas Atluri · 2026</div>
+<div id="footer">Helping little learners shine. Suhas Atluri. 2026</div>
 
 <script>
-// ── Stars background ──
-(function(){
-  const c=document.getElementById('bg-stars');
-  for(let i=0;i<55;i++){const s=document.createElement('div'),sz=Math.random()*2.5+1;s.className='star';s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`;c.appendChild(s);}
-})();
+/* ── Stars ── */
+(function(){const c=document.getElementById('bg-stars');for(let i=0;i<50;i++){const s=document.createElement('div'),sz=Math.random()*2.5+1;s.className='star';s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`;c.appendChild(s)}})();
 
-// ── Card data (loaded from cards.json) ──
-let ALL_CARDS = [];
-const CATEGORY_META = {
-  Animals:  {emoji:'🐾', color:'var(--green)'},
-  Vehicles: {emoji:'🚀', color:'var(--blue)'},
-  Nature:   {emoji:'🌿', color:'var(--teal)'},
-  Objects:  {emoji:'🎁', color:'var(--purple)'},
-  People:   {emoji:'👧', color:'var(--pink)'},
-  Food:     {emoji:'🍕', color:'var(--orange)'},
-};
+/* ── Data ── */
+let ALL_CARDS=[];
+const FALLBACK=[
+  {id:'ride',label:'Ride',emoji:'\u{1F6B4}',category:'Vehicles',img:'assets/shape-cards/Vehicles/ride.jpg',shapes:['circle','triangle','semicircle']},
+  {id:'fish',label:'Fish',emoji:'\u{1F41F}',category:'Animals',img:'assets/shape-cards/Animals/fish.jpg',shapes:['triangle','circle','semicircle']},
+  {id:'elephant',label:'Elephant',emoji:'\u{1F418}',category:'Animals',img:'assets/shape-cards/Animals/elephant.jpg',shapes:['circle','semicircle','rectangle']},
+  {id:'girl',label:'Girl',emoji:'\u{1F467}',category:'People',img:'assets/shape-cards/People/girl.jpg',shapes:['circle','semicircle','triangle']},
+  {id:'rocket',label:'Rocket',emoji:'\u{1F680}',category:'Vehicles',img:'assets/shape-cards/Vehicles/rocket.jpg',shapes:['triangle','semicircle','rectangle']},
+  {id:'car',label:'Car',emoji:'\u{1F697}',category:'Vehicles',img:'assets/shape-cards/Vehicles/car.jpg',shapes:['circle','semicircle','oval']},
+  {id:'robot',label:'Robot',emoji:'\u{1F916}',category:'Objects',img:'assets/shape-cards/Objects/robot.jpg',shapes:['circle','triangle','semicircle','rectangle']},
+  {id:'butterfly',label:'Butterfly',emoji:'\u{1F98B}',category:'Animals',img:'assets/shape-cards/Animals/butterfly.jpg',shapes:['circle','semicircle','oval']},
+  {id:'house',label:'House',emoji:'\u{1F3E0}',category:'Objects',img:'assets/shape-cards/Objects/house.jpg',shapes:['triangle','rectangle','square']},
+  {id:'hamburger',label:'Hamburger',emoji:'\u{1F354}',category:'Food',img:'assets/shape-cards/Food/hamburger.jpg',shapes:['semicircle','rectangle']},
+];
 
-// ── Shapes / palette ──
-// Impeccable: no pure white; last chip is tinted off-white
-const COLS=['#e74c3c','#f5a623','#f1c40f','#52c478','#4a90e2','#9b59b6','#e86dbd','#1abc9c','#2c3e50','#f5f3f7'];
-const SIZES={S:42,M:72,L:115};
-const SHAPES=['circle','semicircle','oval','triangle','square','rectangle','thin-rect','quarter'];
+/* ── Shape SVG ── */
+const COLS=['#e74c3c','#f5a623','#f1c40f','#52c478','#4a90e2','#9b59b6','#e86dbd','#1abc9c','#2c3e50','#f0edf3'];
+const SIZES={S:38,M:64,L:100};
+const SHAPES=[
+  {t:'circle',     l:'Circle'},
+  {t:'semicircle', l:'Semi'},
+  {t:'oval',       l:'Oval'},
+  {t:'triangle',   l:'Triangle'},
+  {t:'square',     l:'Square'},
+  {t:'rectangle',  l:'Rect'},
+  {t:'thin-rect',  l:'Stick'},
+  {t:'quarter',    l:'Quarter'},
+];
 
 function mkSVG(type,color,sz){
   const sk='rgba(0,0,0,0.12)',sw=2,w=sz,h=sz;
   switch(type){
     case'circle':    return`<svg width="${w}" height="${h}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
     case'semicircle':return`<svg width="${w}" height="${Math.round(h*.55)}" viewBox="0 0 100 54"><path d="M4,50 A46,46 0 0,1 96,50 Z" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
-    case'oval':      return`<svg width="${Math.round(w*1.6)}" height="${h}" viewBox="0 0 160 100"><ellipse cx="80" cy="50" rx="76" ry="46" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
+    case'oval':      return`<svg width="${Math.round(w*1.5)}" height="${h}" viewBox="0 0 150 100"><ellipse cx="75" cy="50" rx="71" ry="46" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
     case'triangle':  return`<svg width="${w}" height="${h}" viewBox="0 0 100 100"><polygon points="50,4 96,94 4,94" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
     case'square':    return`<svg width="${w}" height="${h}" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="5" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
-    case'rectangle': return`<svg width="${Math.round(w*1.6)}" height="${h}" viewBox="0 0 160 100"><rect x="4" y="4" width="152" height="92" rx="5" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
-    case'thin-rect': return`<svg width="${Math.round(w*.28)}" height="${h}" viewBox="0 0 28 100"><rect x="3" y="3" width="22" height="94" rx="8" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
+    case'rectangle': return`<svg width="${Math.round(w*1.5)}" height="${h}" viewBox="0 0 150 100"><rect x="4" y="4" width="142" height="92" rx="5" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
+    case'thin-rect': return`<svg width="${Math.round(w*.3)}" height="${h}" viewBox="0 0 30 100"><rect x="3" y="3" width="24" height="94" rx="8" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
     case'quarter':   return`<svg width="${w}" height="${h}" viewBox="0 0 100 100"><path d="M4,96 A92,92 0 0,1 96,4 L96,96 Z" fill="${color}" stroke="${sk}" stroke-width="${sw}"/></svg>`;
     default:         return`<svg width="${w}" height="${h}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="${color}"/></svg>`;
   }
 }
 
-// ── State ──
-let totalStars=0, curColor=COLS[4], curSize='M', selPal=null;
-let placed=[], selId=null, nid=1, drag=null, hist=[];
-let doneSet=new Set(), activeCard=null, activeCat=null, cW=200, cH=200, lastMoved=false;
+/* ── State ── */
+let totalStars=0,curColor=COLS[4],curSize='M',selPal=null;
+let placed=[],selId=null,nid=1,drag=null,hist=[];
+let doneSet=new Set(),activeCard=null,cW=200,cH=200,lastMoved=false;
 
-// Load persisted stars
-try{
-  const saved=JSON.parse(localStorage.getItem('shapeArtState')||'{}');
-  if(saved.stars) totalStars=saved.stars;
-  if(saved.done) doneSet=new Set(saved.done);
-}catch(e){}
+try{const s=JSON.parse(localStorage.getItem('shapeArt2')||'{}');if(s.stars)totalStars=s.stars;if(s.done)doneSet=new Set(s.done)}catch(e){}
+function save(){try{localStorage.setItem('shapeArt2',JSON.stringify({stars:totalStars,done:[...doneSet]}))}catch(e){}}
 
-function saveState(){
-  try{localStorage.setItem('shapeArtState',JSON.stringify({stars:totalStars,done:[...doneSet]}));}catch(e){}
-}
-
-// ── Init ──
-window.addEventListener('DOMContentLoaded', async ()=>{
+/* ── Init ── */
+window.addEventListener('DOMContentLoaded',async()=>{
   document.getElementById('sc').textContent=totalStars;
-  try{
-    const r=await fetch('assets/shape-cards/cards.json');
-    ALL_CARDS=await r.json();
-  }catch(e){
-    console.error('Failed to load cards.json',e);
-    ALL_CARDS=[];
-  }
-  buildHome();
-  buildColors();
-  buildSizes();
-  buildPalette();
+  try{const r=await fetch('assets/shape-cards/cards.json');ALL_CARDS=await r.json();if(!ALL_CARDS.length)throw 0}catch(e){ALL_CARDS=FALLBACK}
+  buildPicker();buildShapePalette();buildColors();buildSizes();
 });
 window.addEventListener('resize',sizeCanvas);
 
-// ── Phase navigation ──
-function showPhase(name){
-  ['phase-home','phase-category','phase-studio','phase-done'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(id==='phase-studio'){el.style.display=name==='studio'?'flex':'none';}
-    else{el.classList.toggle('show',id==='phase-'+name);}
-  });
-  document.getElementById('hdr-btns').style.display=name==='studio'?'flex':'none';
-  if(name==='studio') setTimeout(sizeCanvas,40);
+/* ── Phase nav ── */
+function showPhase(n){
+  document.getElementById('phase-pick').classList.toggle('show',n==='pick');
+  document.getElementById('phase-studio').classList.toggle('show',n==='studio');
+  document.getElementById('phase-done').classList.toggle('show',n==='done');
+  if(n==='studio')setTimeout(sizeCanvas,50);
 }
 
-// ── PHASE 1: Home ──
-function buildHome(){
-  const g=document.getElementById('cat-grid');
-  g.innerHTML='';
-  const cats={};
-  ALL_CARDS.forEach(c=>{if(!cats[c.category])cats[c.category]=[];cats[c.category].push(c);});
-
-  let idx=0;
-  Object.keys(CATEGORY_META).forEach(cat=>{
-    const cards=cats[cat]||[];
-    if(!cards.length) return;
-    const meta=CATEGORY_META[cat];
-    const doneCount=cards.filter(c=>doneSet.has(c.id)).length;
+/* ── PHASE 1: Picker ── */
+function buildPicker(){
+  const g=document.getElementById('pick-grid');g.innerHTML='';
+  ALL_CARDS.forEach((c,i)=>{
+    const done=doneSet.has(c.id);
     const d=document.createElement('div');
-    d.className='cat-card';
-    d.style.setProperty('--stagger', (idx*50)+'ms'); // Emil: 30-80ms stagger
-    d.innerHTML=`
-      <div class="cat-emoji">${meta.emoji}</div>
-      <div class="cat-name">${cat}</div>
-      <div class="cat-count">${cards.length} cards${doneCount?' · '+doneCount+'✅':''}</div>`;
-    d.onclick=()=>openCategory(cat, cards);
+    d.className='pick-card'+(done?' done':'');
+    d.style.setProperty('--d',(i*40)+'ms');
+    d.innerHTML=`<img src="${c.img}" alt="${c.label}" loading="lazy">${done?'<div class="done-badge">\u2705</div>':''}<div class="label">${c.emoji} ${c.label}</div>`;
+    d.onclick=()=>startStudio(c);
     g.appendChild(d);
-    idx++;
   });
   document.getElementById('sc').textContent=totalStars;
 }
+function goHome(){showPhase('pick');buildPicker()}
 
-function goHome(){
-  showPhase('home');
-  buildHome();
-}
-
-// ── PHASE 2: Category ──
-let currentCatCards=[];
-
-function openCategory(cat, cards){
-  activeCat=cat;
-  currentCatCards=cards;
-  const meta=CATEGORY_META[cat]||{emoji:'📦'};
-  document.getElementById('cat-title').textContent=meta.emoji+' '+cat;
-  const doneCount=cards.filter(c=>doneSet.has(c.id)).length;
-  document.getElementById('cat-sub').textContent=`${cards.length} challenge cards · ${doneCount} completed`;
-
-  const g=document.getElementById('card-grid');
-  g.innerHTML='';
-  cards.forEach((c,i)=>{
-    const isDone=doneSet.has(c.id);
-    const d=document.createElement('div');
-    d.className='ch-card'+(isDone?' done':'');
-    d.style.setProperty('--stagger', (i*40)+'ms'); // Emil: stagger 30-80ms
-    d.innerHTML=`
-      <img src="${c.img}" alt="${c.label}" loading="lazy">
-      ${isDone?'<div class="done-badge">✅</div>':''}
-      <div class="ch-card-foot">${c.emoji} ${c.label}</div>`;
-    d.onclick=()=>startChallenge(c);
-    g.appendChild(d);
-  });
-  showPhase('category');
-}
-
-function goCategory(){
-  if(activeCat && currentCatCards.length){
-    openCategory(activeCat, currentCatCards);
-  } else {
-    goHome();
-  }
-}
-
-// ── PHASE 3: Studio ──
-function startChallenge(c){
-  activeCard=c;
-  placed=[];hist=[];selId=null;selPal=null;
+/* ── PHASE 2: Studio ── */
+function startStudio(c){
+  activeCard=c;placed=[];hist=[];selId=null;selPal=null;
   document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('ref-img').src=c.img;
-  document.getElementById('ref-lbl').textContent='📸 '+c.label;
-  renderShapes();
-  showPhase('studio');
-  sizeCanvas();
+  document.getElementById('ref-card-name').textContent=c.emoji+' '+c.label;
+  updateHint();renderShapes();showPhase('studio');sizeCanvas();
+  // instruction banner
+  const ban=document.getElementById('instruction-banner');
+  ban.style.display='';ban.className='';
+  const dismiss=()=>{ban.classList.add('out');setTimeout(()=>ban.style.display='none',300)};
+  ban.onclick=dismiss;setTimeout(dismiss,3500);
+  // canvas events
   const sl=document.getElementById('shapes-layer');
-  sl.onclick=onCvClick;
-  sl.ontouchend=null;
+  sl.onclick=onCvClick;sl.ontouchend=null;
   sl.addEventListener('touchend',onCvTouch,{passive:false});
 }
 
 function sizeCanvas(){
-  const sb=document.getElementById('studio-body');
-  if(!sb) return;
-  const r=sb.getBoundingClientRect();
-  cW=Math.max(Math.floor((r.width-7-18)/2),90);
-  cH=Math.max(r.height-26,90);
-  const ca=document.getElementById('canvas-area');
-  ca.style.width=cW+'px';ca.style.height=cH+'px';
+  const wrap=document.getElementById('canvas-wrap');
+  if(!wrap)return;
+  const r=wrap.getBoundingClientRect();
+  cW=Math.max(r.width,60);cH=Math.max(r.height,60);
   renderShapes();
 }
 
+function buildShapePalette(){
+  const row=document.getElementById('shape-row');
+  SHAPES.forEach(({t,l})=>{
+    const b=document.createElement('button');b.className='shp-btn';b.dataset.type=t;
+    b.innerHTML=mkSVG(t,'#4a90e2',28)+'<span class="shp-label">'+l+'</span>';
+    b.onclick=()=>{selPal=t;selId=null;document.querySelectorAll('.shp-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');updateHint();renderShapes()};
+    row.appendChild(b);
+  });
+}
 function buildColors(){
-  const s=document.getElementById('col-strip');
+  const s=document.getElementById('color-strip');
   COLS.forEach(c=>{
     const d=document.createElement('div');d.className='col-chip'+(c===curColor?' active':'');
-    d.style.background=c;if(c==='#ffffff')d.style.border='3px solid rgba(180,180,180,0.5)';
+    d.style.background=c;if(c==='#f0edf3')d.style.border='3px solid oklch(70% 0.01 290)';
     d.onclick=()=>{curColor=c;document.querySelectorAll('.col-chip').forEach(e=>e.classList.remove('active'));d.classList.add('active');
-      if(selId){const sh=placed.find(p=>p.id===selId);if(sh){sh.color=c;renderShapes();}}};
+      if(selId){const sh=placed.find(p=>p.id===selId);if(sh){sh.color=c;renderShapes()}}};
     s.appendChild(d);
   });
 }
-
 function buildSizes(){
-  const s=document.getElementById('sz-strip');
-  [{k:'S',l:'Small'},{k:'M',l:'Med'},{k:'L',l:'Large'}].forEach(({k,l})=>{
+  const s=document.getElementById('size-strip');
+  [{k:'S',l:'Small'},{k:'M',l:'Med'},{k:'L',l:'Big'}].forEach(({k,l})=>{
     const b=document.createElement('button');b.className='sz-btn'+(k===curSize?' active':'');b.textContent=l;
-    b.onclick=()=>{curSize=k;document.querySelectorAll('.sz-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
+    b.onclick=()=>{curSize=k;document.querySelectorAll('.sz-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active')};
     s.appendChild(b);
   });
 }
 
-function buildPalette(){
-  const p=document.getElementById('shp-palette');
-  const tips={circle:'Circle',semicircle:'Half circle',oval:'Oval',triangle:'Triangle',square:'Square',rectangle:'Rectangle','thin-rect':'Stick',quarter:'Quarter'};
-  SHAPES.forEach(t=>{
-    const b=document.createElement('button');b.className='shp-btn';b.title=tips[t]||t;
-    b.innerHTML=mkSVG(t,'#4a90e2',30);b.dataset.type=t;
-    b.onclick=()=>{selPal=t;selId=null;document.querySelectorAll('.shp-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderShapes();};
-    p.appendChild(b);
-  });
+function updateHint(){
+  const h=document.getElementById('canvas-hint');
+  if(h)h.classList.toggle('hidden',!!selPal||placed.length>0);
 }
 
-// ── Canvas interactions ──
-function onCvClick(e){
-  if(e.target.closest('.placed-shape'))return;
-  if(!selPal)return;
-  const r=document.getElementById('canvas-area').getBoundingClientRect();
-  addShape(e.clientX-r.left,e.clientY-r.top);
-}
-function onCvTouch(e){
-  if(lastMoved){lastMoved=false;return;}
-  if(e.target.closest('.placed-shape'))return;
-  if(!selPal)return;
-  e.preventDefault();
-  const t=e.changedTouches[0],r=document.getElementById('canvas-area').getBoundingClientRect();
-  const x=t.clientX-r.left,y=t.clientY-r.top;
-  if(x<0||y<0||x>cW||y>cH)return;
-  addShape(x,y);
-}
-function addShape(x,y){
-  const id=nid++;
-  placed.push({id,type:selPal,color:curColor,size:curSize,x,y,rot:0});
-  hist.push({action:'place',id});
-  renderShapes();selShape(id);
-}
+/* ── Canvas interactions ── */
+function onCvClick(e){if(e.target.closest('.placed-shape'))return;if(!selPal)return;const r=document.getElementById('canvas-wrap').getBoundingClientRect();addShape(e.clientX-r.left,e.clientY-r.top)}
+function onCvTouch(e){if(lastMoved){lastMoved=false;return}if(e.target.closest('.placed-shape'))return;if(!selPal)return;e.preventDefault();const t=e.changedTouches[0],r=document.getElementById('canvas-wrap').getBoundingClientRect();const x=t.clientX-r.left,y=t.clientY-r.top;if(x<0||y<0||x>cW||y>cH)return;addShape(x,y)}
+function addShape(x,y){const id=nid++;placed.push({id,type:selPal,color:curColor,size:curSize,x,y,rot:0});hist.push({action:'place',id});renderShapes();selShape(id);updateHint()}
 
 function renderShapes(){
   const layer=document.getElementById('shapes-layer');layer.innerHTML='';
@@ -504,75 +424,44 @@ function renderShapes(){
     div.style.transform=`translate(-50%,-50%) rotate(${s.rot||0}deg)`;
     div.style.zIndex=s.id===selId?10:1;
     div.innerHTML=mkSVG(s.type,s.color,sz);div.dataset.id=s.id;
-    div.onclick=e=>{e.stopPropagation();selShape(s.id);};
+    div.onclick=e=>{e.stopPropagation();selShape(s.id)};
     div.addEventListener('touchstart',onShTS,{passive:false});
-    div.addEventListener('touchmove', onShTM,{passive:false});
-    div.addEventListener('touchend',  onShTE,{passive:false});
+    div.addEventListener('touchmove',onShTM,{passive:false});
+    div.addEventListener('touchend',onShTE,{passive:false});
     div.addEventListener('mousedown',onShMD);
     layer.appendChild(div);
   });
 }
+function selShape(id){selId=id;selPal=null;document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));renderShapes()}
 
-function selShape(id){selId=id;selPal=null;document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));renderShapes();}
+function onShTS(e){e.preventDefault();e.stopPropagation();lastMoved=false;const id=+e.currentTarget.dataset.id;selShape(id);const t=e.touches[0],s=placed.find(p=>p.id===id);drag={id,sx:t.clientX,sy:t.clientY,ox:s.x,oy:s.y}}
+function onShTM(e){e.preventDefault();if(!drag)return;lastMoved=true;const t=e.touches[0],s=placed.find(p=>p.id===drag.id);if(s){s.x=Math.max(0,Math.min(cW,drag.ox+t.clientX-drag.sx));s.y=Math.max(0,Math.min(cH,drag.oy+t.clientY-drag.sy));renderShapes()}}
+function onShTE(e){e.preventDefault();drag=null}
+function onShMD(e){e.preventDefault();e.stopPropagation();const id=+e.currentTarget.dataset.id;selShape(id);const s=placed.find(p=>p.id===id);drag={id,sx:e.clientX,sy:e.clientY,ox:s.x,oy:s.y};const mv=ev=>{const sh=placed.find(p=>p.id===drag.id);if(sh){sh.x=Math.max(0,Math.min(cW,drag.ox+ev.clientX-drag.sx));sh.y=Math.max(0,Math.min(cH,drag.oy+ev.clientY-drag.sy));renderShapes()}};const up=()=>{drag=null;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up)};document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up)}
 
-// Touch drag
-function onShTS(e){
-  e.preventDefault();e.stopPropagation();lastMoved=false;
-  const id=parseInt(e.currentTarget.dataset.id);selShape(id);
-  const t=e.touches[0],s=placed.find(p=>p.id===id);
-  drag={id,sx:t.clientX,sy:t.clientY,ox:s.x,oy:s.y};
-}
-function onShTM(e){
-  e.preventDefault();if(!drag)return;lastMoved=true;
-  const t=e.touches[0],s=placed.find(p=>p.id===drag.id);
-  if(s){s.x=Math.max(0,Math.min(cW,drag.ox+t.clientX-drag.sx));s.y=Math.max(0,Math.min(cH,drag.oy+t.clientY-drag.sy));renderShapes();}
-}
-function onShTE(e){e.preventDefault();drag=null;}
+function rotateSelected(){const s=placed.find(p=>p.id===selId);if(s){s.rot=(s.rot||0)+45;renderShapes()}}
+function undoLast(){if(!hist.length)return;const l=hist.pop();if(l.action==='place'){placed=placed.filter(s=>s.id!==l.id);if(selId===l.id)selId=null;renderShapes();updateHint()}}
+function clearAll(){if(!placed.length)return;placed=[];hist=[];selId=null;renderShapes();updateHint()}
 
-// Mouse drag
-function onShMD(e){
-  e.preventDefault();e.stopPropagation();
-  const id=parseInt(e.currentTarget.dataset.id);selShape(id);
-  const s=placed.find(p=>p.id===id);
-  drag={id,sx:e.clientX,sy:e.clientY,ox:s.x,oy:s.y};
-  const mv=ev=>{const sh=placed.find(p=>p.id===drag.id);if(sh){sh.x=Math.max(0,Math.min(cW,drag.ox+ev.clientX-drag.sx));sh.y=Math.max(0,Math.min(cH,drag.oy+ev.clientY-drag.sy));renderShapes();}};
-  const up=()=>{drag=null;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
-  document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
-}
-
-// Toolbar actions
-function rotateSelected(){const s=placed.find(p=>p.id===selId);if(s){s.rot=(s.rot||0)+45;renderShapes();}}
-function undoLast(){if(!hist.length)return;const l=hist.pop();if(l.action==='place'){placed=placed.filter(s=>s.id!==l.id);if(selId===l.id)selId=null;renderShapes();}}
-function clearAll(){if(!placed.length)return;if(!confirm('Clear all shapes?'))return;placed=[];hist=[];selId=null;renderShapes();}
-
-// ── PHASE 4: Done ──
+/* ── PHASE 3: Done ── */
 function finishArt(){
-  if(!placed.length){alert('Add some shapes first! 🎨');return;}
-  doneSet.add(activeCard.id);
-  totalStars+=placed.length;
-  document.getElementById('sc').textContent=totalStars;
-  saveState();
-
+  if(!placed.length)return;
+  doneSet.add(activeCard.id);totalStars+=placed.length;
+  document.getElementById('sc').textContent=totalStars;save();
   document.getElementById('dn-name').textContent=activeCard.emoji+' '+activeCard.label;
   document.getElementById('dn-ref').src=activeCard.img;
-
-  // Clone canvas snapshot
-  const snap=document.getElementById('canvas-area').cloneNode(true);
-  snap.style.position='relative';snap.style.zIndex='';snap.classList.add('dn-snap');
+  const snap=document.getElementById('canvas-wrap').cloneNode(true);
+  snap.style.position='relative';snap.style.width='';snap.style.height='';
+  snap.querySelectorAll('#canvas-hint,#instruction-banner').forEach(e=>e.remove());
   const sw=document.getElementById('dn-snap');sw.innerHTML='';sw.appendChild(snap);
   document.getElementById('dn-count').textContent=placed.length;
   showPhase('done');confetti();
 }
-
-function keepEditing(){showPhase('studio');sizeCanvas();}
+function keepEditing(){showPhase('studio');sizeCanvas()}
 
 function confetti(){
-  const cols=['#f5a623','#e86dbd','#4a90e2','#52c478','#f1c40f','#9b59b6','#f5f3f7'];
-  for(let i=0;i<70;i++){
-    const d=document.createElement('div');d.className='cpcs';const sz=5+Math.random()*8;
-    d.style.cssText=`width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-10px;--cd:${1.1+Math.random()*.8}s;--cdd:${Math.random()}s;border-radius:${Math.random()>.5?'50%':'3px'}`;
-    document.body.appendChild(d);setTimeout(()=>d.remove(),3000);
-  }
+  const cols=['#f5a623','#e86dbd','#4a90e2','#52c478','#f1c40f','#9b59b6','#f0edf3'];
+  for(let i=0;i<70;i++){const d=document.createElement('div');d.className='cpcs';const sz=5+Math.random()*8;d.style.cssText=`width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-10px;--cd:${1.1+Math.random()*.8}s;--cdd:${Math.random()}s;border-radius:${Math.random()>.5?'50%':'3px'}`;document.body.appendChild(d);setTimeout(()=>d.remove(),3000)}
 }
 </script>
 </body>
