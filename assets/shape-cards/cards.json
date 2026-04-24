@@ -1,0 +1,729 @@
+[
+  {
+    "id": "bear",
+    "label": "bear",
+    "emoji": "🐻",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/bear.jpg",
+    "shapes": [
+      "circle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "bird",
+    "label": "bird",
+    "emoji": "🐦",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/bird.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "triangle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "bird-2",
+    "label": "bird",
+    "emoji": "🐦",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/bird-2.jpg",
+    "shapes": [
+      "circle",
+      "triangle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "butterfly",
+    "label": "butterfly",
+    "emoji": "🦋",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/butterfly.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "butterfly-2",
+    "label": "butterfly",
+    "emoji": "🦋",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/butterfly-2.jpg",
+    "shapes": [
+      "circle",
+      "oval",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "caterpillar",
+    "label": "caterpillar",
+    "emoji": "🐛",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/caterpillar.jpg",
+    "shapes": [
+      "circle"
+    ]
+  },
+  {
+    "id": "caterpillar-2",
+    "label": "caterpillar",
+    "emoji": "🐛",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/caterpillar-2.jpg",
+    "shapes": [
+      "circle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "cattle",
+    "label": "cattle",
+    "emoji": "🐄",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/cattle.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "crab",
+    "label": "crab",
+    "emoji": "🦀",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/crab.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "deer",
+    "label": "deer",
+    "emoji": "🦌",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/deer.jpg",
+    "shapes": [
+      "semicircle",
+      "circle",
+      "triangle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "dodo",
+    "label": "Raphus cucullatus",
+    "emoji": "🦤",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/dodo.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "dog",
+    "label": "dog",
+    "emoji": "🐕",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/dog.jpg",
+    "shapes": [
+      "semicircle",
+      "triangle",
+      "circle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "dog-2",
+    "label": "dog",
+    "emoji": "🐕",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/dog-2.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "dog-3",
+    "label": "dog",
+    "emoji": "🐕",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/dog-3.jpg",
+    "shapes": [
+      "semicircle",
+      "circle",
+      "triangle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "dragonfly",
+    "label": "dragonfly",
+    "emoji": "🪰",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/dragonfly.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "duck",
+    "label": "duck",
+    "emoji": "🦆",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/duck.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "triangle"
+    ]
+  },
+  {
+    "id": "elephant",
+    "label": "elephant",
+    "emoji": "🐘",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/elephant.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "rectangle",
+      "crescent"
+    ]
+  },
+  {
+    "id": "elephant-2",
+    "label": "elephant",
+    "emoji": "🐘",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/elephant-2.jpg",
+    "shapes": [
+      "circle",
+      "triangle",
+      "crescent"
+    ]
+  },
+  {
+    "id": "fish",
+    "label": "fish",
+    "emoji": "🐟",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/fish.jpg",
+    "shapes": [
+      "triangle",
+      "circle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "flamingo",
+    "label": "flamingo",
+    "emoji": "🦩",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/flamingo.jpg",
+    "shapes": [
+      "circle",
+      "crescent",
+      "oval",
+      "semicircle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "frog",
+    "label": "frog",
+    "emoji": "🐸",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/frog.jpg",
+    "shapes": [
+      "circle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "giraffe",
+    "label": "giraffe",
+    "emoji": "🦒",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/giraffe.jpg",
+    "shapes": [
+      "oval",
+      "circle",
+      "triangle",
+      "rectangle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "kangaroo",
+    "label": "kangaroo",
+    "emoji": "🦘",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/kangaroo.jpg",
+    "shapes": [
+      "triangle",
+      "semicircle",
+      "oval",
+      "circle"
+    ]
+  },
+  {
+    "id": "ladybug",
+    "label": "ladybug",
+    "emoji": "🐞",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/ladybug.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "ladybug-2",
+    "label": "ladybug",
+    "emoji": "🐞",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/ladybug-2.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "lantern-fish",
+    "label": "Lantern fish",
+    "emoji": "🐟",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/lantern-fish.jpg",
+    "shapes": [
+      "semicircle",
+      "circle"
+    ]
+  },
+  {
+    "id": "mouse",
+    "label": "mouse",
+    "emoji": "🐭",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/mouse.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval",
+      "crescent"
+    ]
+  },
+  {
+    "id": "octopus",
+    "label": "octopus",
+    "emoji": "🐙",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/octopus.jpg",
+    "shapes": [
+      "semicircle",
+      "circle",
+      "oval"
+    ]
+  },
+  {
+    "id": "owl",
+    "label": "owl",
+    "emoji": "🦉",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/owl.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval",
+      "triangle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "poult",
+    "label": "poult",
+    "emoji": "🐤",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/poult.jpg",
+    "shapes": [
+      "circle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "toucan",
+    "label": "toucan",
+    "emoji": "🦜",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/toucan.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "triangle",
+      "oval"
+    ]
+  },
+  {
+    "id": "turkey",
+    "label": "turkey",
+    "emoji": "🦃",
+    "category": "Animals",
+    "img": "assets/shape-cards/Animals/turkey.jpg",
+    "shapes": [
+      "circle",
+      "oval",
+      "semicircle",
+      "triangle"
+    ]
+  },
+  {
+    "id": "candy",
+    "label": "candy",
+    "emoji": "🍬",
+    "category": "Food",
+    "img": "assets/shape-cards/Food/candy.jpg",
+    "shapes": [
+      "circle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "hamburger",
+    "label": "hamburger",
+    "emoji": "🍔",
+    "category": "Food",
+    "img": "assets/shape-cards/Food/hamburger.jpg",
+    "shapes": [
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "ceiling-lamp",
+    "label": "ceiling lamp",
+    "emoji": "💡",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/ceiling-lamp.jpg",
+    "shapes": [
+      "rectangle",
+      "triangle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "draw-bar-box",
+    "label": "draw-bar box",
+    "emoji": "🧳",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/draw-bar-box.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "rectangle",
+      "oval"
+    ]
+  },
+  {
+    "id": "faucet",
+    "label": "faucet",
+    "emoji": "🚰",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/faucet.jpg",
+    "shapes": [
+      "triangle",
+      "semicircle",
+      "circle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "fruit-plate",
+    "label": "fruit plate",
+    "emoji": "🍇",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/fruit-plate.jpg",
+    "shapes": [
+      "semicircle",
+      "semicircle",
+      "trapezoid"
+    ]
+  },
+  {
+    "id": "hourglass",
+    "label": "hourglass",
+    "emoji": "⏳",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/hourglass.jpg",
+    "shapes": [
+      "semicircle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "house",
+    "label": "house",
+    "emoji": "🏠",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/house.jpg",
+    "shapes": [
+      "triangle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "puppet",
+    "label": "puppet",
+    "emoji": "🎭",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/puppet.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "robot",
+    "label": "robot",
+    "emoji": "🤖",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/robot.jpg",
+    "shapes": [
+      "circle",
+      "triangle",
+      "semicircle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "rocking-horse",
+    "label": "rocking horse",
+    "emoji": "🐴",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/rocking-horse.jpg",
+    "shapes": [
+      "circle",
+      "triangle",
+      "semicircle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "umbrella",
+    "label": "umbrella",
+    "emoji": "☂️",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/umbrella.jpg",
+    "shapes": [
+      "semicircle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "windmill",
+    "label": "windmill",
+    "emoji": "🎡",
+    "category": "Objects",
+    "img": "assets/shape-cards/Objects/windmill.jpg",
+    "shapes": [
+      "semicircle",
+      "circle"
+    ]
+  },
+  {
+    "id": "boy",
+    "label": "Boy",
+    "emoji": "👦",
+    "category": "People",
+    "img": "assets/shape-cards/People/boy.jpg",
+    "shapes": [
+      "square",
+      "trapezoid",
+      "semicircle",
+      "circle"
+    ]
+  },
+  {
+    "id": "girl",
+    "label": "girl",
+    "emoji": "👧",
+    "category": "People",
+    "img": "assets/shape-cards/People/girl.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "triangle",
+      "oval"
+    ]
+  },
+  {
+    "id": "smiling-face",
+    "label": "smiling face",
+    "emoji": "😊",
+    "category": "People",
+    "img": "assets/shape-cards/People/smiling-face.jpg",
+    "shapes": [
+      "circle",
+      "oval",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "snowman",
+    "label": "snowman",
+    "emoji": "⛄",
+    "category": "People",
+    "img": "assets/shape-cards/People/snowman.jpg",
+    "shapes": [
+      "triangle",
+      "circle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "aircraft",
+    "label": "aircraft",
+    "emoji": "✈️",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/aircraft.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "triangle",
+      "oval",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "car",
+    "label": "car",
+    "emoji": "🚗",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/car.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "oval"
+    ]
+  },
+  {
+    "id": "excavator",
+    "label": "excavator",
+    "emoji": "🚜",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/excavator.jpg",
+    "shapes": [
+      "rectangle",
+      "semicircle",
+      "circle",
+      "triangle",
+      "oval"
+    ]
+  },
+  {
+    "id": "helicopter",
+    "label": "helicopter",
+    "emoji": "🚁",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/helicopter.jpg",
+    "shapes": [
+      "oval",
+      "circle",
+      "semicircle",
+      "triangle"
+    ]
+  },
+  {
+    "id": "hot-air-balloon",
+    "label": "hot air balloon",
+    "emoji": "🎈",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/hot-air-balloon.jpg",
+    "shapes": [
+      "circle",
+      "semicircle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "motorcycle",
+    "label": "motorcycle",
+    "emoji": "🏍️",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/motorcycle.jpg",
+    "shapes": [
+      "semicircle",
+      "crescent",
+      "oval"
+    ]
+  },
+  {
+    "id": "ride",
+    "label": "ride",
+    "emoji": "🚴",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/ride.jpg",
+    "shapes": [
+      "circle",
+      "triangle",
+      "semicircle"
+    ]
+  },
+  {
+    "id": "rocket",
+    "label": "rocket",
+    "emoji": "🚀",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/rocket.jpg",
+    "shapes": [
+      "triangle",
+      "semicircle",
+      "rectangle"
+    ]
+  },
+  {
+    "id": "sailboat",
+    "label": "sailboat",
+    "emoji": "⛵",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/sailboat.jpg",
+    "shapes": [
+      "triangle",
+      "semicircle",
+      "circle"
+    ]
+  },
+  {
+    "id": "ufo",
+    "label": "UFO",
+    "emoji": "🛸",
+    "category": "Vehicles",
+    "img": "assets/shape-cards/Vehicles/ufo.jpg",
+    "shapes": [
+      "semicircle",
+      "triangle",
+      "oval"
+    ]
+  }
+]
