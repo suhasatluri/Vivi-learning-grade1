@@ -89,41 +89,163 @@ def analyse_image(path: Path) -> dict:
 
 
 def auto_crop_card(path: Path) -> Image.Image:
-    """Detect the white card region and crop to it."""
+    """Detect the white card region and crop tightly to it.
+
+    Strategy:
+    1. Downsample + heavy Gaussian blur so colored shapes merge into the
+       white card background, leaving a uniform bright blob vs darker table.
+    2. Otsu threshold to separate card from table.
+    3. Two-pass density scan: find card rows first (row density > threshold),
+       then find card columns within only the card rows. This handles the
+       card not filling the full image in either dimension.
+    4. Find the longest contiguous run of card rows/cols = card bounds.
+    """
     img = Image.open(path).convert("RGB")
-    arr = np.array(img)
 
-    # White-ish mask: all channels > 180 and low variance across channels
-    channel_min = arr.min(axis=2)
-    channel_max = arr.max(axis=2)
-    bright = channel_min > 160
-    low_spread = (channel_max.astype(int) - channel_min.astype(int)) < 50
-    mask = (bright & low_spread).astype(np.uint8) * 255
+    # --- Downsample for speed ---
+    MAX_DIM = 600
+    scale = 1.0
+    if max(img.size) > MAX_DIM:
+        scale = MAX_DIM / max(img.size)
+        small = img.resize(
+            (int(img.width * scale), int(img.height * scale)), Image.LANCZOS
+        )
+    else:
+        small = img
 
-    # Clean up the mask with morphological operations
-    mask_img = Image.fromarray(mask)
-    mask_img = mask_img.filter(ImageFilter.MedianFilter(7))
-    mask = np.array(mask_img)
-
-    # Find bounding box of the largest white region
-    rows = np.any(mask > 128, axis=1)
-    cols = np.any(mask > 128, axis=0)
-    if not rows.any() or not cols.any():
-        return img  # fallback: return full image
-
-    rmin, rmax = np.where(rows)[0][[0, -1]]
-    cmin, cmax = np.where(cols)[0][[0, -1]]
-
-    # Add small padding inward to trim card edge artifacts
+    # --- Heavy blur to merge shapes into card background ---
+    blur_radius = max(small.width, small.height) // 20
+    blurred = small.filter(ImageFilter.GaussianBlur(radius=blur_radius))
+    arr = np.array(blurred, dtype=np.float32)
     h, w = arr.shape[:2]
-    pad = int(min(h, w) * 0.01)
-    rmin = min(rmin + pad, rmax)
-    rmax = max(rmax - pad, rmin)
-    cmin = min(cmin + pad, cmax)
-    cmax = max(cmax - pad, cmin)
+    gray = arr.mean(axis=2)
 
-    cropped = img.crop((cmin, rmin, cmax, rmax))
-    return cropped
+    # --- Otsu threshold ---
+    flat = gray.flatten()
+    total = len(flat)
+    best_thresh, best_var = 0, 0
+    for t in range(50, 220, 2):
+        fg = flat[flat >= t]
+        bg = flat[flat < t]
+        if len(fg) == 0 or len(bg) == 0:
+            continue
+        var = (len(fg) / total) * (len(bg) / total) * (fg.mean() - bg.mean()) ** 2
+        if var > best_var:
+            best_var = var
+            best_thresh = t
+
+    mask = gray >= best_thresh
+
+    # --- Helper: longest contiguous run of True ---
+    def longest_run(arr_bool):
+        best_start, best_len = 0, 0
+        cur_start, cur_len = 0, 0
+        for i, v in enumerate(arr_bool):
+            if v:
+                if cur_len == 0:
+                    cur_start = i
+                cur_len += 1
+                if cur_len > best_len:
+                    best_start, best_len = cur_start, cur_len
+            else:
+                cur_len = 0
+        if best_len == 0:
+            return 0, len(arr_bool) - 1
+        return best_start, best_start + best_len - 1
+
+    # --- Two-pass density detection with union for robustness ---
+    # Pass A: rows first, then columns within those rows
+    DENSITY_THRESH = 0.50
+    row_density_a = mask.mean(axis=1)
+    card_rows_a = row_density_a > DENSITY_THRESH
+    rmin_a, rmax_a = longest_run(card_rows_a)
+    card_strip_a = mask[rmin_a:rmax_a + 1, :]
+    col_density_a = card_strip_a.mean(axis=0)
+    card_cols_a = col_density_a > DENSITY_THRESH
+    cmin_a, cmax_a = longest_run(card_cols_a)
+
+    # Pass B: columns first, then rows within those columns
+    col_density_b = mask.mean(axis=0)
+    card_cols_b = col_density_b > DENSITY_THRESH
+    cmin_b, cmax_b = longest_run(card_cols_b)
+    card_strip_b = mask[:, cmin_b:cmax_b + 1]
+    row_density_b = card_strip_b.mean(axis=1)
+    card_rows_b = row_density_b > DENSITY_THRESH
+    rmin_b, rmax_b = longest_run(card_rows_b)
+
+    # Union: take the most inclusive bounds from both passes
+    rmin = min(rmin_a, rmin_b)
+    rmax = max(rmax_a, rmax_b)
+    cmin = min(cmin_a, cmin_b)
+    cmax = max(cmax_a, cmax_b)
+
+    # --- Extend edges outward until we hit a steep brightness drop ---
+    # This recovers shadowed card edges that the density threshold missed.
+    # The card-to-table transition has a sharp brightness drop; within-card
+    # shadows are more gradual.
+    row_profile = gray.mean(axis=1)
+    col_profile = gray.mean(axis=0)
+    DROP_THRESH = 8  # brightness drop per pixel that signals card edge
+
+    # Extend top edge upward
+    while rmin > 0:
+        drop = row_profile[rmin] - row_profile[rmin - 1]
+        if drop > DROP_THRESH:
+            break
+        rmin -= 1
+
+    # Extend bottom edge downward
+    while rmax < h - 1:
+        drop = row_profile[rmax] - row_profile[rmax + 1]
+        if drop > DROP_THRESH:
+            break
+        rmax += 1
+
+    # Extend left edge leftward
+    while cmin > 0:
+        drop = col_profile[cmin] - col_profile[cmin - 1]
+        if drop > DROP_THRESH:
+            break
+        cmin -= 1
+
+    # Extend right edge rightward
+    while cmax < w - 1:
+        drop = col_profile[cmax] - col_profile[cmax + 1]
+        if drop > DROP_THRESH:
+            break
+        cmax += 1
+
+    # --- Inward padding to trim rounded corners and shadow fringe ---
+    card_h = rmax - rmin
+    card_w = cmax - cmin
+    pad_x = int(card_w * 0.015)
+    pad_y = int(card_h * 0.015)
+    rmin += pad_y
+    rmax -= pad_y
+    cmin += pad_x
+    cmax -= pad_x
+
+    # Clamp
+    rmin = max(rmin, 0)
+    cmin = max(cmin, 0)
+    rmax = min(rmax, h - 1)
+    cmax = min(cmax, w - 1)
+
+    if rmax <= rmin or cmax <= cmin:
+        return img
+
+    # --- Scale back to original image coords ---
+    orig_left = int(cmin / scale)
+    orig_top = int(rmin / scale)
+    orig_right = int(cmax / scale)
+    orig_bottom = int(rmax / scale)
+
+    orig_left = max(orig_left, 0)
+    orig_top = max(orig_top, 0)
+    orig_right = min(orig_right, img.width)
+    orig_bottom = min(orig_bottom, img.height)
+
+    return img.crop((orig_left, orig_top, orig_right, orig_bottom))
 
 
 def resize_and_compress(img: Image.Image, out_path: Path):
@@ -180,7 +302,52 @@ def resize_and_compress(img: Image.Image, out_path: Path):
 
 # ── main ─────────────────────────────────────────────────────────────
 
+def reprocess_images():
+    """Re-crop and re-compress all images using existing cards.json metadata (no API calls)."""
+    if not CARDS_JSON.exists():
+        print("No cards.json found — run without --reprocess first.")
+        sys.exit(1)
+
+    cards = json.loads(CARDS_JSON.read_text())
+    total = len(cards)
+    print(f"Re-processing {total} images with improved cropping\n")
+    failures = []
+
+    for i, card in enumerate(cards, 1):
+        source = card.get("_source")
+        if not source:
+            print(f"[{i}/{total}]  {card['id']} — no _source field, skipping")
+            failures.append((card["id"], "missing _source"))
+            continue
+
+        img_path = RAW_DIR / source
+        if not img_path.exists():
+            print(f"[{i}/{total}]  {card['id']} — source {source} not found, skipping")
+            failures.append((source, "file not found"))
+            continue
+
+        try:
+            print(f"[{i}/{total}]  {card['emoji']}  {card['label']}...", end="", flush=True)
+            cropped = auto_crop_card(img_path)
+            out_path = OUT_DIR / card["category"] / f"{card['id']}.jpg"
+            resize_and_compress(cropped, out_path)
+            size_kb = out_path.stat().st_size / 1024
+            print(f"  → {size_kb:.1f} KB  ✓")
+        except Exception as e:
+            print(f"  ✗ FAILED: {e}")
+            failures.append((source, str(e)))
+
+    print(f"\nDone. {total - len(failures)} succeeded, {len(failures)} failed.")
+    if failures:
+        for fname, err in failures:
+            print(f"  {fname}: {err}")
+
+
 def main():
+    if "--reprocess" in sys.argv:
+        reprocess_images()
+        return
+
     images = sorted([
         f for f in RAW_DIR.iterdir()
         if f.suffix.lower() in (".jpg", ".jpeg", ".png")
@@ -237,6 +404,7 @@ def main():
                 "category": cat,
                 "img": f"assets/shape-cards/{cat}/{name}.jpg",
                 "shapes": meta["shapes_used"],
+                "_source": img_path.name,
             })
             category_counts[cat] = category_counts.get(cat, 0) + 1
             consecutive_fails = 0

@@ -8,7 +8,8 @@
     "shapes": [
       "circle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160332.jpg"
   },
   {
     "id": "bird",
@@ -21,7 +22,8 @@
       "semicircle",
       "triangle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160354.jpg"
   },
   {
     "id": "bird-2",
@@ -33,7 +35,8 @@
       "circle",
       "triangle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_161015.jpg"
   },
   {
     "id": "butterfly",
@@ -45,7 +48,8 @@
       "circle",
       "semicircle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160504.jpg"
   },
   {
     "id": "butterfly-2",
@@ -55,9 +59,9 @@
     "img": "assets/shape-cards/Animals/butterfly-2.jpg",
     "shapes": [
       "circle",
-      "oval",
-      "semicircle"
-    ]
+      "oval"
+    ],
+    "_source": "20260424_160544.jpg"
   },
   {
     "id": "caterpillar",
@@ -67,7 +71,8 @@
     "img": "assets/shape-cards/Animals/caterpillar.jpg",
     "shapes": [
       "circle"
-    ]
+    ],
+    "_source": "20260424_160216.jpg"
   },
   {
     "id": "caterpillar-2",
@@ -78,7 +83,8 @@
     "shapes": [
       "circle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_161216.jpg"
   },
   {
     "id": "cattle",
@@ -90,7 +96,8 @@
       "circle",
       "semicircle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160712.jpg"
   },
   {
     "id": "crab",
@@ -101,9 +108,9 @@
     "shapes": [
       "circle",
       "semicircle",
-      "oval",
-      "rectangle"
-    ]
+      "oval"
+    ],
+    "_source": "20260424_160124.jpg"
   },
   {
     "id": "deer",
@@ -116,7 +123,8 @@
       "circle",
       "triangle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160420.jpg"
   },
   {
     "id": "dodo",
@@ -129,7 +137,8 @@
       "semicircle",
       "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160447.jpg"
   },
   {
     "id": "dog",
@@ -142,7 +151,8 @@
       "triangle",
       "circle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160645.jpg"
   },
   {
     "id": "dog-2",
@@ -154,7 +164,8 @@
       "circle",
       "semicircle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160755.jpg"
   },
   {
     "id": "dog-3",
@@ -168,7 +179,8 @@
       "triangle",
       "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160821.jpg"
   },
   {
     "id": "dragonfly",
@@ -180,7 +192,8 @@
       "circle",
       "semicircle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160157.jpg"
   },
   {
     "id": "duck",
@@ -192,7 +205,8 @@
       "circle",
       "semicircle",
       "triangle"
-    ]
+    ],
+    "_source": "20260424_160727.jpg"
   },
   {
     "id": "elephant",
@@ -205,7 +219,8 @@
       "semicircle",
       "rectangle",
       "crescent"
-    ]
+    ],
+    "_source": "20260424_160117.jpg"
   },
   {
     "id": "elephant-2",
@@ -217,7 +232,8 @@
       "circle",
       "triangle",
       "crescent"
-    ]
+    ],
+    "_source": "20260424_160437.jpg"
   },
   {
     "id": "fish",
@@ -229,7 +245,8 @@
       "triangle",
       "circle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160134.jpg"
   },
   {
     "id": "flamingo",
@@ -243,7 +260,8 @@
       "oval",
       "semicircle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_161134.jpg"
   },
   {
     "id": "frog",
@@ -254,7 +272,8 @@
     "shapes": [
       "circle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160952.jpg"
   },
   {
     "id": "giraffe",
@@ -266,9 +285,10 @@
       "oval",
       "circle",
       "triangle",
-      "rectangle",
-      "semicircle"
-    ]
+      "semicircle",
+      "rectangle"
+    ],
+    "_source": "20260424_160321.jpg"
   },
   {
     "id": "kangaroo",
@@ -281,7 +301,8 @@
       "semicircle",
       "oval",
       "circle"
-    ]
+    ],
+    "_source": "20260424_160908.jpg"
   },
   {
     "id": "ladybug",
@@ -294,7 +315,8 @@
       "semicircle",
       "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_161328.jpg"
   },
   {
     "id": "ladybug-2",
@@ -307,7 +329,8 @@
       "semicircle",
       "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_161346.jpg"
   },
   {
     "id": "lantern-fish",
@@ -318,7 +341,8 @@
     "shapes": [
       "semicircle",
       "circle"
-    ]
+    ],
+    "_source": "20260424_160455.jpg"
   },
   {
     "id": "mouse",
@@ -329,9 +353,10 @@
     "shapes": [
       "circle",
       "semicircle",
-      "oval",
-      "crescent"
-    ]
+      "crescent",
+      "oval"
+    ],
+    "_source": "20260424_160233.jpg"
   },
   {
     "id": "octopus",
@@ -343,7 +368,8 @@
       "semicircle",
       "circle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160535.jpg"
   },
   {
     "id": "owl",
@@ -354,10 +380,11 @@
     "shapes": [
       "circle",
       "semicircle",
-      "oval",
       "triangle",
+      "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_161336.jpg"
   },
   {
     "id": "poult",
@@ -368,7 +395,8 @@
     "shapes": [
       "circle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160636.jpg"
   },
   {
     "id": "toucan",
@@ -379,9 +407,9 @@
     "shapes": [
       "circle",
       "semicircle",
-      "triangle",
-      "oval"
-    ]
+      "triangle"
+    ],
+    "_source": "20260424_161006.jpg"
   },
   {
     "id": "turkey",
@@ -394,7 +422,8 @@
       "oval",
       "semicircle",
       "triangle"
-    ]
+    ],
+    "_source": "20260424_160343.jpg"
   },
   {
     "id": "candy",
@@ -405,7 +434,8 @@
     "shapes": [
       "circle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160835.jpg"
   },
   {
     "id": "hamburger",
@@ -415,8 +445,9 @@
     "img": "assets/shape-cards/Food/hamburger.jpg",
     "shapes": [
       "semicircle",
-      "oval"
-    ]
+      "rectangle"
+    ],
+    "_source": "20260424_160621.jpg"
   },
   {
     "id": "ceiling-lamp",
@@ -428,7 +459,8 @@
       "rectangle",
       "triangle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160051.jpg"
   },
   {
     "id": "draw-bar-box",
@@ -441,7 +473,8 @@
       "semicircle",
       "rectangle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160811.jpg"
   },
   {
     "id": "faucet",
@@ -454,19 +487,21 @@
       "semicircle",
       "circle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160516.jpg"
   },
   {
     "id": "fruit-plate",
     "label": "fruit plate",
-    "emoji": "🍇",
+    "emoji": "🍽️",
     "category": "Objects",
     "img": "assets/shape-cards/Objects/fruit-plate.jpg",
     "shapes": [
       "semicircle",
       "semicircle",
       "trapezoid"
-    ]
+    ],
+    "_source": "20260424_161143.jpg"
   },
   {
     "id": "hourglass",
@@ -477,7 +512,8 @@
     "shapes": [
       "semicircle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160208.jpg"
   },
   {
     "id": "house",
@@ -487,8 +523,10 @@
     "img": "assets/shape-cards/Objects/house.jpg",
     "shapes": [
       "triangle",
-      "rectangle"
-    ]
+      "rectangle",
+      "square"
+    ],
+    "_source": "20260424_161230.jpg"
   },
   {
     "id": "puppet",
@@ -500,7 +538,8 @@
       "circle",
       "semicircle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160525.jpg"
   },
   {
     "id": "robot",
@@ -514,7 +553,8 @@
       "semicircle",
       "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_161208.jpg"
   },
   {
     "id": "rocking-horse",
@@ -527,7 +567,8 @@
       "triangle",
       "semicircle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_161121.jpg"
   },
   {
     "id": "umbrella",
@@ -538,7 +579,8 @@
     "shapes": [
       "semicircle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160428.jpg"
   },
   {
     "id": "windmill",
@@ -549,7 +591,8 @@
     "shapes": [
       "semicircle",
       "circle"
-    ]
+    ],
+    "_source": "20260424_160552.jpg"
   },
   {
     "id": "boy",
@@ -562,7 +605,8 @@
       "trapezoid",
       "semicircle",
       "circle"
-    ]
+    ],
+    "_source": "20260424_160917.jpg"
   },
   {
     "id": "girl",
@@ -573,9 +617,9 @@
     "shapes": [
       "circle",
       "semicircle",
-      "triangle",
-      "oval"
-    ]
+      "triangle"
+    ],
+    "_source": "20260424_160308.jpg"
   },
   {
     "id": "smiling-face",
@@ -587,7 +631,8 @@
       "circle",
       "oval",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_161152.jpg"
   },
   {
     "id": "snowman",
@@ -599,7 +644,8 @@
       "triangle",
       "circle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160600.jpg"
   },
   {
     "id": "aircraft",
@@ -613,7 +659,8 @@
       "triangle",
       "oval",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160614.jpg"
   },
   {
     "id": "car",
@@ -625,7 +672,8 @@
       "circle",
       "semicircle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_161300.jpg"
   },
   {
     "id": "excavator",
@@ -637,9 +685,10 @@
       "rectangle",
       "semicircle",
       "circle",
-      "triangle",
-      "oval"
-    ]
+      "trapezoid",
+      "triangle"
+    ],
+    "_source": "20260424_160037.jpg"
   },
   {
     "id": "helicopter",
@@ -652,7 +701,8 @@
       "circle",
       "semicircle",
       "triangle"
-    ]
+    ],
+    "_source": "20260424_160249.jpg"
   },
   {
     "id": "hot-air-balloon",
@@ -664,7 +714,8 @@
       "circle",
       "semicircle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160847.jpg"
   },
   {
     "id": "motorcycle",
@@ -676,7 +727,8 @@
       "semicircle",
       "crescent",
       "oval"
-    ]
+    ],
+    "_source": "20260424_160108.jpg"
   },
   {
     "id": "ride",
@@ -688,7 +740,8 @@
       "circle",
       "triangle",
       "semicircle"
-    ]
+    ],
+    "_source": "20260424_160023.jpg"
   },
   {
     "id": "rocket",
@@ -700,7 +753,8 @@
       "triangle",
       "semicircle",
       "rectangle"
-    ]
+    ],
+    "_source": "20260424_160407.jpg"
   },
   {
     "id": "sailboat",
@@ -711,8 +765,9 @@
     "shapes": [
       "triangle",
       "semicircle",
-      "circle"
-    ]
+      "semicircle"
+    ],
+    "_source": "20260424_161246.jpg"
   },
   {
     "id": "ufo",
@@ -724,6 +779,7 @@
       "semicircle",
       "triangle",
       "oval"
-    ]
+    ],
+    "_source": "20260424_161200.jpg"
   }
 ]
