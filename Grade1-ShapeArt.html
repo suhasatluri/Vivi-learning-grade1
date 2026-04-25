@@ -98,6 +98,13 @@ h1,h2,h3,.fredoka{font-family:'Fredoka One',cursive}
 .placed-shape{position:absolute;cursor:grab;touch-action:none;transition:filter 100ms var(--ease-out)}
 .placed-shape.selected{filter:drop-shadow(0 0 8px oklch(82% 0.2 90 / 0.9))}
 
+/* Resize handle */
+.resize-handle{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--off-white);box-shadow:0 1px 4px oklch(0% 0 0 / 0.35);cursor:nwse-resize;touch-action:none;z-index:20;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%)}
+.resize-handle svg{width:12px;height:12px;pointer-events:none}
+
+/* Size tooltip shown during resize */
+.size-tooltip{position:absolute;z-index:30;background:oklch(15% 0.02 290 / 0.88);color:var(--off-white);font-family:'Fredoka One',cursive;font-size:11px;padding:2px 7px;border-radius:6px;white-space:nowrap;pointer-events:none;transform:translate(-50%,-100%);margin-top:-6px}
+
 /* ─── Bottom toolbar (horizontal, MS Paint style) ─── */
 #toolbar{flex-shrink:0;background:var(--card);border-top:2px solid var(--border);padding:6px 10px;padding-bottom:max(6px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px}
 
@@ -120,9 +127,6 @@ h1,h2,h3,.fredoka{font-family:'Fredoka One',cursive}
 .col-chip.active{border-color:var(--off-white);transform:scale(1.15)}
 .col-chip:active{transform:scale(0.9)}
 
-.sz-btn{background:var(--surface);border:2px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Fredoka One',cursive;font-size:11px;padding:4px 10px;cursor:pointer;flex-shrink:0;min-height:32px;transition:transform 160ms var(--ease-out),background 150ms,border-color 150ms,color 150ms}
-.sz-btn:active{transform:scale(0.95)}
-.sz-btn.active{background:oklch(75% 0.17 70 / 0.2);border-color:var(--orange);color:var(--orange)}
 
 .act-btn{background:var(--surface);border:2px solid var(--border);border-radius:10px;color:var(--off-white);font-family:'Fredoka One',cursive;font-size:13px;padding:4px 10px;cursor:pointer;flex-shrink:0;min-height:36px;white-space:nowrap;transition:transform 160ms var(--ease-out),background 150ms;-webkit-tap-highlight-color:transparent}
 .act-btn:active{transform:scale(0.95)}
@@ -142,7 +146,6 @@ h1,h2,h3,.fredoka{font-family:'Fredoka One',cursive}
   .col-chip{width:36px;height:36px}
   .shp-btn{min-width:60px;min-height:60px}
   .act-btn{min-height:44px}
-  .sz-btn{min-height:40px}
 }
 
 /* ─── PHASE 3: Done ─── */
@@ -228,8 +231,6 @@ h1,h2,h3,.fredoka{font-family:'Fredoka One',cursive}
       <div id="controls-row">
         <div class="ctrl-group" id="color-strip"></div>
         <div class="ctrl-sep"></div>
-        <div class="ctrl-group" id="size-strip"></div>
-        <div class="ctrl-sep"></div>
         <div class="ctrl-group">
           <button class="act-btn" onclick="undoLast()" title="Undo">Undo</button>
           <button class="act-btn" onclick="rotateSelected()" title="Rotate">Rotate</button>
@@ -283,7 +284,7 @@ const FALLBACK=[
 
 /* ── Shape SVG ── */
 const COLS=['#e74c3c','#f5a623','#f1c40f','#52c478','#4a90e2','#9b59b6','#e86dbd','#1abc9c','#2c3e50','#f0edf3'];
-const SIZES={S:38,M:64,L:100};
+const DEFAULT_SIZE=80, MIN_SIZE=30, MAX_SIZE=200;
 const SHAPES=[
   {t:'circle',     l:'Circle'},
   {t:'semicircle', l:'Semi'},
@@ -311,8 +312,8 @@ function mkSVG(type,color,sz){
 }
 
 /* ── State ── */
-let totalStars=0,curColor=COLS[4],curSize='M',selPal=null;
-let placed=[],selId=null,nid=1,drag=null,hist=[];
+let totalStars=0,curColor=COLS[4],selPal=null;
+let placed=[],selId=null,nid=1,drag=null,resizeDrag=null,hist=[];
 let doneSet=new Set(),activeCard=null,cW=200,cH=200,lastMoved=false;
 
 try{const s=JSON.parse(localStorage.getItem('shapeArt2')||'{}');if(s.stars)totalStars=s.stars;if(s.done)doneSet=new Set(s.done)}catch(e){}
@@ -322,7 +323,7 @@ function save(){try{localStorage.setItem('shapeArt2',JSON.stringify({stars:total
 window.addEventListener('DOMContentLoaded',async()=>{
   document.getElementById('sc').textContent=totalStars;
   try{const r=await fetch('assets/shape-cards/cards.json');ALL_CARDS=await r.json();if(!ALL_CARDS.length)throw 0}catch(e){ALL_CARDS=FALLBACK}
-  buildPicker();buildShapePalette();buildColors();buildSizes();
+  buildPicker();buildShapePalette();buildColors();
 });
 window.addEventListener('resize',sizeCanvas);
 
@@ -395,34 +396,36 @@ function buildColors(){
     s.appendChild(d);
   });
 }
-function buildSizes(){
-  const s=document.getElementById('size-strip');
-  [{k:'S',l:'Small'},{k:'M',l:'Med'},{k:'L',l:'Big'}].forEach(({k,l})=>{
-    const b=document.createElement('button');b.className='sz-btn'+(k===curSize?' active':'');b.textContent=l;
-    b.onclick=()=>{curSize=k;document.querySelectorAll('.sz-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active')};
-    s.appendChild(b);
-  });
-}
-
 function updateHint(){
   const h=document.getElementById('canvas-hint');
   if(h)h.classList.toggle('hidden',!!selPal||placed.length>0);
 }
 
 /* ── Canvas interactions ── */
-function onCvClick(e){if(e.target.closest('.placed-shape'))return;if(!selPal)return;const r=document.getElementById('canvas-wrap').getBoundingClientRect();addShape(e.clientX-r.left,e.clientY-r.top)}
-function onCvTouch(e){if(lastMoved){lastMoved=false;return}if(e.target.closest('.placed-shape'))return;if(!selPal)return;e.preventDefault();const t=e.changedTouches[0],r=document.getElementById('canvas-wrap').getBoundingClientRect();const x=t.clientX-r.left,y=t.clientY-r.top;if(x<0||y<0||x>cW||y>cH)return;addShape(x,y)}
-function addShape(x,y){const id=nid++;placed.push({id,type:selPal,color:curColor,size:curSize,x,y,rot:0});hist.push({action:'place',id});renderShapes();selShape(id);updateHint()}
+function onCvClick(e){if(e.target.closest('.placed-shape')||e.target.closest('.resize-handle'))return;if(!selPal)return;const r=document.getElementById('canvas-wrap').getBoundingClientRect();addShape(e.clientX-r.left,e.clientY-r.top)}
+function onCvTouch(e){if(lastMoved){lastMoved=false;return}if(e.target.closest('.placed-shape')||e.target.closest('.resize-handle'))return;if(!selPal)return;e.preventDefault();const t=e.changedTouches[0],r=document.getElementById('canvas-wrap').getBoundingClientRect();const x=t.clientX-r.left,y=t.clientY-r.top;if(x<0||y<0||x>cW||y>cH)return;addShape(x,y)}
+function addShape(x,y){const id=nid++;placed.push({id,type:selPal,color:curColor,size:DEFAULT_SIZE,x,y,rot:0});hist.push({action:'place',id});renderShapes();selShape(id);updateHint()}
+
+function getShapeBBox(type,sz){
+  // Returns [width, height] of the SVG for this shape type at this size
+  switch(type){
+    case'oval':case'rectangle':return[Math.round(sz*1.5),sz];
+    case'semicircle':return[sz,Math.round(sz*0.55)];
+    case'thin-rect':return[Math.round(sz*0.3),sz];
+    default:return[sz,sz];
+  }
+}
 
 function renderShapes(){
   const layer=document.getElementById('shapes-layer');layer.innerHTML='';
   placed.forEach(s=>{
-    const sz=SIZES[s.size];
+    const sz=s.size;
+    const isSel=s.id===selId;
     const div=document.createElement('div');
-    div.className='placed-shape'+(s.id===selId?' selected':'');
+    div.className='placed-shape'+(isSel?' selected':'');
     div.style.left=s.x+'px';div.style.top=s.y+'px';
     div.style.transform=`translate(-50%,-50%) rotate(${s.rot||0}deg)`;
-    div.style.zIndex=s.id===selId?10:1;
+    div.style.zIndex=isSel?10:1;
     div.innerHTML=mkSVG(s.type,s.color,sz);div.dataset.id=s.id;
     div.onclick=e=>{e.stopPropagation();selShape(s.id)};
     div.addEventListener('touchstart',onShTS,{passive:false});
@@ -430,6 +433,21 @@ function renderShapes(){
     div.addEventListener('touchend',onShTE,{passive:false});
     div.addEventListener('mousedown',onShMD);
     layer.appendChild(div);
+
+    // Resize handle (only on selected shape)
+    if(isSel){
+      const [bw,bh]=getShapeBBox(s.type,sz);
+      const handle=document.createElement('div');
+      handle.className='resize-handle';
+      // Position at bottom-right of bounding box, relative to shape center
+      handle.style.left=(s.x+bw/2)+'px';
+      handle.style.top=(s.y+bh/2)+'px';
+      handle.style.zIndex=11;
+      handle.innerHTML='<svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3v10" stroke="oklch(30% 0.02 290)" stroke-width="2" stroke-linecap="round"/></svg>';
+      handle.addEventListener('mousedown',onResizeMD);
+      handle.addEventListener('touchstart',onResizeTS,{passive:false});
+      layer.appendChild(handle);
+    }
   });
 }
 function selShape(id){selId=id;selPal=null;document.querySelectorAll('.shp-btn').forEach(b=>b.classList.remove('active'));renderShapes()}
@@ -438,6 +456,54 @@ function onShTS(e){e.preventDefault();e.stopPropagation();lastMoved=false;const 
 function onShTM(e){e.preventDefault();if(!drag)return;lastMoved=true;const t=e.touches[0],s=placed.find(p=>p.id===drag.id);if(s){s.x=Math.max(0,Math.min(cW,drag.ox+t.clientX-drag.sx));s.y=Math.max(0,Math.min(cH,drag.oy+t.clientY-drag.sy));renderShapes()}}
 function onShTE(e){e.preventDefault();drag=null}
 function onShMD(e){e.preventDefault();e.stopPropagation();const id=+e.currentTarget.dataset.id;selShape(id);const s=placed.find(p=>p.id===id);drag={id,sx:e.clientX,sy:e.clientY,ox:s.x,oy:s.y};const mv=ev=>{const sh=placed.find(p=>p.id===drag.id);if(sh){sh.x=Math.max(0,Math.min(cW,drag.ox+ev.clientX-drag.sx));sh.y=Math.max(0,Math.min(cH,drag.oy+ev.clientY-drag.sy));renderShapes()}};const up=()=>{drag=null;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up)};document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up)}
+
+/* ── Resize handle drag ── */
+let sizeTooltip=null;
+function showSizeTooltip(x,y,sz){
+  if(!sizeTooltip){sizeTooltip=document.createElement('div');sizeTooltip.className='size-tooltip';document.getElementById('shapes-layer').appendChild(sizeTooltip)}
+  sizeTooltip.textContent=Math.round(sz)+'px';
+  sizeTooltip.style.left=x+'px';sizeTooltip.style.top=y+'px';
+}
+function hideSizeTooltip(){if(sizeTooltip){sizeTooltip.remove();sizeTooltip=null}}
+
+function onResizeMD(e){
+  e.preventDefault();e.stopPropagation();
+  const s=placed.find(p=>p.id===selId);if(!s)return;
+  resizeDrag={id:s.id,sx:e.clientX,sy:e.clientY,origSize:s.size};
+  const mv=ev=>{
+    if(!resizeDrag)return;
+    const sh=placed.find(p=>p.id===resizeDrag.id);if(!sh)return;
+    const dx=ev.clientX-resizeDrag.sx,dy=ev.clientY-resizeDrag.sy;
+    const delta=Math.max(dx,dy); // outward = bigger
+    sh.size=Math.max(MIN_SIZE,Math.min(MAX_SIZE,resizeDrag.origSize+delta));
+    renderShapes();
+    const [bw,bh]=getShapeBBox(sh.type,sh.size);
+    showSizeTooltip(sh.x+bw/2,sh.y+bh/2-14,sh.size);
+  };
+  const up=()=>{resizeDrag=null;hideSizeTooltip();document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up)};
+  document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+}
+function onResizeTS(e){
+  e.preventDefault();e.stopPropagation();
+  const s=placed.find(p=>p.id===selId);if(!s)return;
+  const t=e.touches[0];
+  resizeDrag={id:s.id,sx:t.clientX,sy:t.clientY,origSize:s.size};
+  const mv=ev=>{
+    ev.preventDefault();if(!resizeDrag)return;
+    const t2=ev.touches[0];
+    const sh=placed.find(p=>p.id===resizeDrag.id);if(!sh)return;
+    const dx=t2.clientX-resizeDrag.sx,dy=t2.clientY-resizeDrag.sy;
+    const delta=Math.max(dx,dy);
+    sh.size=Math.max(MIN_SIZE,Math.min(MAX_SIZE,resizeDrag.origSize+delta));
+    renderShapes();
+    const [bw,bh]=getShapeBBox(sh.type,sh.size);
+    showSizeTooltip(sh.x+bw/2,sh.y+bh/2-14,sh.size);
+  };
+  const up=ev=>{ev.preventDefault();resizeDrag=null;hideSizeTooltip();
+    document.removeEventListener('touchmove',mv);document.removeEventListener('touchend',up)};
+  document.addEventListener('touchmove',mv,{passive:false});
+  document.addEventListener('touchend',up,{passive:false});
+}
 
 function rotateSelected(){const s=placed.find(p=>p.id===selId);if(s){s.rot=(s.rot||0)+45;renderShapes()}}
 function undoLast(){if(!hist.length)return;const l=hist.pop();if(l.action==='place'){placed=placed.filter(s=>s.id!==l.id);if(selId===l.id)selId=null;renderShapes();updateHint()}}
