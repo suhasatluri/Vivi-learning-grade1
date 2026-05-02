@@ -266,12 +266,13 @@
   #word-panel {
     position:fixed; bottom:0; left:50%; width:min(100%,640px);
     transform:translateX(-50%) translateY(100%);
+    pointer-events:none;
     background:#1e1c35; border-top:2px solid rgba(255,255,255,0.1);
     border-radius:28px 28px 0 0; padding:20px 20px 32px;
     z-index:500; transition:transform .3s cubic-bezier(.34,1.2,.64,1);
     box-shadow:0 -8px 40px rgba(0,0,0,0.5);
   }
-  #word-panel.open { transform:translateX(-50%) translateY(0); }
+  #word-panel.open { transform:translateX(-50%) translateY(0); pointer-events:all; }
 
   .wp-handle { width:40px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin:0 auto 16px; }
   .wp-word-display {
