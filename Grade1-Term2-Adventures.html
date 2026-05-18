@@ -139,6 +139,30 @@
   #footer{text-align:center;padding:32px 20px 28px;border-top:1px solid rgba(255,255,255,0.06);margin-top:16px}
   .footer-tagline{font-family:'Fredoka One',cursive;font-size:15px;background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
   .footer-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:700}
+
+  /* ── WEEK 5-6 MATHS ── */
+  .tens-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
+  .ten-rod{display:flex;flex-direction:column;gap:2px;align-items:center}
+  .ten-cell{width:18px;height:18px;border-radius:3px;border:2px solid rgba(74,144,226,0.6);background:rgba(74,144,226,0.25)}
+  .one-cell{width:18px;height:18px;border-radius:3px;border:2px solid rgba(245,166,35,0.6);background:rgba(245,166,35,0.25)}
+  .blocks-display{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12);border-radius:18px;padding:14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-end}
+  .block-group{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .block-label{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .b10-eq{font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,26px);text-align:center;margin-bottom:14px;color:white;line-height:1.5}
+  .b10-eq .hl-ten{color:var(--blue);font-size:1.1em}
+  .b10-eq .hl-one{color:var(--orange);font-size:1.1em}
+  .b10-eq .hl-ans{color:var(--green)}
+
+  /* Direction game */
+  .dir-scene{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.12);border-radius:20px;padding:16px;margin-bottom:14px;display:flex;justify-content:center;align-items:center;gap:0;min-height:90px;flex-wrap:wrap;overflow:hidden}
+  .dir-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 10px;border-radius:14px;transition:all .3s;position:relative}
+  .dir-item.highlight{background:rgba(241,196,15,0.2);border:2px solid var(--yellow)}
+  .dir-item .item-emoji{font-size:clamp(34px,9vw,50px)}
+  .dir-item .item-ord{font-family:'Fredoka One',cursive;font-size:13px;color:var(--muted)}
+  .dir-arrow{font-size:28px;color:rgba(255,255,255,0.2);margin:0 2px;align-self:center}
+  .dir-question{font-family:'Fredoka One',cursive;font-size:clamp(17px,4.5vw,24px);text-align:center;color:white;margin-bottom:14px;line-height:1.4}
+  .dir-question .kw{color:var(--yellow);font-size:1.1em}
+
 </style>
 </head>
 <body>
@@ -174,6 +198,23 @@
       <div class="mc-title" style="color:var(--purple)">Pattern Master</div>
       <div class="mc-sub">What comes next?</div>
     </div>
+  
+    <div class="menu-card" onclick="startGame('mult10')" style="border-color:rgba(82,196,120,0.4);grid-column:1/span 1">
+      <span class="mc-icon">🔟</span>
+      <div class="mc-title" style="color:var(--green)">Tens Addition</div>
+      <div class="mc-sub">20+30, 40+50…</div>
+    </div>
+    <div class="menu-card" onclick="startGame('base10')" style="border-color:rgba(74,144,226,0.4)">
+      <span class="mc-icon">🧱</span>
+      <div class="mc-title" style="color:var(--blue)">Base 10 Blocks</div>
+      <div class="mc-sub">Regroup ones into tens</div>
+    </div>
+    <div class="menu-card" onclick="startGame('directions')" style="border-color:rgba(232,109,189,0.4)">
+      <span class="mc-icon">🧭</span>
+      <div class="mc-title" style="color:var(--pink)">Directions</div>
+      <div class="mc-sub">First · Second · Forwards…</div>
+    </div>
+
   </div>
 
   <!-- SCREENS -->
@@ -192,6 +233,20 @@
   <div class="screen" id="screen-patterns">
     <button class="back-btn" onclick="goHome()">← Back</button>
     <div class="gcard" id="patterns-card"></div>
+  </div>
+
+
+  <div class="screen" id="screen-mult10">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="mult10-card"></div>
+  </div>
+  <div class="screen" id="screen-base10">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="base10-card"></div>
+  </div>
+  <div class="screen" id="screen-directions">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="directions-card"></div>
   </div>
 
   <!-- COMPLETE -->
@@ -237,7 +292,7 @@ function startGame(name){
   document.getElementById('menu').classList.add('hidden');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('complete-screen').classList.remove('active');
-  ({shapes:initShapes,position:initPosition,addition:initAddition,patterns:initPatterns})[name]();
+  ({shapes:initShapes,position:initPosition,addition:initAddition,patterns:initPatterns,mult10:initMult10,base10:initBase10,directions:initDirections})[name]();
   document.getElementById('screen-'+name).classList.add('active');
 }
 function showComplete(emoji,title,score,total){
@@ -640,6 +695,179 @@ function nextPat(){
   if(ptIdx>=PAT_Q.length)showComplete('🎨',ptScore>=10?'Pattern Master! 🌟':ptScore>=8?'Great Patterns! 😊':'Keep Practising! 💪',ptScore,PAT_Q.length);
   else renderPattern();
 }
+
+// ══════════════════════════════════════════════
+//  GAME: MULTIPLES OF 10 ADDITION
+// ══════════════════════════════════════════════
+const M10_Q=[
+  {a:20,b:30,ans:50},{a:10,b:40,ans:50},{a:30,b:40,ans:70},
+  {a:20,b:50,ans:70},{a:40,b:50,ans:90},{a:10,b:80,ans:90},
+  {a:30,b:60,ans:90},{a:20,b:60,ans:80},{a:10,b:70,ans:80},
+  {a:50,b:40,ans:90},{a:30,b:50,ans:80},{a:40,b:40,ans:80},
+];
+let m10Qs=[],m10Idx=0,m10Score=0;
+
+function tenBlocks(n){
+  const count=n/10;
+  let html='<div class="tens-row">';
+  for(let i=0;i<count;i++){
+    html+='<div class="ten-rod">';
+    for(let j=0;j<10;j++) html+='<div class="ten-cell"></div>';
+    html+='</div>';
+  }
+  return html+'</div>';
+}
+
+function initMult10(){m10Qs=[...M10_Q].sort(()=>Math.random()-0.5).slice(0,8);m10Idx=0;m10Score=0;renderMult10();}
+function renderMult10(){
+  const q=m10Qs[m10Idx];
+  const opts=shuffle([q.ans,...new Set([q.ans-10,q.ans+10,q.ans-20,q.ans+20].filter(v=>v>0&&v<=120))].slice(0,4));
+  const card=document.getElementById('mult10-card');
+  card.innerHTML=progHTML(m10Idx,m10Qs.length,'#52c478')+
+    `<div class="q-text">${q.a} + ${q.b} = ? 🔟</div>
+     <div class="q-sub">Count the tens blocks!</div>
+     <div class="blocks-display">
+       <div class="block-group">${tenBlocks(q.a)}<div class="block-label">${q.a}</div></div>
+       <div style="font-family:'Fredoka One',cursive;font-size:36px;color:var(--muted);align-self:center">+</div>
+       <div class="block-group">${tenBlocks(q.b)}<div class="block-label">${q.b}</div></div>
+     </div>
+     <div class="opts-4" id="m10-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansMult10(${o},${q.ans},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="m10-fb"></div>
+     <button class="action-btn btn-green hidden" id="m10-next" onclick="nextMult10()">Next ➜</button>`;
+  setScore(m10Score);
+}
+function ansMult10(choice,ans,btn){
+  document.querySelectorAll('#m10-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');m10Score++;setFb('m10-fb','⭐ Correct! '+ans+' altogether!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#m10-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});setFb('m10-fb','The answer is '+ans+'!','bad');}
+  setScore(m10Score);showEl('m10-next');
+}
+function nextMult10(){
+  m10Idx++;
+  if(m10Idx>=m10Qs.length)showComplete('🔟',m10Score>=7?'Tens Expert! 🌟':m10Score>=5?'Great Adding! 😊':'Keep Practising! 💪',m10Score,m10Qs.length);
+  else renderMult10();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: BASE 10 BLOCKS (REGROUPING)
+// ══════════════════════════════════════════════
+const B10_Q=[
+  {tens:1,o1:2,o2:9,  rTens:2,rOnes:1, total:21},
+  {tens:2,o1:4,o2:7,  rTens:3,rOnes:1, total:31},
+  {tens:1,o1:4,o2:8,  rTens:2,rOnes:2, total:22},
+  {tens:3,o1:5,o2:7,  rTens:4,rOnes:2, total:42},
+  {tens:1,o1:7,o2:6,  rTens:2,rOnes:3, total:23},
+  {tens:2,o1:7,o2:5,  rTens:3,rOnes:2, total:32},
+  {tens:2,o1:3,o2:9,  rTens:3,rOnes:2, total:32},
+  {tens:1,o1:6,o2:8,  rTens:2,rOnes:4, total:24},
+];
+let b10Idx=0,b10Score=0;
+
+function onesBlocks(n){
+  let html='<div class="tens-row" style="flex-wrap:wrap;max-width:120px">';
+  for(let i=0;i<n;i++) html+='<div class="one-cell"></div>';
+  return html+'</div>';
+}
+
+function initBase10(){b10Idx=0;b10Score=0;renderBase10();}
+function renderBase10(){
+  const q=B10_Q[b10Idx];
+  const opts=shuffle([q.total,...new Set([q.total-1,q.total+1,q.total-10,q.total+10].filter(v=>v>0))].slice(0,4));
+  const card=document.getElementById('base10-card');
+  card.innerHTML=progHTML(b10Idx,B10_Q.length,'#4a90e2')+
+    `<div class="q-text">Add with regrouping! 🧱</div>
+     <div class="b10-eq">
+       <span class="hl-ten">${q.tens} ten${q.tens>1?'s':''}</span> +
+       <span class="hl-one">${q.o1} ones</span> +
+       <span class="hl-one">${q.o2} ones</span> = ?
+     </div>
+     <div class="blocks-display">
+       <div class="block-group">${tenBlocks(q.tens*10)}<div class="block-label" style="color:var(--blue)">${q.tens} ten${q.tens>1?'s':''}</div></div>
+       <div style="font-family:'Fredoka One',cursive;font-size:28px;color:var(--muted);align-self:center">+</div>
+       <div class="block-group">${onesBlocks(q.o1)}<div class="block-label" style="color:var(--orange)">${q.o1} ones</div></div>
+       <div style="font-family:'Fredoka One',cursive;font-size:28px;color:var(--muted);align-self:center">+</div>
+       <div class="block-group">${onesBlocks(q.o2)}<div class="block-label" style="color:var(--orange)">${q.o2} ones</div></div>
+     </div>
+     <div class="q-sub">Hint: ${q.o1}+${q.o2}=${q.o1+q.o2} ones → regroup into <span class="hl-ten">1 extra ten</span> + <span class="hl-one">${(q.o1+q.o2)-10} ones</span></div>
+     <div class="opts-4" id="b10-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansBase10(${o},${q.total},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="b10-fb"></div>
+     <button class="action-btn btn-blue hidden" id="b10-next" onclick="nextBase10()">Next ➜</button>`;
+  setScore(b10Score);
+}
+function ansBase10(choice,ans,btn){
+  document.querySelectorAll('#b10-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');b10Score++;setFb('b10-fb','⭐ Correct! Great regrouping!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#b10-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});setFb('b10-fb','The answer is '+ans+'!','bad');}
+  setScore(b10Score);showEl('b10-next');
+}
+function nextBase10(){
+  b10Idx++;
+  if(b10Idx>=B10_Q.length)showComplete('🧱',b10Score>=7?'Regrouping Rock Star! 🌟':b10Score>=5?'Good Work! 😊':'Keep Trying! 💪',b10Score,B10_Q.length);
+  else renderBase10();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: DIRECTIONS
+// ══════════════════════════════════════════════
+const DIR_ROUNDS=[
+  {type:'ordinal', items:['🐱','🐶','🐭'], question:'Which animal is <span class="kw">FIRST</span>?', ans:'🐱', opts:['🐱','🐶','🐭','🐰']},
+  {type:'ordinal', items:['🐱','🐶','🐭'], question:'Which animal is <span class="kw">SECOND</span>?', ans:'🐶', opts:['🐱','🐶','🐭','🐰']},
+  {type:'ordinal', items:['🐱','🐶','🐭'], question:'Which animal is <span class="kw">THIRD</span>?', ans:'🐭', opts:['🐱','🐶','🐭','🐰']},
+  {type:'ordinal', items:['🚗','🚌','🚑'], question:'Which vehicle is <span class="kw">FIRST</span>?', ans:'🚗', opts:['🚗','🚌','🚑','✈️']},
+  {type:'ordinal', items:['🚗','🚌','🚑'], question:'Which vehicle is <span class="kw">SECOND</span>?', ans:'🚌', opts:['🚗','🚌','🚑','✈️']},
+  {type:'move', items:['🌳','🏠','🌸'], question:'Start at 🌳. Move <span class="kw">FORWARDS</span>. Where are you?', ans:'🏠', opts:['🌳','🏠','🌸','⭐']},
+  {type:'move', items:['🌳','🏠','🌸'], question:'Start at 🌸. Move <span class="kw">BACKWARDS</span>. Where are you?', ans:'🏠', opts:['🌳','🏠','🌸','⭐']},
+  {type:'move', items:['⭐','🌙','☀️'], question:'Start at ⭐. Move <span class="kw">FORWARDS</span> twice. Where are you?', ans:'☀️', opts:['⭐','🌙','☀️','🌈']},
+  {type:'pos', items:['🐦','🌳','🐛'], labels:['above','in the middle','below'],
+   question:'Where is the 🐦 bird?', ans:'above', opts:['above','below','next to','behind']},
+  {type:'pos', items:['🐦','🌳','🐛'], labels:['above','in the middle','below'],
+   question:'Where is the 🐛 caterpillar?', ans:'below', opts:['above','below','next to','in front']},
+];
+
+let dIdx=0,dScore=0,dRounds=[];
+function initDirections(){dRounds=[...DIR_ROUNDS].sort(()=>Math.random()-0.5);dIdx=0;dScore=0;renderDir();}
+function renderDir(){
+  const q=dRounds[dIdx];
+  let scene='<div class="dir-scene">';
+  if(q.type==='pos'){
+    scene+=`<div style="display:flex;flex-direction:column;align-items:center;gap:8px">`;
+    q.items.forEach((it,i)=>{
+      scene+=`<div class="dir-item"><span class="item-emoji">${it}</span><span class="item-ord">${q.labels[i]}</span></div>`;
+    });
+    scene+=`</div>`;
+  } else {
+    q.items.forEach((it,i)=>{
+      scene+=`<div class="dir-item"><span class="item-emoji">${it}</span><span class="item-ord">${['1st','2nd','3rd'][i]}</span></div>`;
+      if(i<q.items.length-1) scene+=`<div class="dir-arrow">→</div>`;
+    });
+  }
+  scene+='</div>';
+  const opts=shuffle(q.opts).slice(0,4);
+  const card=document.getElementById('directions-card');
+  card.innerHTML=progHTML(dIdx,dRounds.length,'#e86dbd')+
+    `<div class="q-text">Directions Challenge! 🧭</div>
+     ${scene}
+     <div class="dir-question">${q.question}</div>
+     <div class="opts-4" id="dir-opts">`+
+    opts.map(o=>`<button class="opt-btn" style="font-size:clamp(20px,5vw,28px)" onclick="ansDir('${o}','${q.ans}',this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="dir-fb"></div>
+     <button class="action-btn btn-pink hidden" id="dir-next" onclick="nextDir()">Next ➜</button>`;
+  setScore(dScore);
+}
+function ansDir(choice,ans,btn){
+  document.querySelectorAll('#dir-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');dScore++;setFb('dir-fb','⭐ Correct! Great direction sense!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#dir-opts .opt-btn').forEach(b=>{if(b.textContent===ans)b.classList.add('correct')});setFb('dir-fb','The answer is "'+ans+'"!','bad');}
+  setScore(dScore);showEl('dir-next');
+}
+function nextDir(){
+  dIdx++;
+  if(dIdx>=dRounds.length)showComplete('🧭',dScore>=8?'Direction Master! 🌟':dScore>=6?'Great Navigating! 😊':'Keep Practising! 💪',dScore,dRounds.length);
+  else renderDir();
+}
+
 </script>
 </body>
 </html>
