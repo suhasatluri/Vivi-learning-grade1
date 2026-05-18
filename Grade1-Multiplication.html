@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>✖️ Multiplication Adventures – Grade 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0f0e17;--card:#1a1830;
+    --blue:#4a90e2;--pink:#e86dbd;--orange:#f5a623;
+    --green:#52c478;--purple:#9b59b6;--yellow:#f1c40f;
+    --teal:#1abc9c;--red:#e74c3c;--muted:#8888aa;
+  }
+  html,body{min-height:100%;background:var(--bg);color:#fff;font-family:'Nunito',sans-serif;overflow-x:hidden}
+
+  /* Stars */
+  #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) var(--dl,0s) infinite alternate}
+  @keyframes twinkle{from{opacity:.04}to{opacity:.5}}
+  #app{position:relative;z-index:1;min-height:100vh}
+
+  /* Header */
+  #header{text-align:center;padding:22px 20px 8px;position:sticky;top:0;background:rgba(15,14,23,0.93);backdrop-filter:blur(12px);z-index:100;border-bottom:1px solid rgba(255,255,255,0.06)}
+  #header h1{font-family:'Fredoka One',cursive;font-size:clamp(24px,5.5vw,44px);background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  #header p{color:var(--muted);font-size:13px;font-weight:700;margin-top:2px}
+  #star-bar{color:var(--yellow);font-size:17px;font-weight:900;margin-top:5px}
+
+  /* Menu */
+  #menu{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;padding:20px 18px 40px;max-width:740px;margin:0 auto}
+  @media(max-width:500px){#menu{grid-template-columns:repeat(2,1fr)}}
+  .menu-card{background:var(--card);border:2px solid transparent;border-radius:22px;padding:20px 10px;text-align:center;cursor:pointer;transition:transform .22s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent}
+  .menu-card:hover{transform:translateY(-6px) scale(1.04)}
+  .menu-card .mc-icon{font-size:42px;display:block;margin-bottom:8px}
+  .menu-card .mc-title{font-family:'Fredoka One',cursive;font-size:17px}
+  .menu-card .mc-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+  /* Screens */
+  .screen{display:none;max-width:640px;margin:0 auto;padding:16px 18px 60px;animation:fadeUp .35s ease}
+  .screen.active{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .back-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);border:none;color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;padding:8px 16px;border-radius:12px;cursor:pointer;margin-bottom:14px;transition:background .2s;-webkit-tap-highlight-color:transparent}
+  .back-btn:hover{background:rgba(255,255,255,0.16)}
+  .gcard{background:var(--card);border:2px solid rgba(255,255,255,0.06);border-radius:24px;padding:22px 20px}
+  @media(min-width:600px){.gcard{padding:28px}}
+
+  /* Progress */
+  .prog-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px}
+  .prog-bar{background:rgba(255,255,255,0.08);border-radius:50px;height:9px;margin-bottom:18px;overflow:hidden}
+  .prog-fill{height:100%;border-radius:50px;transition:width .4s ease}
+
+  /* Shared */
+  .q-text{font-size:clamp(17px,4vw,22px);font-weight:900;text-align:center;margin-bottom:16px;line-height:1.35;color:white}
+  .q-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:-10px;margin-bottom:14px}
+  .feedback{text-align:center;font-size:17px;font-weight:900;min-height:26px;margin:6px 0 10px}
+  .feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+  .action-btn{display:block;margin:4px auto 0;border:none;color:white;font-family:'Fredoka One',cursive;font-size:19px;padding:12px 36px;border-radius:50px;cursor:pointer;transition:transform .18s;box-shadow:0 4px 18px rgba(0,0,0,0.35);-webkit-tap-highlight-color:transparent}
+  .action-btn:hover{transform:scale(1.06)}
+  .action-btn.hidden{display:none!important}
+  .btn-blue{background:linear-gradient(135deg,var(--blue),#6a4fe8)}
+  .btn-orange{background:linear-gradient(135deg,var(--orange),#e8844a);color:#111}
+  .btn-green{background:linear-gradient(135deg,var(--green),#2ea85b)}
+  .btn-purple{background:linear-gradient(135deg,var(--purple),#6a2fa8)}
+  .btn-teal{background:linear-gradient(135deg,var(--teal),#16a085)}
+  .btn-pink{background:linear-gradient(135deg,var(--pink),#a83dbd)}
+
+  /* Option grids */
+  .opts-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .opts-4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .opt-btn{background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.12);border-radius:16px;color:white;font-family:'Nunito',sans-serif;font-size:clamp(20px,5vw,30px);font-weight:900;padding:16px 8px;cursor:pointer;transition:transform .15s,background .15s;-webkit-tap-highlight-color:transparent}
+  .opt-btn:not(:disabled):hover{transform:scale(1.04);background:rgba(255,255,255,0.13)}
+  .opt-btn:disabled{cursor:default}
+  .opt-btn.correct{background:rgba(82,196,120,0.28);border-color:var(--green)}
+  .opt-btn.wrong{background:rgba(231,76,60,0.28);border-color:var(--red)}
+
+  /* Complete screen */
+  #complete-screen{display:none;text-align:center;padding:50px 24px;max-width:520px;margin:0 auto;animation:fadeUp .4s ease}
+  #complete-screen.active{display:block}
+  .cmp-emoji{font-size:90px;margin-bottom:14px}
+  .cmp-title{font-family:'Fredoka One',cursive;font-size:clamp(28px,6vw,42px);margin-bottom:8px}
+  .cmp-msg{color:var(--muted);font-size:16px;margin-bottom:22px}
+  .cmp-badge{display:inline-block;background:linear-gradient(135deg,var(--orange),var(--pink));padding:12px 36px;border-radius:50px;font-family:'Fredoka One',cursive;font-size:30px;color:white;margin-bottom:28px;box-shadow:0 6px 28px rgba(245,166,35,0.38)}
+
+  /* ── ARRAYS ── */
+  .array-grid{display:flex;flex-direction:column;gap:6px;align-items:center;margin-bottom:18px}
+  .array-row{display:flex;gap:6px}
+  .array-dot{width:clamp(26px,6vw,40px);height:clamp(26px,6vw,40px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(18px,4vw,28px);animation:dotPop .3s ease forwards;opacity:0}
+  @keyframes dotPop{to{opacity:1;transform:scale(1)}from{opacity:0;transform:scale(0.3)}}
+  .array-equation{text-align:center;font-family:'Fredoka One',cursive;font-size:clamp(24px,6vw,36px);color:var(--yellow);margin-bottom:14px}
+
+  /* ── GROUPS OF ── */
+  .groups-container{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:18px}
+  .group-box{background:rgba(255,255,255,0.06);border:2px dashed rgba(255,255,255,0.2);border-radius:16px;padding:10px 12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-width:80px}
+  .group-label{font-size:11px;font-weight:800;color:var(--muted);text-align:center;margin-bottom:4px;width:100%}
+  .group-emoji{font-size:clamp(20px,5vw,30px)}
+
+  /* ── SKIP COUNT ── */
+  .skip-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px}
+  .skip-num{min-width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:20px;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
+  .skip-num.filled{background:rgba(74,144,226,0.3);border-color:var(--blue);color:white}
+  .skip-num.blank{background:rgba(245,166,35,0.15);border:2px dashed var(--orange);color:var(--orange)}
+  .skip-num.revealed{background:rgba(82,196,120,0.3);border-color:var(--green);color:var(--green)}
+  .skip-bridge{text-align:center;font-size:15px;font-weight:800;color:var(--teal);margin-bottom:14px;padding:10px;background:rgba(26,188,156,0.1);border-radius:12px;border:1px solid rgba(26,188,156,0.3)}
+
+  /* ── TIMES TABLE TRAINER ── */
+  .table-picker{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px}
+  .table-btn{background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.15);border-radius:14px;color:white;font-family:'Fredoka One',cursive;font-size:20px;padding:10px 18px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+  .table-btn:hover{transform:scale(1.08)}
+  .table-btn.active{border-color:var(--yellow);background:rgba(241,196,15,0.2);color:var(--yellow)}
+  .flash-question{font-family:'Fredoka One',cursive;font-size:clamp(38px,10vw,62px);text-align:center;margin-bottom:20px;background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .streak-bar{text-align:center;font-size:13px;font-weight:900;color:var(--orange);margin-bottom:10px}
+
+  /* ── ROCKET RACE ── */
+  .rocket-track{background:rgba(255,255,255,0.04);border:2px solid rgba(255,255,255,0.1);border-radius:20px;padding:14px;margin-bottom:14px;position:relative;overflow:hidden}
+  .track-label{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px}
+  .track-bar{background:rgba(255,255,255,0.08);border-radius:50px;height:20px;position:relative;overflow:hidden}
+  .track-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .5s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;justify-content:flex-end;padding-right:4px}
+  .rocket-emoji{font-size:22px;filter:drop-shadow(0 0 6px rgba(74,144,226,0.8))}
+  .finish-flag{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:20px}
+  .fuel-bar{text-align:center;font-size:14px;font-weight:900;color:var(--teal);margin-top:8px}
+
+  /* ── MISSING NUMBER ── */
+  .missing-eq{font-family:'Fredoka One',cursive;font-size:clamp(36px,10vw,58px);text-align:center;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+  .missing-num{color:white}
+  .missing-blank{color:var(--orange);border-bottom:4px solid var(--orange);min-width:60px;text-align:center;transition:all .3s}
+  .missing-blank.filled{color:var(--green);border-bottom-color:var(--green)}
+  .missing-op{color:var(--muted)}
+
+  /* Confetti */
+  .cpcs{position:fixed;z-index:999;pointer-events:none;border-radius:3px;animation:cfall var(--cd,1.4s) var(--cdd,0s) ease-in forwards}
+  @keyframes cfall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(780deg);opacity:0}}
+
+  /* Footer */
+  #footer{text-align:center;padding:28px 20px 24px;border-top:1px solid rgba(255,255,255,0.06);margin-top:16px}
+  .footer-tagline{font-family:'Fredoka One',cursive;font-size:15px;background:linear-gradient(120deg,var(--orange),var(--pink),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .footer-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:700}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="bg-canvas"></div>
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <h1>✖️ Multiplication Adventures</h1>
+    <p>Grade 1 &nbsp;·&nbsp; 2s · 3s · 4s · 5s · 10s</p>
+    <div id="star-bar">⭐ <span id="star-count">0</span> Stars</div>
+  </div>
+
+  <!-- MENU -->
+  <div id="menu">
+    <div class="menu-card" onclick="startGame('arrays')" style="border-color:rgba(74,144,226,0.45)">
+      <span class="mc-icon">🔵</span>
+      <div class="mc-title" style="color:var(--blue)">Arrays</div>
+      <div class="mc-sub">See multiplication as dots</div>
+    </div>
+    <div class="menu-card" onclick="startGame('groups')" style="border-color:rgba(245,166,35,0.45)">
+      <span class="mc-icon">🍎</span>
+      <div class="mc-title" style="color:var(--orange)">Groups Of</div>
+      <div class="mc-sub">Count equal groups</div>
+    </div>
+    <div class="menu-card" onclick="startGame('skip')" style="border-color:rgba(26,188,156,0.45)">
+      <span class="mc-icon">🎲</span>
+      <div class="mc-title" style="color:var(--teal)">Skip Count</div>
+      <div class="mc-sub">Count in 2s, 5s, 10s…</div>
+    </div>
+    <div class="menu-card" onclick="startGame('trainer')" style="border-color:rgba(155,89,182,0.45)">
+      <span class="mc-icon">⚡</span>
+      <div class="mc-title" style="color:var(--purple)">Table Trainer</div>
+      <div class="mc-sub">Practice a times table</div>
+    </div>
+    <div class="menu-card" onclick="startGame('rocket')" style="border-color:rgba(232,109,189,0.45)">
+      <span class="mc-icon">🚀</span>
+      <div class="mc-title" style="color:var(--pink)">Rocket Race</div>
+      <div class="mc-sub">Answer to fly!</div>
+    </div>
+    <div class="menu-card" onclick="startGame('missing')" style="border-color:rgba(241,196,15,0.45)">
+      <span class="mc-icon">🎯</span>
+      <div class="mc-title" style="color:var(--yellow)">Missing Number</div>
+      <div class="mc-sub">3 × ? = 15</div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="screen" id="screen-arrays">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="arrays-card"></div>
+  </div>
+  <div class="screen" id="screen-groups">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="groups-card"></div>
+  </div>
+  <div class="screen" id="screen-skip">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="skip-card"></div>
+  </div>
+  <div class="screen" id="screen-trainer">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="trainer-card"></div>
+  </div>
+  <div class="screen" id="screen-rocket">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="rocket-card"></div>
+  </div>
+  <div class="screen" id="screen-missing">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="missing-card"></div>
+  </div>
+
+  <!-- COMPLETE -->
+  <div id="complete-screen">
+    <div class="cmp-emoji" id="cmp-emoji">🎉</div>
+    <div class="cmp-title" id="cmp-title">Brilliant!</div>
+    <div class="cmp-msg"   id="cmp-msg">You finished the game!</div>
+    <div class="cmp-badge" id="cmp-badge">⭐ 5 / 8</div>
+    <br>
+    <button class="action-btn btn-blue" onclick="goHome()">🏠 More Games</button>
+  </div>
+
+</div><!-- /app -->
+
+<div id="footer">
+  <div class="footer-tagline">✨ Helping little learners shine ✨</div>
+  <div class="footer-sub">Created with ❤️ by &nbsp;<strong style="-webkit-text-fill-color:white;color:white">Suhas Atluri</strong>&nbsp; · Grade 1 Multiplication · 2026</div>
+</div>
+
+<script>
+// ── STARS ──────────────────────────────────────
+(function(){
+  const c=document.getElementById('bg-canvas');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div'),sz=Math.random()*2.5+1;
+    s.className='star';
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`;
+    c.appendChild(s);
+  }
+})();
+
+// ── GLOBALS ────────────────────────────────────
+const TABLES=[2,3,4,5,10];
+const EMOJIS=['🍎','🌟','🐶','🎈','🍕','🦋','🏀','🌸','🐱','🍦'];
+let totalStars=0;
+function addStar(){totalStars++;document.getElementById('star-count').textContent=totalStars}
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5)}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function wrong4(ans, max){
+  const pool=new Set();pool.add(ans);
+  while(pool.size<4){const v=Math.max(1,ans+rand(-6,6));if(v!==ans&&v<=max)pool.add(v);}
+  return shuffle([...pool]);
+}
+
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('complete-screen').classList.remove('active');
+  document.getElementById('menu').classList.remove('hidden');
+}
+function startGame(name){
+  document.getElementById('menu').classList.add('hidden');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('complete-screen').classList.remove('active');
+  ({arrays:initArrays,groups:initGroups,skip:initSkip,trainer:initTrainer,rocket:initRocket,missing:initMissing})[name]();
+  document.getElementById('screen-'+name).classList.add('active');
+}
+function showComplete(emoji,title,score,total){
+  for(let i=0;i<score;i++)setTimeout(()=>addStar(),i*100);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cmp-emoji').textContent=emoji;
+  document.getElementById('cmp-title').textContent=title;
+  document.getElementById('cmp-msg').textContent='You scored '+score+' out of '+total+'!';
+  document.getElementById('cmp-badge').textContent='⭐ '+score+' / '+total;
+  document.getElementById('complete-screen').classList.add('active');
+  if(score>=Math.floor(total*0.6))confetti();
+}
+function confetti(){
+  const cols=['#f5a623','#e86dbd','#4a90e2','#52c478','#f1c40f','#9b59b6','#1abc9c','#fff'];
+  for(let i=0;i<70;i++){
+    const d=document.createElement('div');d.className='cpcs';const sz=6+Math.random()*8;
+    d.style.cssText=`width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-12px;--cd:${1.2+Math.random()*.8}s;--cdd:${Math.random()}s;border-radius:${Math.random()>.5?'50%':'3px'}`;
+    document.body.appendChild(d);setTimeout(()=>d.remove(),3000);
+  }
+}
+function progHTML(cur,tot,color){
+  return `<div class="prog-row"><span>Question ${cur+1} of ${tot}</span><span id="gscore">Score: 0</span></div>
+  <div class="prog-bar"><div class="prog-fill" style="width:${cur/tot*100}%;background:linear-gradient(90deg,${color},#e86dbd)"></div></div>`;
+}
+function setScore(v){const e=document.getElementById('gscore');if(e)e.textContent='Score: '+v}
+function setFb(id,msg,cls){const e=document.getElementById(id);if(!e)return;e.textContent=msg;e.className='feedback'+(cls?' '+cls:'')}
+function showEl(id){const e=document.getElementById(id);if(e)e.classList.remove('hidden')}
+
+// Build all questions for a game
+function buildQs(count){
+  const qs=[];
+  const used=new Set();
+  while(qs.length<count){
+    const t=TABLES[rand(0,TABLES.length-1)];
+    const m=rand(2,10);
+    const key=t+'x'+m;
+    if(used.has(key))continue;
+    used.add(key);
+    qs.push({t,m,ans:t*m});
+  }
+  return qs;
+}
+
+// ══════════════════════════════════════════════
+//  GAME 1 – ARRAYS EXPLORER
+// ══════════════════════════════════════════════
+let aQs=[],aIdx=0,aScore=0;
+function initArrays(){
+  aQs=buildQs(10).filter(q=>q.t<=5&&q.m<=5); // keep arrays manageable visually
+  while(aQs.length<8){
+    const t=TABLES.filter(x=>x<=5)[rand(0,2)];
+    const m=rand(2,5);
+    aQs.push({t,m,ans:t*m});
+  }
+  aQs=aQs.slice(0,8);aIdx=0;aScore=0;renderArrays();
+}
+function renderArrays(){
+  const q=aQs[aIdx];
+  const emoji=EMOJIS[aIdx%EMOJIS.length];
+  const opts=wrong4(q.ans,50);
+  let grid='<div class="array-grid">';
+  for(let r=0;r<q.t;r++){
+    grid+='<div class="array-row">';
+    for(let c=0;c<q.m;c++){
+      grid+=`<div class="array-dot" style="animation-delay:${(r*q.m+c)*40}ms">${emoji}</div>`;
+    }
+    grid+='</div>';
+  }
+  grid+='</div>';
+  const card=document.getElementById('arrays-card');
+  card.innerHTML=progHTML(aIdx,aQs.length,'#4a90e2')+
+    `<div class="q-text">${q.t} rows of ${q.m} — how many altogether? ✖️</div>
+     <div class="array-equation">${q.t} × ${q.m} = ?</div>
+     ${grid}
+     <div class="opts-4" id="a-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansArrays(${o},${q.ans},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="a-fb"></div>
+     <button class="action-btn btn-blue hidden" id="a-next" onclick="nextArrays()">Next ➜</button>`;
+  setScore(aScore);
+}
+function ansArrays(choice,ans,btn){
+  document.querySelectorAll('#a-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');aScore++;setFb('a-fb','⭐ Correct! '+ans+' altogether!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#a-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});setFb('a-fb','The answer is '+ans+'!','bad');}
+  setScore(aScore);showEl('a-next');
+}
+function nextArrays(){
+  aIdx++;
+  if(aIdx>=aQs.length)showComplete('🔵',aScore>=7?'Array Ace! 🌟':aScore>=5?'Great Work! 😊':'Keep Trying! 💪',aScore,aQs.length);
+  else renderArrays();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 2 – GROUPS OF
+// ══════════════════════════════════════════════
+let gQs=[],gIdx=0,gScore=0;
+function initGroups(){gQs=buildQs(8);gIdx=0;gScore=0;renderGroups();}
+function renderGroups(){
+  const q=gQs[gIdx];
+  const emoji=EMOJIS[(gIdx+2)%EMOJIS.length];
+  const opts=wrong4(q.ans,100);
+  let groups='<div class="groups-container">';
+  for(let g=0;g<q.t;g++){
+    groups+=`<div class="group-box"><div class="group-label">Group ${g+1}</div>`;
+    for(let i=0;i<q.m;i++)groups+=`<span class="group-emoji">${emoji}</span>`;
+    groups+='</div>';
+  }
+  groups+='</div>';
+  const card=document.getElementById('groups-card');
+  card.innerHTML=progHTML(gIdx,gQs.length,'#f5a623')+
+    `<div class="q-text">${q.t} groups of ${q.m} ${emoji} — how many altogether?</div>
+     <div class="array-equation" style="color:var(--orange)">${q.t} × ${q.m} = ?</div>
+     ${groups}
+     <div class="opts-4" id="g-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansGroups(${o},${q.ans},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="g-fb"></div>
+     <button class="action-btn btn-orange hidden" id="g-next" onclick="nextGroups()">Next ➜</button>`;
+  setScore(gScore);
+}
+function ansGroups(choice,ans,btn){
+  document.querySelectorAll('#g-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');gScore++;setFb('g-fb','⭐ Yes! '+ans+' in total!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#g-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});setFb('g-fb','The answer is '+ans+'!','bad');}
+  setScore(gScore);showEl('g-next');
+}
+function nextGroups(){
+  gIdx++;
+  if(gIdx>=gQs.length)showComplete('🍎',gScore>=7?'Group Genius! 🌟':gScore>=5?'Good Grouping! 😊':'Keep Practising! 💪',gScore,gQs.length);
+  else renderGroups();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 3 – SKIP COUNT BLASTER
+// ══════════════════════════════════════════════
+const SKIP_SEQS=[
+  {table:2, seq:[2,4,6,null,10],   miss:3, ans:8,  steps:4},
+  {table:2, seq:[2,4,null,8,10],   miss:2, ans:6,  steps:4},
+  {table:5, seq:[5,10,15,null,25], miss:3, ans:20, steps:4},
+  {table:5, seq:[5,10,null,20,25], miss:2, ans:15, steps:4},
+  {table:10,seq:[10,20,null,40,50],miss:2, ans:30, steps:4},
+  {table:10,seq:[10,20,30,null,50],miss:3, ans:40, steps:4},
+  {table:3, seq:[3,6,9,null,15],   miss:3, ans:12, steps:4},
+  {table:3, seq:[3,6,null,12,15],  miss:2, ans:9,  steps:4},
+  {table:4, seq:[4,8,null,16,20],  miss:2, ans:12, steps:4},
+  {table:4, seq:[4,8,12,null,20],  miss:3, ans:16, steps:4},
+];
+let sQs=[],sIdx=0,sScore=0;
+function initSkip(){sQs=shuffle(SKIP_SEQS);sIdx=0;sScore=0;renderSkip();}
+function renderSkip(){
+  const q=sQs[sIdx];
+  const opts=wrong4(q.ans,60);
+  let seqHTML='<div class="skip-row">';
+  q.seq.forEach(n=>{
+    if(n===null)seqHTML+=`<div class="skip-num blank">?</div>`;
+    else seqHTML+=`<div class="skip-num filled">${n}</div>`;
+  });
+  seqHTML+='</div>';
+  const stepNum=q.miss;
+  const card=document.getElementById('skip-card');
+  card.innerHTML=progHTML(sIdx,sQs.length,'#1abc9c')+
+    `<div class="q-text">Count by ${q.table}s — what is the missing number?</div>
+     ${seqHTML}
+     <div class="skip-bridge" id="sk-bridge" style="display:none"></div>
+     <div class="opts-4" id="s-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansSkip(${o},${q.ans},${q.table},${stepNum},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="s-fb"></div>
+     <button class="action-btn btn-teal hidden" id="s-next" onclick="nextSkip()">Next ➜</button>`;
+  setScore(sScore);
+}
+function ansSkip(choice,ans,table,step,btn){
+  document.querySelectorAll('#s-opts .opt-btn').forEach(b=>b.disabled=true);
+  // Reveal the answer in the blank
+  document.querySelectorAll('#skip-card .skip-num.blank').forEach(el=>{el.textContent=ans;el.classList.remove('blank');el.classList.add('revealed');});
+  const bridge=document.getElementById('sk-bridge');
+  bridge.style.display='block';
+  bridge.textContent='That means '+step+' × '+table+' = '+ans+'! Counting by '+table+'s gives us multiplication!';
+  if(choice===ans){btn.classList.add('correct');sScore++;setFb('s-fb','⭐ Correct! '+ans+' is right!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#s-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});setFb('s-fb','The answer was '+ans+'!','bad');}
+  setScore(sScore);showEl('s-next');
+}
+function nextSkip(){
+  sIdx++;
+  if(sIdx>=sQs.length)showComplete('🎲',sScore>=9?'Skip Count Star! 🌟':sScore>=7?'Great Counting! 😊':'Keep Counting! 💪',sScore,sQs.length);
+  else renderSkip();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 4 – TIMES TABLE TRAINER
+// ══════════════════════════════════════════════
+let tTable=2,tIdx=0,tScore=0,tQs=[],tStreak=0;
+function initTrainer(){tTable=2;tIdx=0;tScore=0;tStreak=0;renderTrainerPicker();}
+function renderTrainerPicker(){
+  const card=document.getElementById('trainer-card');
+  card.innerHTML=`
+    <div class="q-text" style="margin-bottom:14px">Pick a times table to practise! ⚡</div>
+    <div class="table-picker" id="tp">`+
+    TABLES.map(t=>`<button class="table-btn${t===tTable?' active':''}" onclick="selectTable(${t},this)">${t}s</button>`).join('')+
+    `</div>
+    <button class="action-btn btn-purple" onclick="startTrainer()">Start Practising! ▶</button>`;
+}
+function selectTable(t,btn){
+  tTable=t;
+  document.querySelectorAll('#tp .table-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function startTrainer(){
+  tQs=shuffle(Array.from({length:10},(_,i)=>({m:i+1,ans:tTable*(i+1)})));
+  tIdx=0;tScore=0;tStreak=0;renderTrainer();
+}
+function renderTrainer(){
+  const q=tQs[tIdx];
+  const opts=wrong4(q.ans,120);
+  const card=document.getElementById('trainer-card');
+  card.innerHTML=progHTML(tIdx,tQs.length,'#9b59b6')+
+    `<div class="streak-bar" id="t-streak">${tStreak>0?'🔥 Streak: '+tStreak:'Start your streak!'}</div>
+     <div class="flash-question">${tTable} × ${q.m} = ?</div>
+     <div class="opts-4" id="t-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansTrainer(${o},${q.ans},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="t-fb"></div>
+     <button class="action-btn btn-purple hidden" id="t-next" onclick="nextTrainer()">Next ➜</button>`;
+  setScore(tScore);
+}
+function ansTrainer(choice,ans,btn){
+  document.querySelectorAll('#t-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){
+    btn.classList.add('correct');tScore++;tStreak++;
+    setFb('t-fb','⭐ '+tTable+' × '+(ans/tTable)+' = '+ans+'!','good');
+  } else {
+    btn.classList.add('wrong');tStreak=0;
+    document.querySelectorAll('#t-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});
+    setFb('t-fb','The answer was '+ans+'!','bad');
+  }
+  setScore(tScore);showEl('t-next');
+}
+function nextTrainer(){
+  tIdx++;
+  if(tIdx>=tQs.length)showComplete('⚡',tScore>=9?'Times Table Champion! 🌟':tScore>=7?'Great Practice! 😊':'Keep Training! 💪',tScore,tQs.length);
+  else renderTrainer();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 5 – ROCKET RACE
+// ══════════════════════════════════════════════
+const TOTAL_FUEL=10;
+let rQs=[],rIdx=0,rScore=0,rFuel=0;
+function initRocket(){rQs=buildQs(10);rIdx=0;rScore=0;rFuel=0;renderRocket();}
+function renderRocket(){
+  const q=rQs[rIdx];
+  const opts=wrong4(q.ans,100);
+  const pct=Math.round(rFuel/TOTAL_FUEL*100);
+  const card=document.getElementById('rocket-card');
+  card.innerHTML=progHTML(rIdx,rQs.length,'#e86dbd')+
+    `<div class="rocket-track">
+       <div class="track-label"><span>Launch pad 🚀</span><span>Finish 🏁</span></div>
+       <div class="track-bar">
+         <div class="track-fill" id="r-fill" style="width:${pct}%">
+           <span class="rocket-emoji">🚀</span>
+         </div>
+         <span class="finish-flag">🏁</span>
+       </div>
+       <div class="fuel-bar">⛽ Fuel: ${rFuel} / ${TOTAL_FUEL} — answer correctly to fly!</div>
+     </div>
+     <div class="q-text">${q.t} × ${q.m} = ?</div>
+     <div class="opts-4" id="r-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansRocket(${o},${q.ans},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="r-fb"></div>
+     <button class="action-btn btn-pink hidden" id="r-next" onclick="nextRocket()">Next ➜</button>`;
+  setScore(rScore);
+}
+function ansRocket(choice,ans,btn){
+  document.querySelectorAll('#r-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){
+    btn.classList.add('correct');rScore++;rFuel++;
+    const pct=Math.round(rFuel/TOTAL_FUEL*100);
+    const fill=document.getElementById('r-fill');
+    if(fill)fill.style.width=pct+'%';
+    setFb('r-fb','⭐ '+ans+' is correct! 🚀 Rocket moves forward!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#r-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});
+    setFb('r-fb','The answer was '+ans+'! 🚀 No fuel this time…','bad');
+  }
+  setScore(rScore);showEl('r-next');
+}
+function nextRocket(){
+  rIdx++;
+  if(rIdx>=rQs.length){
+    const launched=rFuel>=TOTAL_FUEL;
+    showComplete(launched?'🚀':'🛸',launched?'Blast Off! 🌟':rScore>=7?'Almost There! 😊':'Keep Fuelling! 💪',rScore,rQs.length);
+  } else renderRocket();
+}
+
+// ══════════════════════════════════════════════
+//  GAME 6 – MISSING NUMBER
+// ══════════════════════════════════════════════
+function buildMissingQs(){
+  const qs=[];
+  const used=new Set();
+  while(qs.length<10){
+    const t=TABLES[rand(0,TABLES.length-1)];
+    const m=rand(2,10);
+    const ans=t*m;
+    const blankPos=Math.random()>.5?'a':'b'; // which factor is missing
+    const key=t+'x'+m+blankPos;
+    if(used.has(key))continue;
+    used.add(key);
+    // blankPos 'a' means ?×m=ans, 'b' means t×?=ans
+    if(blankPos==='a'){qs.push({question:'? × '+m+' = '+ans, ans:t, max:12});}
+    else{qs.push({question:t+' × ? = '+ans, ans:m, max:12});}
+  }
+  return qs;
+}
+let mQs=[],mIdx=0,mScore=0;
+function initMissing(){mQs=buildMissingQs();mIdx=0;mScore=0;renderMissing();}
+function renderMissing(){
+  const q=mQs[mIdx];
+  const opts=wrong4(q.ans,q.max);
+  // Parse question to build visual equation
+  const parts=q.question.split(' ');
+  const card=document.getElementById('missing-card');
+  card.innerHTML=progHTML(mIdx,mQs.length,'#f1c40f')+
+    `<div class="q-text" style="margin-bottom:10px">Fill in the missing number! 🎯</div>
+     <div class="missing-eq">
+       <span class="missing-num">${parts[0]==='?'?'<span class="missing-blank" id="m-blank">?</span>':parts[0]}</span>
+       <span class="missing-op">×</span>
+       <span class="missing-num">${parts[2]==='?'?'<span class="missing-blank" id="m-blank">?</span>':parts[2]}</span>
+       <span class="missing-op">=</span>
+       <span class="missing-num" style="color:var(--yellow)">${parts[4]}</span>
+     </div>
+     <div class="opts-4" id="m-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansMissing(${o},${q.ans},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="m-fb"></div>
+     <button class="action-btn btn-orange hidden" id="m-next" onclick="nextMissing()">Next ➜</button>`;
+  setScore(mScore);
+}
+function ansMissing(choice,ans,btn){
+  document.querySelectorAll('#m-opts .opt-btn').forEach(b=>b.disabled=true);
+  const blank=document.getElementById('m-blank');
+  if(blank){blank.textContent=ans;blank.classList.add('filled');}
+  if(choice===ans){
+    btn.classList.add('correct');mScore++;
+    setFb('m-fb','⭐ Correct! '+choice+' is the missing number!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#m-opts .opt-btn').forEach(b=>{if(+b.textContent===ans)b.classList.add('correct')});
+    setFb('m-fb','The missing number was '+ans+'!','bad');
+  }
+  setScore(mScore);showEl('m-next');
+}
+function nextMissing(){
+  mIdx++;
+  if(mIdx>=mQs.length)showComplete('🎯',mScore>=9?'Number Detective! 🌟':mScore>=7?'Great Thinking! 😊':'Keep Solving! 💪',mScore,mQs.length);
+  else renderMissing();
+}
+</script>
+</body>
+</html>
