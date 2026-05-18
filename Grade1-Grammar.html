@@ -445,6 +445,57 @@
   .vocab-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
   .vocab-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
 
+
+  /* ── WEEK 5-6 GAMES ── */
+  .big-word-display {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(46px,12vw,72px);
+    text-align:center; margin-bottom:10px; display:block;
+    background:linear-gradient(135deg,var(--yellow),var(--orange));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .word-emoji-row { text-align:center; font-size:44px; margin-bottom:10px; }
+  .clue-text { font-size:clamp(17px,4vw,22px); font-weight:900; text-align:center;
+    margin-bottom:16px; color:white; line-height:1.3; }
+  .spell-btn {
+    background:rgba(74,144,226,0.12); border:3px solid rgba(74,144,226,0.4);
+    border-radius:18px; color:white; font-family:'Fredoka One',cursive;
+    font-size:clamp(26px,8vw,42px); padding:16px 12px; cursor:pointer; letter-spacing:2px;
+    transition:transform .15s,background .15s; -webkit-tap-highlight-color:transparent;
+  }
+  .spell-btn:not(:disabled):hover{transform:scale(1.06);background:rgba(74,144,226,0.25);}
+  .spell-btn:disabled{cursor:default;}
+  .spell-btn.correct{background:rgba(82,196,120,0.28);border-color:var(--green);}
+  .spell-btn.wrong{background:rgba(231,76,60,0.28);border-color:var(--red);}
+
+  /* Opinion Builder */
+  .opinion-sentence-box {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; padding:16px 18px; margin-bottom:14px;
+    font-size:clamp(16px,4vw,20px); font-weight:800; color:white; line-height:1.7;
+    min-height:64px; text-align:center;
+  }
+  .opinion-word { display:inline-block; background:rgba(82,196,120,0.22);
+    border:1px solid var(--green); border-radius:8px; padding:1px 8px;
+    margin:2px 3px; color:var(--green); font-weight:900;
+    animation:wPop .25s ease; }
+  @keyframes wPop{from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1}}
+  .opinion-tiles { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:12px; }
+  .op-tile {
+    background:rgba(155,89,182,0.18); border:2px solid rgba(155,89,182,0.45);
+    border-radius:12px; padding:9px 16px; font-size:clamp(15px,3.5vw,18px); font-weight:900;
+    cursor:pointer; color:white; transition:transform .15s,background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .op-tile:hover{transform:scale(1.06);background:rgba(155,89,182,0.32);}
+  .op-tile.used{background:rgba(82,196,120,0.2);border-color:var(--green);color:var(--green);cursor:default;pointer-events:none;}
+  .op-tile.starter-tile:not(.used){border-color:rgba(74,144,226,0.6);color:#7ab8f5;background:rgba(74,144,226,0.15);}
+  .op-tile.reason-tile:not(.used){border-color:rgba(245,166,35,0.6);color:var(--orange);background:rgba(245,166,35,0.12);}
+  .op-req{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
+  .op-req-chip{font-size:12px;font-weight:900;padding:4px 12px;border-radius:50px;
+    border:2px solid rgba(255,255,255,0.15);color:var(--muted);transition:all .3s;}
+  .op-req-chip.met{border-color:var(--green);color:var(--green);background:rgba(82,196,120,0.15);}
+
 </style>
 </head>
 <body>
@@ -514,6 +565,28 @@
       <span class="mc-icon">🔤</span>
       <div class="mc-title" style="color:var(--purple)">Vocab Match</div>
       <div class="mc-sub">Match words to pictures</div>
+    </div>
+
+
+    <!-- WEEK 5-6 LITERACY -->
+    <div class="section-divider" style="grid-column:1/-1;margin-top:8px">🗓️ Term 2 · Week 5–6</div>
+
+    <div class="menu-card" onclick="startGame('eeea')" style="border-color:rgba(74,144,226,0.45)">
+      <span class="mc-icon">🔤</span>
+      <div class="mc-title" style="color:var(--blue)">EE or EA?</div>
+      <div class="mc-sub">see/sea · meet/meat · feet/feat</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('ysound')" style="border-color:rgba(26,188,156,0.45)">
+      <span class="mc-icon">🦋</span>
+      <div class="mc-title" style="color:var(--teal)">-Y Sound</div>
+      <div class="mc-sub">happy · funny · silly…</div>
+    </div>
+
+    <div class="menu-card mc-full" onclick="startGame('opinion')" style="border-color:rgba(155,89,182,0.45)">
+      <span class="mc-icon">💬</span>
+      <div class="mc-title" style="color:var(--purple)">Opinion Builder</div>
+      <div class="mc-sub">I think… · I like… · I prefer… · because…</div>
     </div>
 
   </div>
@@ -607,6 +680,25 @@
     <div class="gcard" id="vocabmatch-card"></div>
   </div>
 
+
+  <!-- EE vs EA -->
+  <div class="screen" id="screen-eeea">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="eeea-card"></div>
+  </div>
+
+  <!-- Y SOUND -->
+  <div class="screen" id="screen-ysound">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="ysound-card"></div>
+  </div>
+
+  <!-- OPINION BUILDER -->
+  <div class="screen" id="screen-opinion">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="opinion-card"></div>
+  </div>
+
   <!-- COMPLETE SCREEN -->
   <div id="complete-screen">
     <div class="complete-emoji" id="cmp-emoji">🎉</div>
@@ -679,6 +771,9 @@ function startGame(name){
   if(name==='vocabmatch') initVocabMatch();
   if(name==='fill')    initFill();
   if(name==='story')   initStoryGame();
+  if(name==='eeea')    initEEEA();
+  if(name==='ysound')  initYSound();
+  if(name==='opinion') initOpinion();
   document.getElementById('screen-'+name).classList.add('active');
 }
 
@@ -1476,6 +1571,182 @@ function nextVocab(){
   if(vmIdx>=VOCAB.length)
     showComplete('🔤',vmScore>=5?'Vocab Champion! 🌟':vmScore>=4?'Great Words! 😊':'Keep Practising! 💪',vmScore,VOCAB.length);
   else renderVocab();
+}
+
+
+// ══════════════════════════════════════════════
+//  GAME: EE vs EA HOMOPHONES
+// ══════════════════════════════════════════════
+const EEEA_Q=[
+  {clue:'👁️ To look at something',       opts:['see','sea'],   ans:'see'},
+  {clue:'🌊 The big body of water',       opts:['see','sea'],   ans:'sea'},
+  {clue:'👋 To come together and greet',  opts:['meet','meat'],  ans:'meet'},
+  {clue:'🥩 Something we cook and eat',   opts:['meet','meat'],  ans:'meat'},
+  {clue:'🦶 You have two on your body',   opts:['feet','feat'],  ans:'feet'},
+  {clue:'🏆 A great achievement',         opts:['feet','feat'],  ans:'feat'},
+  {clue:'📅 Seven days long',             opts:['week','weak'],  ans:'week'},
+  {clue:'😴 Not strong or powerful',      opts:['week','weak'],  ans:'weak'},
+  {clue:'🐝 The insect that makes honey', opts:['bee','be'],     ans:'bee'},
+  {clue:'🍵 A warm drink to sip',         opts:['tea','tee'],    ans:'tea'},
+  {clue:'💊 To help a wound get better',  opts:['heel','heal'],  ans:'heal'},
+  {clue:'👟 The back part of your foot',  opts:['heel','heal'],  ans:'heel'},
+];
+let eeIdx=0,eeScore=0;
+function initEEEA(){eeIdx=0;eeScore=0;renderEEEA();}
+function renderEEEA(){
+  const q=EEEA_Q[eeIdx];
+  const card=document.getElementById('eeea-card');
+  card.innerHTML=progHTML(eeIdx,EEEA_Q.length,'#4a90e2')+
+    `<div class="q-text">Which spelling is correct? 🔤</div>
+     <div class="clue-text">${q.clue}</div>
+     <div class="opts-2" id="ee-opts">`+
+    q.opts.map(o=>`<button class="spell-btn" onclick="ansEEEA('${o}','${q.ans}',this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="ee-fb"></div>
+     <button class="action-btn btn-blue hidden" id="ee-next" onclick="nextEEEA()">Next ➜</button>`;
+  setScore(eeScore);
+}
+function ansEEEA(choice,ans,btn){
+  document.querySelectorAll('#ee-opts .spell-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');eeScore++;setFb('ee-fb','⭐ Correct! "'+ans+'" is the right spelling!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#ee-opts .spell-btn').forEach(b=>{if(b.textContent===ans)b.classList.add('correct')});setFb('ee-fb','The answer is "'+ans+'"!','bad');}
+  setScore(eeScore);showEl('ee-next');
+}
+function nextEEEA(){
+  eeIdx++;
+  if(eeIdx>=EEEA_Q.length)showComplete('🔤',eeScore>=10?'Homophone Hero! 🌟':eeScore>=7?'Great Spelling! 😊':'Keep Practising! 💪',eeScore,EEEA_Q.length);
+  else renderEEEA();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: -Y SOUND SPOTTER
+// ══════════════════════════════════════════════
+const Y_WORDS=[
+  {word:'happy',   emoji:'😊', hasY:true},
+  {word:'funny',   emoji:'😂', hasY:true},
+  {word:'silly',   emoji:'🤪', hasY:true},
+  {word:'puppy',   emoji:'🐶', hasY:true},
+  {word:'tiny',    emoji:'🤏', hasY:true},
+  {word:'muddy',   emoji:'🟤', hasY:true},
+  {word:'unhappy', emoji:'😢', hasY:true},
+  {word:'baby',    emoji:'👶', hasY:true},
+  {word:'run',     emoji:'🏃', hasY:false},
+  {word:'cat',     emoji:'🐱', hasY:false},
+  {word:'big',     emoji:'🐘', hasY:false},
+  {word:'green',   emoji:'🟢', hasY:false},
+  {word:'jump',    emoji:'🦘', hasY:false},
+  {word:'red',     emoji:'🔴', hasY:false},
+];
+let yIdx=0,yScore=0,yWords=[];
+function initYSound(){yWords=[...Y_WORDS].sort(()=>Math.random()-0.5);yIdx=0;yScore=0;renderYSound();}
+function renderYSound(){
+  const w=yWords[yIdx];
+  const card=document.getElementById('ysound-card');
+  card.innerHTML=progHTML(yIdx,yWords.length,'#1abc9c')+
+    `<div class="q-text">Does this word end with the <span style="color:var(--teal)">/ee-y/</span> sound?</div>
+     <div class="q-sub">Like in "happ<span style="color:var(--teal)">y</span>", "funn<span style="color:var(--teal)">y</span>", "sill<span style="color:var(--teal)">y</span>"</div>
+     <div class="word-emoji-row">${w.emoji}</div>
+     <span class="big-word-display">${w.word}</span>
+     <div class="opts-2" id="y-opts">
+       <button class="opt-btn" onclick="ansYSound(true,${w.hasY},this)">✅ Yes!</button>
+       <button class="opt-btn" onclick="ansYSound(false,${w.hasY},this)">❌ No</button>
+     </div>
+     <div class="feedback" id="y-fb"></div>
+     <button class="action-btn btn-teal hidden" id="y-next" onclick="nextYSound()">Next ➜</button>`;
+  setScore(yScore);
+}
+function ansYSound(choice,hasY,btn){
+  document.querySelectorAll('#y-opts .opt-btn').forEach(b=>b.disabled=true);
+  const correct=(choice===hasY);
+  if(correct){btn.classList.add('correct');yScore++;setFb('y-fb',hasY?'⭐ Yes! It ends with the /ee-y/ sound!':'⭐ Correct! No /ee-y/ sound here!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#y-opts .opt-btn').forEach(b=>{if((b.textContent.includes('Yes'))===hasY)b.classList.add('correct')});setFb('y-fb',hasY?'It DOES end with /ee-y/!':'It does NOT end with /ee-y/!','bad');}
+  setScore(yScore);showEl('y-next');
+}
+function nextYSound(){
+  yIdx++;
+  if(yIdx>=yWords.length)showComplete('🦋',yScore>=12?'Y Sound Star! 🌟':yScore>=9?'Great Listening! 😊':'Keep Practising! 💪',yScore,yWords.length);
+  else renderYSound();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: OPINION BUILDER
+// ══════════════════════════════════════════════
+const OP_ROUNDS=[
+  {topic:'🐶 dogs',    starters:['I think','I like','I prefer'],
+   reasons:['they are friendly','they are fun to play with','they make great pets']},
+  {topic:'🍕 pizza',   starters:['I think','I like','I prefer'],
+   reasons:['it is delicious','it has so many toppings','it is the best food']},
+  {topic:'📚 reading', starters:['I think','I like','I prefer'],
+   reasons:['it teaches us new things','it is exciting','stories are amazing']},
+  {topic:'⚽ sport',   starters:['I think','I like','I prefer'],
+   reasons:['it keeps us healthy','it is lots of fun','we learn to work as a team']},
+];
+let opRound=0,opScore=0,opStarter=null,opReason=null;
+function initOpinion(){opRound=0;opScore=0;opStarter=null;opReason=null;renderOpinion();}
+function renderOpinion(){
+  opStarter=null;opReason=null;
+  const r=OP_ROUNDS[opRound];
+  const card=document.getElementById('opinion-card');
+  card.innerHTML=progHTML(opRound,OP_ROUNDS.length,'#9b59b6')+
+    `<div class="q-text">Build an opinion sentence about ${r.topic}! 💬</div>
+     <div class="opinion-sentence-box" id="op-sentence">
+       <span style="color:var(--muted)">Tap a sentence starter below…</span>
+     </div>
+     <div class="op-req" id="op-reqs">
+       <div class="op-req-chip" id="req-starter">1️⃣ Starter</div>
+       <div class="op-req-chip" id="req-because">2️⃣ Because</div>
+       <div class="op-req-chip" id="req-reason">3️⃣ Reason</div>
+     </div>
+     <div style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">⏺ Choose a starter:</div>
+     <div class="opinion-tiles" id="op-starters">`+
+    r.starters.map(s=>`<span class="op-tile starter-tile" onclick="opPickStarter('${s}',this)">${s}…</span>`).join('')+
+    `</div>
+     <div style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">💛 Choose a reason:</div>
+     <div class="opinion-tiles" id="op-reasons">`+
+    r.reasons.map(rs=>`<span class="op-tile reason-tile" onclick="opPickReason(\`${rs}\`,this)">${rs}</span>`).join('')+
+    `</div>
+     <div class="feedback" id="op-fb"></div>
+     <button class="action-btn btn-purple hidden" id="op-submit" onclick="submitOpinion()">✅ That is my opinion!</button>
+     <button class="action-btn btn-purple hidden" id="op-next" onclick="nextOpinion()" style="margin-top:10px">Next ➜</button>`;
+  setScore(opScore);
+}
+function opPickStarter(s,tile){
+  opStarter=s;
+  document.querySelectorAll('#op-starters .op-tile').forEach(t=>t.classList.remove('used'));
+  tile.classList.add('used');
+  document.getElementById('req-starter').classList.add('met');
+  updateOpSentence();
+}
+function opPickReason(r,tile){
+  opReason=r;
+  document.querySelectorAll('#op-reasons .op-tile').forEach(t=>t.classList.remove('used'));
+  tile.classList.add('used');
+  document.getElementById('req-reason').classList.add('met');
+  updateOpSentence();
+}
+function updateOpSentence(){
+  const r=OP_ROUNDS[opRound];
+  let parts=[];
+  if(opStarter)parts.push(`<span class="opinion-word">${opStarter}</span>`);
+  parts.push(r.topic);
+  parts.push('<span class="opinion-word">because</span>');
+  document.getElementById('req-because').classList.add('met');
+  if(opReason)parts.push(`<span class="opinion-word">${opReason}</span>`);
+  parts.push('.');
+  document.getElementById('op-sentence').innerHTML=parts.join(' ');
+  if(opStarter&&opReason)showEl('op-submit');
+}
+function submitOpinion(){
+  opScore++;
+  document.getElementById('op-submit').classList.add('hidden');
+  document.querySelectorAll('.op-tile').forEach(t=>t.onclick=null);
+  setFb('op-fb','⭐ Amazing opinion sentence! You are a writer! 📝','good');
+  setScore(opScore);
+  showEl('op-next');
+}
+function nextOpinion(){
+  opRound++;
+  if(opRound>=OP_ROUNDS.length)showComplete('💬',opScore>=4?'Opinion Expert! 🌟':opScore>=2?'Great Opinions! 😊':'Good Try! 💪',opScore,OP_ROUNDS.length);
+  else{opStarter=null;opReason=null;renderOpinion();}
 }
 
 </script>
