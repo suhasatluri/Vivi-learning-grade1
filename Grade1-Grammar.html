@@ -496,6 +496,57 @@
     border:2px solid rgba(255,255,255,0.15);color:var(--muted);transition:all .3s;}
   .op-req-chip.met{border-color:var(--green);color:var(--green);background:rgba(82,196,120,0.15);}
 
+
+  /* Week 7-8 games */
+  .sort-buckets { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+  @media(max-width:480px){ .sort-buckets { grid-template-columns:1fr; } }
+  .sort-bucket {
+    background:rgba(255,255,255,0.05); border:2px dashed rgba(255,255,255,0.2);
+    border-radius:16px; padding:10px 8px; min-height:60px;
+    display:flex; flex-wrap:wrap; gap:6px; align-content:flex-start;
+  }
+  .sort-bucket.droppable { border-color:rgba(255,255,255,0.5); background:rgba(255,255,255,0.08); cursor:pointer; }
+  .sort-bucket .sb-ph { color:#555; font-size:12px; align-self:center; width:100%; text-align:center; }
+  .sort-label { font-family:'Fredoka One',cursive; font-size:16px; margin-bottom:6px; text-align:center; }
+  .word-chip-sort {
+    background:rgba(74,144,226,0.2); border:2px solid var(--blue);
+    border-radius:10px; padding:7px 12px; font-size:17px; font-weight:900;
+    cursor:pointer; transition:transform .15s, background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .word-chip-sort:hover { transform:scale(1.08); }
+  .word-chip-sort.selected { background:rgba(245,166,35,0.3); border-color:var(--orange); }
+  .word-chip-sort.placed-ok  { background:rgba(82,196,120,0.25); border-color:var(--green); cursor:default; pointer-events:none; }
+  .word-chip-sort.placed-bad { background:rgba(231,76,60,0.25);  border-color:var(--red);   cursor:default; pointer-events:none; }
+  .chip-pool { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; justify-content:center; }
+
+  /* Connector game */
+  .connector-sentence {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; padding:16px 18px; margin-bottom:14px;
+    font-size:clamp(16px,4vw,20px); font-weight:800; color:white;
+    line-height:1.8; text-align:center; min-height:70px;
+  }
+  .conn-gap {
+    display:inline-block; min-width:100px; border-bottom:3px solid var(--orange);
+    color:var(--orange); font-family:'Fredoka One',cursive; padding:0 8px;
+    transition:all .3s;
+  }
+  .conn-gap.filled { border-bottom-color:var(--green); color:var(--green); }
+  .conn-gap.wrong  { border-bottom-color:var(--red);   color:var(--red); animation:shk .4s ease; }
+  @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  .conn-btns { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .conn-btn {
+    background:rgba(155,89,182,0.18); border:2px solid rgba(155,89,182,0.45);
+    border-radius:16px; color:white; font-family:'Fredoka One',cursive;
+    font-size:clamp(22px,6vw,34px); padding:16px 8px; cursor:pointer;
+    transition:transform .15s, background .15s; -webkit-tap-highlight-color:transparent;
+  }
+  .conn-btn:not(:disabled):hover { transform:scale(1.05); background:rgba(155,89,182,0.32); }
+  .conn-btn:disabled { cursor:default; }
+  .conn-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .conn-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
 </style>
 </head>
 <body>
@@ -587,6 +638,27 @@
       <span class="mc-icon">💬</span>
       <div class="mc-title" style="color:var(--purple)">Opinion Builder</div>
       <div class="mc-sub">I think… · I like… · I prefer… · because…</div>
+    </div>
+
+
+    <div class="section-divider" style="grid-column:1/-1;margin-top:8px">🗓️ Term 2 · Week 7–8</div>
+
+    <div class="menu-card mc-full" onclick="startGame('longisort')" style="border-color:rgba(241,196,15,0.45)">
+      <span class="mc-icon">🌙</span>
+      <div class="mc-title" style="color:var(--yellow)">Long /i/ Sorter</div>
+      <div class="mc-sub">igh (night) · y (fly) · ie (pie) — sort into the right bucket!</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('oasound')" style="border-color:rgba(26,188,156,0.45)">
+      <span class="mc-icon">🚣</span>
+      <div class="mc-title" style="color:var(--teal)">OA Sound</div>
+      <div class="mc-sub">boat · coat · road…</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('connector')" style="border-color:rgba(232,109,189,0.45)">
+      <span class="mc-icon">🔗</span>
+      <div class="mc-title" style="color:var(--pink)">Because &amp; But</div>
+      <div class="mc-sub">Join sentences together</div>
     </div>
 
   </div>
@@ -699,6 +771,20 @@
     <div class="gcard" id="opinion-card"></div>
   </div>
 
+
+  <div class="screen" id="screen-longisort">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="longisort-card"></div>
+  </div>
+  <div class="screen" id="screen-oasound">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="oasound-card"></div>
+  </div>
+  <div class="screen" id="screen-connector">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="connector-card"></div>
+  </div>
+
   <!-- COMPLETE SCREEN -->
   <div id="complete-screen">
     <div class="complete-emoji" id="cmp-emoji">🎉</div>
@@ -773,7 +859,10 @@ function startGame(name){
   if(name==='story')   initStoryGame();
   if(name==='eeea')    initEEEA();
   if(name==='ysound')  initYSound();
-  if(name==='opinion') initOpinion();
+  if(name==='opinion')    initOpinion();
+  if(name==='longisort') initLongiSort();
+  if(name==='oasound')   initOASound();
+  if(name==='connector') initConnector();
   document.getElementById('screen-'+name).classList.add('active');
 }
 
@@ -1747,6 +1836,213 @@ function nextOpinion(){
   opRound++;
   if(opRound>=OP_ROUNDS.length)showComplete('💬',opScore>=4?'Opinion Expert! 🌟':opScore>=2?'Great Opinions! 😊':'Good Try! 💪',opScore,OP_ROUNDS.length);
   else{opStarter=null;opReason=null;renderOpinion();}
+}
+
+
+// ══════════════════════════════════════════════
+//  GAME: LONG /i/ SORTER  (igh / y / ie)
+// ══════════════════════════════════════════════
+const LONGI_WORDS = [
+  {word:'night',  bucket:'igh'}, {word:'light',  bucket:'igh'},
+  {word:'right',  bucket:'igh'}, {word:'might',  bucket:'igh'},
+  {word:'bright', bucket:'igh'},
+  {word:'fly',    bucket:'y'},   {word:'cry',    bucket:'y'},
+  {word:'sky',    bucket:'y'},   {word:'dry',    bucket:'y'},
+  {word:'try',    bucket:'y'},
+  {word:'pie',    bucket:'ie'},  {word:'tie',    bucket:'ie'},
+  {word:'lie',    bucket:'ie'},  {word:'die',    bucket:'ie'},
+  {word:'cried',  bucket:'ie'},
+];
+let liSelected=null, liScore=0, liRemaining=[];
+
+function initLongiSort(){
+  liSelected=null; liScore=0;
+  liRemaining=[...LONGI_WORDS].sort(()=>Math.random()-0.5);
+  renderLongiSort();
+}
+
+function renderLongiSort(){
+  const total=LONGI_WORDS.length;
+  const placed=total-liRemaining.length;
+  const card=document.getElementById('longisort-card');
+  card.innerHTML=
+    `<div class="prog-row"><span>Sorted ${placed} of ${total}</span><span id="gscore">Score: ${liScore}</span></div>
+     <div class="prog-bar"><div class="prog-fill" style="width:${placed/total*100}%;background:linear-gradient(90deg,var(--yellow),#e86dbd)"></div></div>
+     <div class="q-text">Sort the long <span style="color:var(--yellow)">/i/</span> words into the right bucket!</div>
+     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+       <div>
+         <div class="sort-label" style="color:var(--yellow)">🌙 igh</div>
+         <div class="sort-bucket" id="bucket-igh" onclick="liDrop('igh')">
+           <span class="sb-ph" id="ph-igh">night…</span>
+         </div>
+       </div>
+       <div>
+         <div class="sort-label" style="color:var(--blue)">🦋 y</div>
+         <div class="sort-bucket" id="bucket-y" onclick="liDrop('y')">
+           <span class="sb-ph" id="ph-y">fly…</span>
+         </div>
+       </div>
+       <div>
+         <div class="sort-label" style="color:var(--pink)">🥧 ie</div>
+         <div class="sort-bucket" id="bucket-ie" onclick="liDrop('ie')">
+           <span class="sb-ph" id="ph-ie">pie…</span>
+         </div>
+       </div>
+     </div>
+     <div style="font-weight:900;font-size:13px;color:var(--muted);margin-bottom:8px">Tap a word, then tap the right bucket:</div>
+     <div class="chip-pool" id="li-pool"></div>
+     <div class="feedback" id="li-fb"></div>
+     <button class="action-btn btn-orange hidden" id="li-finish" onclick="liFinish()">🎉 See my score!</button>`;
+  renderLiPool();
+}
+
+function renderLiPool(){
+  const pool=document.getElementById('li-pool');
+  pool.innerHTML='';
+  liRemaining.forEach(w=>{
+    const chip=document.createElement('span');
+    chip.className='word-chip-sort'; chip.textContent=w.word;
+    chip.dataset.bucket=w.bucket;
+    chip.onclick=()=>liSelect(chip,w);
+    pool.appendChild(chip);
+  });
+}
+
+function liSelect(chip,w){
+  document.querySelectorAll('.word-chip-sort').forEach(c=>c.classList.remove('selected'));
+  chip.classList.add('selected'); liSelected=w;
+  ['igh','y','ie'].forEach(b=>document.getElementById('bucket-'+b).classList.add('droppable'));
+  setFb('li-fb','Now tap the right bucket! 👆','');
+}
+
+function liDrop(bucket){
+  if(!liSelected) return;
+  ['igh','y','ie'].forEach(b=>document.getElementById('bucket-'+b).classList.remove('droppable'));
+  const correct=(liSelected.bucket===bucket);
+  const ph=document.getElementById('ph-'+bucket);
+  if(ph) ph.remove();
+  const chip=document.createElement('span');
+  chip.className='word-chip-sort '+(correct?'placed-ok':'placed-bad');
+  chip.textContent=liSelected.word;
+  document.getElementById('bucket-'+bucket).appendChild(chip);
+  if(correct){ liScore++; setFb('li-fb','✅ "'+liSelected.word+'" has the igh/y/ie sound!','good'); }
+  else { setFb('li-fb','❌ "'+liSelected.word+'" goes in the '+liSelected.bucket+' bucket!','bad'); }
+  liRemaining=liRemaining.filter(w=>w.word!==liSelected.word);
+  liSelected=null;
+  setScore(liScore);
+  renderLiPool();
+  if(liRemaining.length===0) showEl('li-finish');
+}
+
+function liFinish(){
+  showComplete('🌙',liScore>=13?'Long /i/ Legend! 🌟':liScore>=10?'Great Sorting! 😊':'Keep Practising! 💪',liScore,LONGI_WORDS.length);
+}
+
+// ══════════════════════════════════════════════
+//  GAME: OA SOUND SPOTTER
+// ══════════════════════════════════════════════
+const OA_Q=[
+  {word:'boat',   emoji:'⛵', hasOA:true},
+  {word:'coat',   emoji:'🧥', hasOA:true},
+  {word:'road',   emoji:'🛣️', hasOA:true},
+  {word:'toast',  emoji:'🍞', hasOA:true},
+  {word:'goat',   emoji:'🐐', hasOA:true},
+  {word:'soap',   emoji:'🧼', hasOA:true},
+  {word:'load',   emoji:'📦', hasOA:true},
+  {word:'float',  emoji:'🏊', hasOA:true},
+  {word:'cat',    emoji:'🐱', hasOA:false},
+  {word:'hot',    emoji:'🔥', hasOA:false},
+  {word:'blue',   emoji:'💙', hasOA:false},
+  {word:'jump',   emoji:'🦘', hasOA:false},
+  {word:'fish',   emoji:'🐟', hasOA:false},
+];
+let oaIdx=0, oaScore=0, oaWords=[];
+
+function initOASound(){ oaWords=[...OA_Q].sort(()=>Math.random()-0.5); oaIdx=0; oaScore=0; renderOA(); }
+function renderOA(){
+  const w=oaWords[oaIdx];
+  const card=document.getElementById('oasound-card');
+  card.innerHTML=progHTML(oaIdx,oaWords.length,'#1abc9c')+
+    `<div class="q-text">Does this word have the <span style="color:var(--teal)">OA</span> sound?</div>
+     <div class="q-sub">Like in b<span style="color:var(--teal)">oa</span>t, c<span style="color:var(--teal)">oa</span>t, r<span style="color:var(--teal)">oa</span>d</div>
+     <div class="word-emoji-row">${w.emoji}</div>
+     <span class="big-word-display">${w.word}</span>
+     <div class="opts-2" id="oa-opts">
+       <button class="opt-btn" onclick="ansOA(true,${w.hasOA},this)">✅ Yes!</button>
+       <button class="opt-btn" onclick="ansOA(false,${w.hasOA},this)">❌ No</button>
+     </div>
+     <div class="feedback" id="oa-fb"></div>
+     <button class="action-btn btn-teal hidden" id="oa-next" onclick="nextOA()">Next ➜</button>`;
+  setScore(oaScore);
+}
+function ansOA(choice,hasOA,btn){
+  document.querySelectorAll('#oa-opts .opt-btn').forEach(b=>b.disabled=true);
+  const correct=(choice===hasOA);
+  if(correct){ btn.classList.add('correct'); oaScore++; setFb('oa-fb',hasOA?'⭐ Yes! It has the OA sound!':'⭐ Correct! No OA sound here!','good'); }
+  else { btn.classList.add('wrong'); document.querySelectorAll('#oa-opts .opt-btn').forEach(b=>{ if((b.textContent.includes('Yes'))===hasOA) b.classList.add('correct'); }); setFb('oa-fb',hasOA?'It DOES have the OA sound!':'No OA sound in this word!','bad'); }
+  setScore(oaScore); showEl('oa-next');
+}
+function nextOA(){
+  oaIdx++;
+  if(oaIdx>=oaWords.length) showComplete('🚣',oaScore>=11?'OA Sound Star! 🌟':oaScore>=8?'Great Listening! 😊':'Keep Practising! 💪',oaScore,oaWords.length);
+  else renderOA();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: BECAUSE & BUT CONNECTOR
+// ══════════════════════════════════════════════
+const CONN_Q=[
+  {s1:'I like dogs',       gap:'because', s2:'they are friendly',         ans:'because', wrong:'but'},
+  {s1:'I want to sleep',   gap:'because', s2:'I am very tired',           ans:'because', wrong:'but'},
+  {s1:'I like summer',     gap:'because', s2:'it is warm and sunny',      ans:'because', wrong:'but'},
+  {s1:'I want to read',    gap:'but',     s2:'I have lost my book',       ans:'but',     wrong:'because'},
+  {s1:'I like cats',       gap:'but',     s2:'I am allergic to them',     ans:'but',     wrong:'because'},
+  {s1:'I want to play',    gap:'but',     s2:'it is raining outside',     ans:'but',     wrong:'because'},
+  {s1:'I prefer fruit',    gap:'because', s2:'it is healthy and delicious',ans:'because',wrong:'but'},
+  {s1:'I think fish swim', gap:'because', s2:'they have fins and a tail',  ans:'because',wrong:'but'},
+  {s1:'I like pizza',      gap:'but',     s2:'it makes me too full',      ans:'but',     wrong:'because'},
+  {s1:'I want to run',     gap:'because', s2:'it keeps me fit and strong', ans:'because',wrong:'but'},
+];
+let connIdx=0, connScore=0;
+
+function initConnector(){ connIdx=0; connScore=0; renderConnector(); }
+function renderConnector(){
+  const q=CONN_Q[connIdx];
+  const card=document.getElementById('connector-card');
+  card.innerHTML=progHTML(connIdx,CONN_Q.length,'#e86dbd')+
+    `<div class="q-text">Choose the right joining word! 🔗</div>
+     <div class="connector-sentence">
+       ${q.s1} <span class="conn-gap" id="conn-gap">_____</span> ${q.s2}.
+     </div>
+     <div class="q-sub">Does the second part give a <strong>reason</strong> (because) or a <strong>surprise</strong> (but)?</div>
+     <div class="conn-btns" id="conn-opts">
+       <button class="conn-btn" onclick="ansConn('because',this)">because</button>
+       <button class="conn-btn" onclick="ansConn('but',this)">but</button>
+     </div>
+     <div class="feedback" id="conn-fb"></div>
+     <button class="action-btn btn-pink hidden" id="conn-next" onclick="nextConn()">Next ➜</button>`;
+  setScore(connScore);
+}
+function ansConn(choice,btn){
+  const q=CONN_Q[connIdx];
+  document.querySelectorAll('#conn-opts .conn-btn').forEach(b=>b.disabled=true);
+  const gap=document.getElementById('conn-gap');
+  gap.textContent=q.ans; gap.classList.add('filled');
+  if(choice===q.ans){
+    btn.classList.add('correct'); connScore++;
+    setFb('conn-fb','⭐ Correct! "'+q.ans+'" joins the sentences perfectly!','good');
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#conn-opts .conn-btn').forEach(b=>{ if(b.textContent===q.ans) b.classList.add('correct'); });
+    const tip = q.ans==='because' ? '"because" gives a reason' : '"but" shows a surprise or contrast';
+    setFb('conn-fb','The answer is "'+q.ans+'" — '+tip+'!','bad');
+  }
+  setScore(connScore); showEl('conn-next');
+}
+function nextConn(){
+  connIdx++;
+  if(connIdx>=CONN_Q.length) showComplete('🔗',connScore>=9?'Sentence Joiner! 🌟':connScore>=6?'Great Connecting! 😊':'Keep Practising! 💪',connScore,CONN_Q.length);
+  else renderConnector();
 }
 
 </script>
