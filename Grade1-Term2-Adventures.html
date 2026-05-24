@@ -163,6 +163,44 @@
   .dir-question{font-family:'Fredoka One',cursive;font-size:clamp(17px,4.5vw,24px);text-align:center;color:white;margin-bottom:14px;line-height:1.4}
   .dir-question .kw{color:var(--yellow);font-size:1.1em}
 
+
+  /* Week 7-8 maths */
+  .vert-add-wrap {
+    display:flex; justify-content:center; margin-bottom:16px;
+  }
+  .vert-add-box {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; padding:16px 24px; display:inline-block;
+    font-family:'Fredoka One',cursive;
+  }
+  .vert-row {
+    display:flex; justify-content:flex-end; gap:4px;
+    font-size:clamp(32px,9vw,52px); line-height:1.2; color:white;
+  }
+  .vert-digit { min-width:clamp(32px,8vw,52px); text-align:center; }
+  .vert-op { min-width:clamp(32px,8vw,52px); text-align:center; color:var(--muted); }
+  .vert-line { border-top:3px solid rgba(255,255,255,0.4); margin:4px 0 6px; }
+  .vert-carry {
+    font-size:clamp(14px,3vw,20px); color:var(--orange); text-align:right;
+    min-height:22px; padding-right:4px; font-family:'Fredoka One',cursive;
+  }
+  .vert-ans-digit {
+    min-width:clamp(32px,8vw,52px); text-align:center;
+    color:var(--green); font-size:clamp(32px,9vw,52px);
+  }
+  .vert-hint {
+    background:rgba(74,144,226,0.12); border:1.5px solid rgba(74,144,226,0.3);
+    border-radius:12px; padding:9px 14px; font-size:13px; font-weight:800;
+    color:#7ab8f5; margin-bottom:12px; text-align:center; line-height:1.5;
+  }
+  .word-problem-box {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; padding:16px 18px; margin-bottom:14px;
+    font-size:clamp(16px,4vw,20px); font-weight:800; color:white;
+    line-height:1.6; text-align:center;
+  }
+  .word-problem-box .wp-num { color:var(--yellow); font-family:'Fredoka One',cursive; font-size:1.2em; }
+
 </style>
 </head>
 <body>
@@ -215,6 +253,18 @@
       <div class="mc-sub">First · Second · Forwards…</div>
     </div>
 
+  
+    <div class="menu-card" onclick="startGame('vertadd')" style="border-color:rgba(82,196,120,0.4)">
+      <span class="mc-icon">📐</span>
+      <div class="mc-title" style="color:var(--green)">Vertical Addition</div>
+      <div class="mc-sub">Column by column</div>
+    </div>
+    <div class="menu-card" onclick="startGame('add100')" style="border-color:rgba(155,89,182,0.4)">
+      <span class="mc-icon">💯</span>
+      <div class="mc-title" style="color:var(--purple)">Add within 100</div>
+      <div class="mc-sub">38 + 25 = ? regroup!</div>
+    </div>
+
   </div>
 
   <!-- SCREENS -->
@@ -247,6 +297,16 @@
   <div class="screen" id="screen-directions">
     <button class="back-btn" onclick="goHome()">← Back</button>
     <div class="gcard" id="directions-card"></div>
+  </div>
+
+
+  <div class="screen" id="screen-vertadd">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="vertadd-card"></div>
+  </div>
+  <div class="screen" id="screen-add100">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="add100-card"></div>
   </div>
 
   <!-- COMPLETE -->
@@ -292,7 +352,7 @@ function startGame(name){
   document.getElementById('menu').classList.add('hidden');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('complete-screen').classList.remove('active');
-  ({shapes:initShapes,position:initPosition,addition:initAddition,patterns:initPatterns,mult10:initMult10,base10:initBase10,directions:initDirections})[name]();
+  ({shapes:initShapes,position:initPosition,addition:initAddition,patterns:initPatterns,mult10:initMult10,base10:initBase10,directions:initDirections,vertadd:initVertAdd,add100:initAdd100})[name]();
   document.getElementById('screen-'+name).classList.add('active');
 }
 function showComplete(emoji,title,score,total){
@@ -866,6 +926,136 @@ function nextDir(){
   dIdx++;
   if(dIdx>=dRounds.length)showComplete('🧭',dScore>=8?'Direction Master! 🌟':dScore>=6?'Great Navigating! 😊':'Keep Practising! 💪',dScore,dRounds.length);
   else renderDir();
+}
+
+
+// ══════════════════════════════════════════════
+//  GAME: VERTICAL ADDITION
+// ══════════════════════════════════════════════
+// Questions: mix of no-carry and with-carry 2-digit
+const VA_Q = [
+  {a:23,b:14,carry:false},{a:41,b:35,carry:false},{a:52,b:26,carry:false},
+  {a:34,b:43,carry:false},{a:12,b:56,carry:false},
+  {a:27,b:35,carry:true}, {a:38,b:25,carry:true}, {a:46,b:37,carry:true},
+  {a:54,b:28,carry:true}, {a:65,b:19,carry:true},
+  {a:47,b:36,carry:true}, {a:29,b:43,carry:true},
+];
+let vaQs=[],vaIdx=0,vaScore=0;
+
+function initVertAdd(){
+  vaQs=[...VA_Q].sort(()=>Math.random()-0.5).slice(0,8);
+  vaIdx=0; vaScore=0; renderVertAdd();
+}
+
+function vertAddHTML(a,b,showAns){
+  const ans=a+b;
+  const aT=Math.floor(a/10), aO=a%10;
+  const bT=Math.floor(b/10), bO=b%10;
+  const onesSum=aO+bO;
+  const carry=onesSum>=10?1:0;
+  const ansO=onesSum%10;
+  const ansT=aT+bT+carry;
+  let carryStr=carry?'1':'';
+  return `<div class="vert-add-wrap"><div class="vert-add-box">
+    <div class="vert-carry">${carry&&showAns?carryStr:''}</div>
+    <div class="vert-row"><span class="vert-digit">${aT}</span><span class="vert-digit">${aO}</span></div>
+    <div class="vert-row"><span class="vert-op">+</span><span class="vert-digit">${bT}</span><span class="vert-digit">${bO}</span></div>
+    <div class="vert-line"></div>
+    <div class="vert-row">
+      ${showAns
+        ? `<span class="vert-ans-digit">${ansT}</span><span class="vert-ans-digit">${ansO}</span>`
+        : `<span class="vert-ans-digit" style="color:var(--orange)">?</span><span class="vert-ans-digit" style="color:var(--orange)">?</span>`
+      }
+    </div>
+  </div></div>`;
+}
+
+function renderVertAdd(){
+  const q=vaQs[vaIdx];
+  const ans=q.a+q.b;
+  const aO=q.a%10, bO=q.b%10, onesSum=aO+bO;
+  const hint=q.carry
+    ? `ones: ${aO}+${bO}=${onesSum} → write ${onesSum%10}, carry 1 to tens`
+    : `ones: ${aO}+${bO}=${onesSum} · tens: ${Math.floor(q.a/10)}+${Math.floor(q.b/10)}=${Math.floor(q.a/10)+Math.floor(q.b/10)}`;
+  const opts=shuffle([ans,...new Set([ans-1,ans+1,ans-10,ans+10].filter(v=>v>0&&v<100))].slice(0,4));
+  const card=document.getElementById('vertadd-card');
+  card.innerHTML=progHTML(vaIdx,vaQs.length,'#52c478')+
+    `<div class="q-text">What is the answer? 📐</div>
+     ${vertAddHTML(q.a,q.b,false)}
+     <div class="vert-hint">💡 ${hint}</div>
+     <div class="opts-4" id="va-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansVertAdd(${o},${ans},${q.a},${q.b},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="va-fb"></div>
+     <button class="action-btn btn-green hidden" id="va-next" onclick="nextVertAdd()">Next ➜</button>`;
+  setScore(vaScore);
+}
+function ansVertAdd(choice,ans,a,b,btn){
+  document.querySelectorAll('#va-opts .opt-btn').forEach(x=>x.disabled=true);
+  // Reveal the vertical layout with answer
+  const vw=document.querySelector('.vert-add-wrap');
+  if(vw) vw.outerHTML=vertAddHTML(a,b,true);
+  if(choice===ans){ btn.classList.add('correct'); vaScore++; setFb('va-fb','⭐ Correct! '+a+' + '+b+' = '+ans,'good'); }
+  else { btn.classList.add('wrong'); document.querySelectorAll('#va-opts .opt-btn').forEach(x=>{ if(+x.textContent===ans) x.classList.add('correct'); }); setFb('va-fb','The answer is '+ans+'!','bad'); }
+  setScore(vaScore); showEl('va-next');
+}
+function nextVertAdd(){
+  vaIdx++;
+  if(vaIdx>=vaQs.length) showComplete('📐',vaScore>=7?'Column Champion! 🌟':vaScore>=5?'Great Adding! 😊':'Keep Practising! 💪',vaScore,vaQs.length);
+  else renderVertAdd();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: ADD WITHIN 100 (WORD PROBLEMS + REGROUPING)
+// ══════════════════════════════════════════════
+const A100_Q = [
+  {story:'There are <span class="wp-num">38</span> red balls and <span class="wp-num">25</span> blue balls. How many balls altogether?', a:38,b:25,ans:63},
+  {story:'Sam has <span class="wp-num">47</span> stickers. He gets <span class="wp-num">36</span> more. How many stickers now?', a:47,b:36,ans:83},
+  {story:'A library has <span class="wp-num">54</span> big books and <span class="wp-num">29</span> small books. How many books in total?', a:54,b:29,ans:83},
+  {story:'There are <span class="wp-num">63</span> children and <span class="wp-num">28</span> adults at the park. How many people altogether?', a:63,b:28,ans:91},
+  {story:'Mia collects <span class="wp-num">45</span> shells on Monday and <span class="wp-num">37</span> on Tuesday. How many shells?', a:45,b:37,ans:82},
+  {story:'A farmer has <span class="wp-num">56</span> cows and <span class="wp-num">35</span> sheep. How many animals?', a:56,b:35,ans:91},
+  {story:'There are <span class="wp-num">72</span> apples and <span class="wp-num">19</span> oranges in the shop. How many fruits?', a:72,b:19,ans:91},
+  {story:'Jack scores <span class="wp-num">43</span> points in the morning and <span class="wp-num">38</span> in the afternoon. Total score?', a:43,b:38,ans:81},
+];
+let a100Qs=[],a100Idx=0,a100Score=0;
+
+function initAdd100(){
+  a100Qs=[...A100_Q].sort(()=>Math.random()-0.5);
+  a100Idx=0; a100Score=0; renderAdd100();
+}
+
+function renderAdd100(){
+  const q=a100Qs[a100Idx];
+  const aO=q.a%10, bO=q.b%10, onesSum=aO+bO;
+  const carry=onesSum>=10?1:0;
+  const hint=carry
+    ? `Step 1: ones ${aO}+${bO}=${onesSum} → write ${onesSum%10}, carry 1<br>Step 2: tens ${Math.floor(q.a/10)}+${Math.floor(q.b/10)}+1=${Math.floor(q.a/10)+Math.floor(q.b/10)+1}`
+    : `ones: ${aO}+${bO}=${onesSum} · tens: ${Math.floor(q.a/10)}+${Math.floor(q.b/10)}`;
+  const opts=shuffle([q.ans,...new Set([q.ans-1,q.ans+1,q.ans-10,q.ans+10].filter(v=>v>0&&v<=120))].slice(0,4));
+  const card=document.getElementById('add100-card');
+  card.innerHTML=progHTML(a100Idx,a100Qs.length,'#9b59b6')+
+    `<div class="q-text">Solve the word problem! 💯</div>
+     <div class="word-problem-box">${q.story}</div>
+     ${vertAddHTML(q.a,q.b,false)}
+     <div class="vert-hint">💡 ${hint}</div>
+     <div class="opts-4" id="a100-opts">`+
+    opts.map(o=>`<button class="opt-btn" onclick="ansAdd100(${o},${q.ans},${q.a},${q.b},this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="a100-fb"></div>
+     <button class="action-btn btn-purple hidden" id="a100-next" onclick="nextAdd100()">Next ➜</button>`;
+  setScore(a100Score);
+}
+function ansAdd100(choice,ans,a,b,btn){
+  document.querySelectorAll('#a100-opts .opt-btn').forEach(x=>x.disabled=true);
+  const vw=document.querySelector('.vert-add-wrap');
+  if(vw) vw.outerHTML=vertAddHTML(a,b,true);
+  if(choice===ans){ btn.classList.add('correct'); a100Score++; setFb('a100-fb','⭐ Correct! '+a+' + '+b+' = '+ans+'!','good'); }
+  else { btn.classList.add('wrong'); document.querySelectorAll('#a100-opts .opt-btn').forEach(x=>{ if(+x.textContent===ans) x.classList.add('correct'); }); setFb('a100-fb','The answer is '+ans+'!','bad'); }
+  setScore(a100Score); showEl('a100-next');
+}
+function nextAdd100(){
+  a100Idx++;
+  if(a100Idx>=a100Qs.length) showComplete('💯',a100Score>=7?'Maths Superstar! 🌟':a100Score>=5?'Great Work! 😊':'Keep Solving! 💪',a100Score,a100Qs.length);
+  else renderAdd100();
 }
 
 </script>
