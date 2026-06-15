@@ -201,6 +201,29 @@
   }
   .word-problem-box .wp-num { color:var(--yellow); font-family:'Fredoka One',cursive; font-size:1.2em; }
 
+
+  /* Telling Time */
+  .clock-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .clock-option {
+    background:rgba(255,255,255,0.06); border:3px solid rgba(255,255,255,0.12);
+    border-radius:18px; padding:12px; cursor:pointer; display:flex;
+    flex-direction:column; align-items:center; gap:6px;
+    transition:transform .15s, border-color .15s, background .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .clock-option:hover { transform:scale(1.04); background:rgba(255,255,255,0.12); }
+  .clock-option:disabled { cursor:default; pointer-events:none; }
+  .clock-option.correct { border-color:var(--green); background:rgba(82,196,120,0.2); }
+  .clock-option.wrong   { border-color:var(--red);   background:rgba(231,76,60,0.2); }
+  .clock-option .time-label {
+    font-family:'Fredoka One',cursive; font-size:clamp(14px,3.5vw,18px); color:var(--muted);
+  }
+  .clock-display-big { display:flex; justify-content:center; margin-bottom:14px; }
+  .time-text-big {
+    font-family:'Fredoka One',cursive; font-size:clamp(28px,8vw,46px);
+    color:var(--yellow); text-align:center; margin-bottom:14px;
+  }
+
 </style>
 </head>
 <body>
@@ -265,6 +288,13 @@
       <div class="mc-sub">38 + 25 = ? regroup!</div>
     </div>
 
+  
+    <div class="menu-card mc-full" onclick="startGame('time')" style="border-color:rgba(241,196,15,0.45)">
+      <span class="mc-icon">🕐</span>
+      <div class="mc-title" style="color:var(--yellow)">Telling Time</div>
+      <div class="mc-sub">O'clock · Half past · Read the clock!</div>
+    </div>
+
   </div>
 
   <!-- SCREENS -->
@@ -307,6 +337,12 @@
   <div class="screen" id="screen-add100">
     <button class="back-btn" onclick="goHome()">← Back</button>
     <div class="gcard" id="add100-card"></div>
+  </div>
+
+
+  <div class="screen" id="screen-time">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="time-card"></div>
   </div>
 
   <!-- COMPLETE -->
@@ -352,7 +388,7 @@ function startGame(name){
   document.getElementById('menu').classList.add('hidden');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('complete-screen').classList.remove('active');
-  ({shapes:initShapes,position:initPosition,addition:initAddition,patterns:initPatterns,mult10:initMult10,base10:initBase10,directions:initDirections,vertadd:initVertAdd,add100:initAdd100})[name]();
+  ({shapes:initShapes,position:initPosition,addition:initAddition,patterns:initPatterns,mult10:initMult10,base10:initBase10,directions:initDirections,vertadd:initVertAdd,add100:initAdd100,time:initTime})[name]();
   document.getElementById('screen-'+name).classList.add('active');
 }
 function showComplete(emoji,title,score,total){
@@ -1056,6 +1092,155 @@ function nextAdd100(){
   a100Idx++;
   if(a100Idx>=a100Qs.length) showComplete('💯',a100Score>=7?'Maths Superstar! 🌟':a100Score>=5?'Great Work! 😊':'Keep Solving! 💪',a100Score,a100Qs.length);
   else renderAdd100();
+}
+
+
+// ══════════════════════════════════════════════
+//  GAME: TELLING TIME
+//  O'clock + Half past
+// ══════════════════════════════════════════════
+
+// Generate SVG analogue clock
+function clockSVG(hour, isHalfPast, sz) {
+  sz = sz || 130;
+  var cx=sz/2, cy=sz/2, r=sz/2-3;
+  // Hour hand angle: 30deg per hour + 15deg for half past
+  var hourAngle = (hour % 12) * 30 + (isHalfPast ? 15 : 0);
+  // Minute hand: 0deg for o'clock (pointing up), 180deg for half past (pointing down)
+  var minAngle = isHalfPast ? 180 : 0;
+
+  function pt(angle, len) {
+    var rad = (angle - 90) * Math.PI / 180;
+    return { x: cx + len * Math.cos(rad), y: cy + len * Math.sin(rad) };
+  }
+
+  var h = pt(hourAngle, r * 0.48);
+  var m = pt(minAngle,  r * 0.70);
+
+  // Tick marks and numbers
+  var marks = '';
+  for (var i = 1; i <= 12; i++) {
+    var ang = (i * 30 - 90) * Math.PI / 180;
+    var numR = r - 14;
+    var nx = cx + numR * Math.cos(ang);
+    var ny = cy + numR * Math.sin(ang);
+    var fs = sz < 120 ? 10 : 13;
+    marks += '<text x="'+nx+'" y="'+ny+'" text-anchor="middle" dominant-baseline="central" font-size="'+fs+'" font-weight="900" font-family="Nunito,sans-serif" fill="#1a1830">'+i+'</text>';
+    // tick
+    var tickOuter = { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang) };
+    var tickInner = { x: cx + (r-5) * Math.cos(ang), y: cy + (r-5) * Math.sin(ang) };
+    marks += '<line x1="'+tickOuter.x+'" y1="'+tickOuter.y+'" x2="'+tickInner.x+'" y2="'+tickInner.y+'" stroke="#ccc" stroke-width="2"/>';
+  }
+
+  return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'">'
+    + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="white" stroke="#ddd" stroke-width="3"/>'
+    + marks
+    + '<line x1="'+cx+'" y1="'+cy+'" x2="'+h.x+'" y2="'+h.y+'" stroke="#1a1830" stroke-width="'+(sz<120?5:7)+'" stroke-linecap="round"/>'
+    + '<line x1="'+cx+'" y1="'+cy+'" x2="'+m.x+'" y2="'+m.y+'" stroke="#e74c3c" stroke-width="'+(sz<120?3:5)+'" stroke-linecap="round"/>'
+    + '<circle cx="'+cx+'" cy="'+cy+'" r="'+(sz<120?4:6)+'" fill="#1a1830"/>'
+    + '</svg>';
+}
+
+function timeStr(hour, isHalfPast) {
+  return isHalfPast ? 'half past ' + hour : hour + " o'clock";
+}
+
+// Build all questions
+function buildTimeQs() {
+  var qs = [];
+  var hours = [1,2,3,4,5,6,7,8,9,10,11,12];
+  // O'clock questions - both modes
+  [2,4,6,8,10,12].forEach(function(h) {
+    qs.push({type:'readClock', hour:h, isHalfPast:false,
+      ans:timeStr(h,false),
+      wrongs:[timeStr(h-1||12,false), timeStr(h+1>12?1:h+1,false), timeStr(h,true)]});
+  });
+  // Half past questions - both modes
+  [1,3,5,7,9,11].forEach(function(h) {
+    qs.push({type:'findClock', hour:h, isHalfPast:true,
+      ans:timeStr(h,true),
+      wrongTimes:[{h:h+1>12?1:h+1,hp:true},{h:h,hp:false},{h:h-1||12,hp:false}]});
+  });
+  // More o'clock find-clock
+  [3,7,11].forEach(function(h) {
+    qs.push({type:'findClock', hour:h, isHalfPast:false,
+      ans:timeStr(h,false),
+      wrongTimes:[{h:h+1>12?1:h+1,hp:false},{h:h,hp:true},{h:h-1||12,hp:false}]});
+  });
+  // More half past read-clock
+  [2,6,10].forEach(function(h) {
+    qs.push({type:'readClock', hour:h, isHalfPast:true,
+      ans:timeStr(h,true),
+      wrongs:[timeStr(h,false), timeStr(h+1>12?1:h+1,true), timeStr(h-1||12,true)]});
+  });
+  return shuffle(qs);
+}
+
+var timeQs=[], timeIdx=0, timeScore=0;
+
+function initTime() {
+  timeQs = buildTimeQs();
+  timeIdx = 0; timeScore = 0;
+  renderTime();
+}
+
+function renderTime() {
+  var q = timeQs[timeIdx];
+  var card = document.getElementById('time-card');
+
+  if (q.type === 'readClock') {
+    // Show ONE big clock, pick the written time
+    var opts = shuffle([q.ans].concat(q.wrongs)).slice(0,4);
+    card.innerHTML = progHTML(timeIdx, timeQs.length, '#f1c40f')
+      + '<div class="q-text">What time does this clock show? 🕐</div>'
+      + '<div class="clock-display-big">' + clockSVG(q.hour, q.isHalfPast, 160) + '</div>'
+      + '<div class="opts-4" id="time-opts">'
+      + opts.map(function(o){
+          return '<button class="opt-btn" style="font-size:clamp(14px,3.5vw,20px)" onclick="ansTime(\''+o+'\',\''+q.ans+'\',this)">'+o+'</button>';
+        }).join('')
+      + '</div><div class="feedback" id="time-fb"></div>'
+      + '<button class="action-btn btn-orange hidden" id="time-next" onclick="nextTime()">Next ➜</button>';
+
+  } else {
+    // Show written time, pick the correct clock from 4
+    var options = [{h:q.hour, hp:q.isHalfPast}].concat(q.wrongTimes).slice(0,4);
+    options = shuffle(options);
+    card.innerHTML = progHTML(timeIdx, timeQs.length, '#f1c40f')
+      + '<div class="q-text">Find the clock that shows… 🕐</div>'
+      + '<div class="time-text-big">' + q.ans + '</div>'
+      + '<div class="clock-grid" id="time-opts">'
+      + options.map(function(opt){
+          var label = timeStr(opt.h, opt.hp);
+          var isAns = (opt.h===q.hour && opt.hp===q.isHalfPast);
+          return '<button class="clock-option" onclick="ansTimeClock('+isAns+',this)">'
+            + clockSVG(opt.h, opt.hp, 110)
+            + '<span class="time-label">' + label + '</span>'
+            + '</button>';
+        }).join('')
+      + '</div><div class="feedback" id="time-fb"></div>'
+      + '<button class="action-btn btn-orange hidden" id="time-next" onclick="nextTime()">Next ➜</button>';
+  }
+  setScore(timeScore);
+}
+
+function ansTime(choice, ans, btn) {
+  document.querySelectorAll('#time-opts .opt-btn').forEach(function(b){b.disabled=true;});
+  if(choice===ans){btn.classList.add('correct');timeScore++;setFb('time-fb','⭐ Correct! That is '+ans+'!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#time-opts .opt-btn').forEach(function(b){if(b.textContent===ans)b.classList.add('correct');});setFb('time-fb','The clock shows '+ans+'!','bad');}
+  setScore(timeScore);showEl('time-next');
+}
+
+function ansTimeClock(isCorrect, btn) {
+  document.querySelectorAll('#time-opts .clock-option').forEach(function(b){b.disabled=true;b.style.pointerEvents='none';});
+  if(isCorrect){btn.classList.add('correct');timeScore++;setFb('time-fb','⭐ Correct clock! Well spotted!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#time-opts .clock-option').forEach(function(b){if(b.getAttribute('onclick').includes('true'))b.classList.add('correct');});setFb('time-fb','Look for the right hands position!','bad');}
+  setScore(timeScore);showEl('time-next');
+}
+
+function nextTime() {
+  timeIdx++;
+  if(timeIdx>=timeQs.length)showComplete('🕐',timeScore>=14?'Clock Master! 🌟':timeScore>=10?'Great Time Telling! 😊':'Keep Practising! 💪',timeScore,timeQs.length);
+  else renderTime();
 }
 
 </script>
