@@ -547,6 +547,66 @@
   .conn-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
   .conn-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
 
+
+  /* Week 9-10 literacy */
+  .prefix-display {
+    text-align:center; margin-bottom:18px;
+  }
+  .prefix-box {
+    display:inline-flex; align-items:center; gap:0;
+    font-family:'Fredoka One',cursive; font-size:clamp(32px,9vw,52px);
+  }
+  .prefix-part {
+    background:rgba(155,89,182,0.3); border:2px solid var(--purple);
+    border-radius:12px 0 0 12px; padding:8px 14px; color:var(--purple);
+  }
+  .root-part {
+    background:rgba(74,144,226,0.2); border:2px solid var(--blue);
+    border-radius:0 12px 12px 0; padding:8px 14px; color:white;
+    border-left:none;
+  }
+  .prefix-meaning {
+    font-size:13px; font-weight:800; color:var(--muted);
+    text-align:center; margin-top:8px;
+  }
+  .suffix-display {
+    text-align:center; margin-bottom:16px;
+  }
+  .suffix-base {
+    font-family:'Fredoka One',cursive; font-size:clamp(36px,10vw,56px);
+    background:linear-gradient(135deg,var(--blue),var(--teal));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    display:block;
+  }
+  .suffix-rule {
+    display:inline-block; margin-top:6px; font-size:13px; font-weight:800;
+    padding:4px 14px; border-radius:50px; border:1.5px solid rgba(255,255,255,0.2);
+    color:var(--muted);
+  }
+  .pronoun-sentence {
+    background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.15);
+    border-radius:18px; padding:16px 18px; margin-bottom:16px;
+    font-size:clamp(18px,4.5vw,24px); font-weight:900; color:white;
+    text-align:center; line-height:1.6;
+  }
+  .pron-blank {
+    display:inline-block; min-width:80px; border-bottom:3px solid var(--orange);
+    color:var(--orange); font-family:'Fredoka One',cursive;
+    padding:0 6px; transition:all .3s;
+  }
+  .pron-blank.filled { border-bottom-color:var(--green); color:var(--green); }
+  .pron-opts { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:14px; }
+  .pron-btn {
+    background:rgba(26,188,156,0.15); border:2px solid rgba(26,188,156,0.45);
+    border-radius:14px; color:white; font-family:'Fredoka One',cursive;
+    font-size:clamp(20px,6vw,30px); padding:12px 22px; cursor:pointer;
+    transition:transform .15s, background .15s; -webkit-tap-highlight-color:transparent;
+  }
+  .pron-btn:not(:disabled):hover { transform:scale(1.06); background:rgba(26,188,156,0.3); }
+  .pron-btn:disabled { cursor:default; }
+  .pron-btn.correct { background:rgba(82,196,120,0.28); border-color:var(--green); }
+  .pron-btn.wrong   { background:rgba(231,76,60,0.28);  border-color:var(--red); }
+
 </style>
 </head>
 <body>
@@ -659,6 +719,27 @@
       <span class="mc-icon">🔗</span>
       <div class="mc-title" style="color:var(--pink)">Because &amp; But</div>
       <div class="mc-sub">Join sentences together</div>
+    </div>
+
+
+    <div class="section-divider" style="grid-column:1/-1;margin-top:8px">🗓️ Term 2 · Week 9–10</div>
+
+    <div class="menu-card" onclick="startGame('unprefix')" style="border-color:rgba(155,89,182,0.45)">
+      <span class="mc-icon">🧩</span>
+      <div class="mc-title" style="color:var(--purple)">Prefix un-</div>
+      <div class="mc-sub">unhappy · unlock · unfair…</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('suffix')" style="border-color:rgba(26,188,156,0.45)">
+      <span class="mc-icon">➕</span>
+      <div class="mc-title" style="color:var(--teal)">Suffix -ing</div>
+      <div class="mc-sub">running · baking · jumping…</div>
+    </div>
+
+    <div class="menu-card" onclick="startGame('pronouns')" style="border-color:rgba(82,196,120,0.45)">
+      <span class="mc-icon">👤</span>
+      <div class="mc-title" style="color:var(--green)">Pronouns</div>
+      <div class="mc-sub">I · my · we · us · our</div>
     </div>
 
   </div>
@@ -785,6 +866,20 @@
     <div class="gcard" id="connector-card"></div>
   </div>
 
+
+  <div class="screen" id="screen-unprefix">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="unprefix-card"></div>
+  </div>
+  <div class="screen" id="screen-suffix">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="suffix-card"></div>
+  </div>
+  <div class="screen" id="screen-pronouns">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="gcard" id="pronouns-card"></div>
+  </div>
+
   <!-- COMPLETE SCREEN -->
   <div id="complete-screen">
     <div class="complete-emoji" id="cmp-emoji">🎉</div>
@@ -862,7 +957,10 @@ function startGame(name){
   if(name==='opinion')    initOpinion();
   if(name==='longisort') initLongiSort();
   if(name==='oasound')   initOASound();
-  if(name==='connector') initConnector();
+  if(name==='connector')  initConnector();
+  if(name==='unprefix')  initUnPrefix();
+  if(name==='suffix')    initSuffix();
+  if(name==='pronouns')  initPronouns();
   document.getElementById('screen-'+name).classList.add('active');
 }
 
@@ -2043,6 +2141,162 @@ function nextConn(){
   connIdx++;
   if(connIdx>=CONN_Q.length) showComplete('🔗',connScore>=9?'Sentence Joiner! 🌟':connScore>=6?'Great Connecting! 😊':'Keep Practising! 💪',connScore,CONN_Q.length);
   else renderConnector();
+}
+
+
+// ══════════════════════════════════════════════
+//  GAME: PREFIX un-
+// ══════════════════════════════════════════════
+const UN_Q=[
+  {root:'happy',   word:'unhappy',   meaning:'not happy',         emoji:'😢',
+   opts:['not happy','very happy','always happy','too happy'], ans:'not happy'},
+  {root:'lock',    word:'unlock',    meaning:'to open a lock',    emoji:'🔓',
+   opts:['open a lock','close a lock','break a lock','fix a lock'], ans:'open a lock'},
+  {root:'fair',    word:'unfair',    meaning:'not fair',          emoji:'😤',
+   opts:['not fair','very fair','quite fair','super fair'], ans:'not fair'},
+  {root:'kind',    word:'unkind',    meaning:'not kind',          emoji:'😠',
+   opts:['not kind','very kind','extra kind','a little kind'], ans:'not kind'},
+  {root:'well',    word:'unwell',    meaning:'not well',          emoji:'🤒',
+   opts:['not well','feeling well','sleeping well','eating well'], ans:'not well'},
+  {root:'pack',    word:'unpack',    meaning:'to take things out',emoji:'🧳',
+   opts:['take things out','put things in','lose things','find things'], ans:'take things out'},
+  {root:'tidy',    word:'untidy',    meaning:'not tidy',          emoji:'🧹',
+   opts:['not tidy','very tidy','super tidy','neatly tidy'], ans:'not tidy'},
+  {root:'zip',     word:'unzip',     meaning:'to open a zip',     emoji:'🤐',
+   opts:['open a zip','close a zip','break a zip','find a zip'], ans:'open a zip'},
+  {root:'safe',    word:'unsafe',    meaning:'not safe',          emoji:'⚠️',
+   opts:['not safe','very safe','always safe','super safe'], ans:'not safe'},
+  {root:'wrap',    word:'unwrap',    meaning:'to remove wrapping',emoji:'🎁',
+   opts:['remove wrapping','add wrapping','make wrapping','find wrapping'], ans:'remove wrapping'},
+];
+let unIdx=0,unScore=0;
+function initUnPrefix(){unIdx=0;unScore=0;renderUnPrefix();}
+function renderUnPrefix(){
+  const q=UN_Q[unIdx];
+  const opts=shuffle(q.opts);
+  const card=document.getElementById('unprefix-card');
+  card.innerHTML=progHTML(unIdx,UN_Q.length,'#9b59b6')+
+    `<div class="q-text">What does <span style="color:var(--purple)">"${q.word}"</span> mean? 🧩</div>
+     <div class="prefix-display">
+       <div class="prefix-box">
+         <span class="prefix-part">un-</span><span class="root-part">${q.root}</span>
+       </div>
+       <div class="prefix-meaning">${q.emoji} Remember: un- means NOT or OPPOSITE</div>
+     </div>
+     <div class="opts-4" id="un-opts">`+
+    opts.map(o=>`<button class="opt-btn" style="font-size:clamp(14px,3.5vw,19px);padding:13px 8px" onclick="ansUnPrefix('${o}','${q.ans}',this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="un-fb"></div>
+     <button class="action-btn btn-purple hidden" id="un-next" onclick="nextUnPrefix()">Next ➜</button>`;
+  setScore(unScore);
+}
+function ansUnPrefix(choice,ans,btn){
+  document.querySelectorAll('#un-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');unScore++;setFb('un-fb','⭐ Correct! un- makes the opposite!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#un-opts .opt-btn').forEach(b=>{if(b.textContent===ans)b.classList.add('correct')});setFb('un-fb','The answer is "'+ans+'"!','bad');}
+  setScore(unScore);showEl('un-next');
+}
+function nextUnPrefix(){
+  unIdx++;
+  if(unIdx>=UN_Q.length)showComplete('🧩',unScore>=9?'Prefix Pro! 🌟':unScore>=7?'Great Work! 😊':'Keep Practising! 💪',unScore,UN_Q.length);
+  else renderUnPrefix();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: SUFFIX -ing
+// ══════════════════════════════════════════════
+const ING_Q=[
+  // Just add -ing
+  {base:'jump',  ans:'jumping',  rule:'just add -ing',         opts:['jumping','jumppping','jumpping','jumpeing']},
+  {base:'eat',   ans:'eating',   rule:'just add -ing',         opts:['eating','eatting','eaing','eateing']},
+  {base:'read',  ans:'reading',  rule:'just add -ing',         opts:['reading','readding','reding','readeing']},
+  {base:'play',  ans:'playing',  rule:'just add -ing',         opts:['playing','playying','plaing','playeing']},
+  {base:'sleep', ans:'sleeping', rule:'just add -ing',         opts:['sleeping','sleepping','sleepeing','slepeing']},
+  // Double consonant
+  {base:'run',   ans:'running',  rule:'double the last letter',opts:['running','runing','runeing','runnning']},
+  {base:'sit',   ans:'sitting',  rule:'double the last letter',opts:['sitting','siting','siteing','sittting']},
+  {base:'swim',  ans:'swimming', rule:'double the last letter',opts:['swimming','swiming','swimmming','swimeing']},
+  {base:'hop',   ans:'hopping',  rule:'double the last letter',opts:['hopping','hoping','hopeing','hopppping']},
+  // Drop e
+  {base:'bake',  ans:'baking',   rule:'drop the e, then add -ing', opts:['baking','bakeing','bakking','bakkeing']},
+  {base:'ride',  ans:'riding',   rule:'drop the e, then add -ing', opts:['riding','rideing','ridding','rideeing']},
+  {base:'make',  ans:'making',   rule:'drop the e, then add -ing', opts:['making','makeing','makking','makkeing']},
+];
+let ingIdx=0,ingScore=0;
+function initSuffix(){ingIdx=0;ingScore=0;renderSuffix();}
+function renderSuffix(){
+  const q=ING_Q[ingIdx];
+  const opts=shuffle(q.opts);
+  const ruleColor=q.rule.includes('double')?'var(--orange)':q.rule.includes('drop')?'var(--pink)':'var(--teal)';
+  const card=document.getElementById('suffix-card');
+  card.innerHTML=progHTML(ingIdx,ING_Q.length,'#1abc9c')+
+    `<div class="q-text">Add <span style="color:var(--teal)">-ing</span> to make a doing word! ➕</div>
+     <div class="suffix-display">
+       <span class="suffix-base">${q.base}</span>
+       <span class="suffix-rule" style="border-color:${ruleColor};color:${ruleColor}">💡 ${q.rule}</span>
+     </div>
+     <div class="opts-4" id="ing-opts">`+
+    opts.map(o=>`<button class="opt-btn" style="font-size:clamp(17px,4vw,24px)" onclick="ansSuffix('${o}','${q.ans}',this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="ing-fb"></div>
+     <button class="action-btn btn-teal hidden" id="ing-next" onclick="nextSuffix()">Next ➜</button>`;
+  setScore(ingScore);
+}
+function ansSuffix(choice,ans,btn){
+  document.querySelectorAll('#ing-opts .opt-btn').forEach(b=>b.disabled=true);
+  if(choice===ans){btn.classList.add('correct');ingScore++;setFb('ing-fb','⭐ Correct! '+ans+' is right!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#ing-opts .opt-btn').forEach(b=>{if(b.textContent===ans)b.classList.add('correct')});setFb('ing-fb','The answer is "'+ans+'"!','bad');}
+  setScore(ingScore);showEl('ing-next');
+}
+function nextSuffix(){
+  ingIdx++;
+  if(ingIdx>=ING_Q.length)showComplete('➕',ingScore>=10?'Suffix Superstar! 🌟':ingScore>=8?'Great Spelling! 😊':'Keep Practising! 💪',ingScore,ING_Q.length);
+  else renderSuffix();
+}
+
+// ══════════════════════════════════════════════
+//  GAME: PRONOUNS  (I / my / we / us / our)
+// ══════════════════════════════════════════════
+const PRON_Q=[
+  {sentence:'___ am going to school today.',          ans:'I',   opts:['I','My','We','Our']},
+  {sentence:'___ book is on the table.',              ans:'My',  opts:['I','My','We','Our']},
+  {sentence:'___ are going to the park together.',    ans:'We',  opts:['I','We','Us','Our']},
+  {sentence:'Can you help ___ carry the bags?',       ans:'us',  opts:['I','we','us','our']},
+  {sentence:'This is ___ house. We live here.',       ans:'our', opts:['I','my','we','our']},
+  {sentence:'___ love to play in the garden.',        ans:'We',  opts:['I','My','We','Us']},
+  {sentence:'___ name is Vivan.',                     ans:'My',  opts:['I','My','We','Our']},
+  {sentence:'Please wait for ___ at the gate.',       ans:'us',  opts:['I','we','us','our']},
+  {sentence:'___ have a big family.',                 ans:'We',  opts:['I','My','We','Us']},
+  {sentence:'___ drew this picture myself.',          ans:'I',   opts:['I','My','We','Our']},
+  {sentence:'___ teacher is kind and helpful.',       ans:'Our', opts:['My','Our','We','Us']},
+  {sentence:'Mum told ___ to tidy our rooms.',        ans:'us',  opts:['I','we','us','our']},
+];
+let pronIdx=0,pronScore=0;
+function initPronouns(){pronIdx=0;pronScore=0;renderPronouns();}
+function renderPronouns(){
+  const q=PRON_Q[pronIdx];
+  const display=q.sentence.replace('___','<span class="pron-blank" id="pron-blank">___</span>');
+  const card=document.getElementById('pronouns-card');
+  card.innerHTML=progHTML(pronIdx,PRON_Q.length,'#52c478')+
+    `<div class="q-text">Pick the right pronoun! 👤</div>
+     <div class="q-sub">Pronouns: I · my · we · us · our</div>
+     <div class="pronoun-sentence">${display}</div>
+     <div class="pron-opts" id="pron-opts">`+
+    q.opts.map(o=>`<button class="pron-btn" onclick="ansPronoun('${o}','${q.ans}',this)">${o}</button>`).join('')+
+    `</div><div class="feedback" id="pron-fb"></div>
+     <button class="action-btn btn-green hidden" id="pron-next" onclick="nextPronoun()">Next ➜</button>`;
+  setScore(pronScore);
+}
+function ansPronoun(choice,ans,btn){
+  document.querySelectorAll('#pron-opts .pron-btn').forEach(b=>b.disabled=true);
+  const blank=document.getElementById('pron-blank');
+  if(blank){blank.textContent=ans;blank.classList.add('filled');}
+  if(choice.toLowerCase()===ans.toLowerCase()){btn.classList.add('correct');pronScore++;setFb('pron-fb','⭐ Correct! "'+ans+'" fits perfectly!','good');}
+  else{btn.classList.add('wrong');document.querySelectorAll('#pron-opts .pron-btn').forEach(b=>{if(b.textContent.toLowerCase()===ans.toLowerCase())b.classList.add('correct')});setFb('pron-fb','The answer is "'+ans+'"!','bad');}
+  setScore(pronScore);showEl('pron-next');
+}
+function nextPronoun(){
+  pronIdx++;
+  if(pronIdx>=PRON_Q.length)showComplete('👤',pronScore>=11?'Pronoun Pro! 🌟':pronScore>=8?'Great Grammar! 😊':'Keep Practising! 💪',pronScore,PRON_Q.length);
+  else renderPronouns();
 }
 
 </script>
